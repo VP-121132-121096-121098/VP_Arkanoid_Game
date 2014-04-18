@@ -12,7 +12,7 @@ namespace ArkanoidGame.Interfaces
 
         void OnDraw(Graphics graphics, int frameWidth, int frameHeight);
 
-        public int PositionX {get; set;}
-        public int PositionY { get; set; }
+        int PositionX {get; set;}
+        int PositionY { get; set; }
     }
 }

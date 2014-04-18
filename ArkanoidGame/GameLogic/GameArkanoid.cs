@@ -1,5 +1,6 @@
 ﻿using ArkanoidGame.Framework;
 using ArkanoidGame.Interfaces;
+using ArkanoidGame.Objects;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -54,7 +55,10 @@ namespace ArkanoidGame.GameLogic
         public void OnDraw(Graphics graphics, int frameWidth, int frameHeight)
         {
             this.GameState.OnDraw(graphics, frameWidth, frameHeight);
+            obj.OnDraw(graphics, frameWidth, frameHeight);
         }
+
+        private IGameObject obj;
 
         /// <summary>
         /// Креира нова игра и ја поставува во почетна состојба initialState
@@ -62,6 +66,7 @@ namespace ArkanoidGame.GameLogic
         /// <param name="state"></param>
         public GameArkanoid(IGameState initialState)
         {
+            obj = new Paddle(800, 850);
             GameState = initialState;
             Name = "Arkanoid";
         }
@@ -70,6 +75,7 @@ namespace ArkanoidGame.GameLogic
         public void OnUpdate()
         {
             GameState.OnUpdate(null);
+            obj.OnUpdate();
         }
     }
 }
