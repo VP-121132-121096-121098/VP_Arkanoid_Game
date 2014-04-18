@@ -1,5 +1,5 @@
-﻿using ArkanoidGame;
-using ArkanoidGame.Framework;
+﻿using ArkanoidGame.Framework;
+using ArkanoidGame.GameLogic;
 using System;
 using System.Threading;
 using System.Windows.Forms;

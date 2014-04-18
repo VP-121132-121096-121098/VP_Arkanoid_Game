@@ -54,7 +54,7 @@
       <DependentUpon>AbstractGameWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="Framework\StaticBitmapFactory.cs" />
-    <Compile Include="GameArkanoid.cs" />
+    <Compile Include="GameLogic\GameArkanoid.cs" />
     <Compile Include="Framework\GameFramework.cs" />
     <Compile Include="Framework\KeyStateInfo.cs" />
     <Compile Include="Framework\Logger.cs" />
