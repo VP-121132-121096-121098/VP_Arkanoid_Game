@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ArkanoidGame.GameLogic;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -12,7 +13,6 @@ namespace ArkanoidGame.Interfaces
 
         void OnDraw(Graphics graphics, int frameWidth, int frameHeight);
 
-        int PositionX {get; set;}
-        int PositionY { get; set; }
+        Vector2D Position { get; set; }
     }
 }

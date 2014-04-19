@@ -5,7 +5,7 @@ using System.Windows.Forms;
 
 namespace ArkanoidGame.Framework
 {
-    class KeyStateInfo
+    public class KeyStateInfo
     {
         static KeyStateInfo()
         {

@@ -58,6 +58,7 @@
     <Compile Include="Framework\GameFramework.cs" />
     <Compile Include="Framework\KeyStateInfo.cs" />
     <Compile Include="Framework\Logger.cs" />
+    <Compile Include="GameLogic\Vector2D.cs" />
     <Compile Include="GamePanel.cs">
       <SubType>Component</SubType>
     </Compile>

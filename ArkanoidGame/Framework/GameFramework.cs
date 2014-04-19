@@ -48,6 +48,13 @@ namespace ArkanoidGame.Framework
 
         public bool IsGameRunning { get; set; }
 
+
+        /// <summary>
+        /// Го паузира исцртувањето, ажурирањето на логиката на 
+        /// играта не смее да заостанува!!!
+        /// </summary>
+        public bool IsRendererRunning { get; private set; }
+
         /// <summary>
         /// Is GameFramework initialized?
         /// </summary>
@@ -61,11 +68,12 @@ namespace ArkanoidGame.Framework
             this.Initialized = false;
             this.IsFrameworkRunning = false;
             this.FPSCounter = 0;
-            this.gameUpdatePeriod = (int)(SecondInWinFileTime / FPSTarget / MillisecondInFileTime);
+            this.gameUpdatePeriod = 40; //25 updates per second
             this.PreviousFPSCounterValue = FPSTarget;
             this.FPSLastUpdate = 0;
             this.gamePanel = null;
             this.IsGameRunning = false;
+            this.IsRendererRunning = true;
         }
 
         /// <summary>
@@ -90,6 +98,8 @@ namespace ArkanoidGame.Framework
                 }
                 else
                 {
+                    while (!IsRendererRunning)
+                        Thread.Sleep(1);
                     game.OnDraw(graphics, frameWidth, frameHeight);
                 }
 
@@ -103,7 +113,7 @@ namespace ArkanoidGame.Framework
 
                     if (FPSFileTimeIntervalCounter > SecondInWinFileTime)
                     {
-                        FPSFileTimeIntervalCounter = 0; //Ресетирај го бројачот, веројатно имало некој проблем
+                        FPSFileTimeIntervalCounter = 0; //Ресетирај го бројачот, веројатно имало подолга пауза
                     }
 
                     if (FPSFileTimeIntervalCounter > 0 && PreviousFPSCounterValue > 0)
@@ -119,6 +129,12 @@ namespace ArkanoidGame.Framework
                 graphics.DrawString(string.Format("{0} FPS", PreviousFPSCounterValue),
                     SystemFonts.CaptionFont, Brushes.Yellow, frameWidth * 0.01f, frameHeight * 0.01f);
                 FPSCounter++;
+
+                if (PreviousFPSCounterValue >= 100)
+                    Thread.Sleep((int)(1000 / PreviousFPSCounterValue));
+                else
+                    Thread.Sleep(1);
+                gamePanel.Refresh();
             }
             catch (Exception e)
             {
@@ -167,8 +183,8 @@ namespace ArkanoidGame.Framework
             gamePanel.GameFramework = this;
             this.InitializeFramework();
 
-            gamePanel.Invalidate();
             this.IsFrameworkRunning = true;
+            gamePanel.Invalidate();
 
             try
             {
@@ -205,19 +221,18 @@ namespace ArkanoidGame.Framework
                 }
 
                 long timeUpdateBegin = DateTime.Now.ToFileTimeUtc() / MillisecondInFileTime;
-                gamePanel.Invalidate();
                 game.OnUpdate();
 
                 long timeUpdateEnd = DateTime.Now.ToFileTimeUtc() / MillisecondInFileTime;
                 int remainingTime = (int)(timeUpdateEnd - timeUpdateBegin);
-                //if (remainingTime < gameUpdatePeriod)
-                if (false) //for debugging only!!!
+                if (remainingTime > 0 && remainingTime < gameUpdatePeriod) 
                 {
-                    Thread.Sleep(gameUpdatePeriod - remainingTime);
+                    IsRendererRunning = true;
+                    Thread.Sleep(remainingTime);
                 }
                 else
                 {
-                    Thread.Sleep(1);
+                    IsRendererRunning = false;
                 }
 
                 if (!this.IsFrameworkRunning || !this.IsGameRunning)
