@@ -31,7 +31,6 @@ namespace ArkanoidGame.Objects
 
         public void OnUpdate(IEnumerable<IGameObject> objects)
         {
-            
         }
 
         public void OnDraw(System.Drawing.Graphics graphics, int frameWidth, int frameHeight)

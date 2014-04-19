@@ -96,11 +96,13 @@ namespace ArkanoidGame.Framework
                 {
                     graphics.FillRectangle(Brushes.Black, 0, 0, gamePanel.Width, gamePanel.Height);
                 }
+                else if(IsRendererRunning)
+                {
+                    game.OnDraw(graphics, frameWidth, frameHeight);
+                }
                 else
                 {
-                    while (!IsRendererRunning)
-                        Thread.Sleep(1);
-                    game.OnDraw(graphics, frameWidth, frameHeight);
+                    return;
                 }
 
                 //FPS Counter Logic
@@ -225,14 +227,19 @@ namespace ArkanoidGame.Framework
 
                 long timeUpdateEnd = DateTime.Now.ToFileTimeUtc() / MillisecondInFileTime;
                 int remainingTime = (int)(timeUpdateEnd - timeUpdateBegin);
-                if (remainingTime > 0 && remainingTime < gameUpdatePeriod) 
+                if (remainingTime < gameUpdatePeriod) 
                 {
-                    IsRendererRunning = true;
+                    if (!IsRendererRunning)
+                    {
+                        IsRendererRunning = true;
+                        gamePanel.Invalidate();
+                    }
                     Thread.Sleep(remainingTime);
                 }
                 else
                 {
                     IsRendererRunning = false;
+                    Thread.Sleep(1);
                 }
 
                 if (!this.IsFrameworkRunning || !this.IsGameRunning)
