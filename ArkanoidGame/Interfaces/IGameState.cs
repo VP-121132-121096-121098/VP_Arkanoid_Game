@@ -22,7 +22,7 @@ namespace ArkanoidGame.Interfaces
         /// повик на Update() во состојбата во која моментално се наоѓа играта
         /// </summary>
         /// <param name="gameObjects"></param>
-        void OnUpdate(IEnumerable<IGameObject> gameObjects);
+        void OnUpdate(IEnumerable<IGameObject> gameObjects, long gameElapsedTime);
 
         /// <summary>
         /// Референца кон играта

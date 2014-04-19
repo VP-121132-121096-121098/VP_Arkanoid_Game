@@ -32,6 +32,8 @@ namespace ArkanoidGame.Framework
 
         private long FPSLastUpdate; //се користи за броење FPS
 
+        private long FPSTimeLastFrame; //време кога е исцртан последниот frame
+
         private IGame game; //играта која треба да се стартува
 
 
@@ -74,6 +76,7 @@ namespace ArkanoidGame.Framework
             this.gamePanel = null;
             this.IsGameRunning = false;
             this.IsRendererRunning = true;
+            this.FPSTimeLastFrame = 0;
         }
 
         /// <summary>
@@ -91,12 +94,14 @@ namespace ArkanoidGame.Framework
                 graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
                 if (FPSLastUpdate == 0)
                     FPSLastUpdate = DateTime.Now.ToFileTimeUtc();
+                if (FPSTimeLastFrame == 0)
+                    FPSTimeLastFrame = DateTime.Now.ToFileTimeUtc();
 
                 if (!IsGameRunning)
                 {
                     graphics.FillRectangle(Brushes.Black, 0, 0, gamePanel.Width, gamePanel.Height);
                 }
-                else if(IsRendererRunning)
+                else if (IsRendererRunning)
                 {
                     game.OnDraw(graphics, frameWidth, frameHeight);
                 }
@@ -132,10 +137,14 @@ namespace ArkanoidGame.Framework
                     SystemFonts.CaptionFont, Brushes.Yellow, frameWidth * 0.01f, frameHeight * 0.01f);
                 FPSCounter++;
 
-                if (PreviousFPSCounterValue >= 100)
-                    Thread.Sleep((int)(1000 / PreviousFPSCounterValue));
-                else
-                    Thread.Sleep(1);
+                //Колку време поминало од последниот frame
+                int deltaFPSFrameTime = (int)((DateTime.Now.ToFileTimeUtc() - FPSTimeLastFrame)
+                    / MillisecondInFileTime);
+              
+                Thread.Sleep(Math.Max(1, 8 - deltaFPSFrameTime));
+
+                FPSTimeLastFrame = DateTime.Now.ToFileTimeUtc();
+
                 gamePanel.Refresh();
             }
             catch (Exception e)
@@ -211,6 +220,10 @@ namespace ArkanoidGame.Framework
         private void GameMainLoop()
         {
 
+            long timeGameStarted = DateTime.Now.ToFileTimeUtc() / MillisecondInFileTime;
+            long gameElapsedTime = 0;
+            long gameLag = 0;
+
             while (true)
             {
                 if (IsExceptionRaised) /* race condition. Нема потреба од синхронизација, после   *
@@ -225,21 +238,35 @@ namespace ArkanoidGame.Framework
                 long timeUpdateBegin = DateTime.Now.ToFileTimeUtc() / MillisecondInFileTime;
                 game.OnUpdate();
 
+                gameElapsedTime++;
+
                 long timeUpdateEnd = DateTime.Now.ToFileTimeUtc() / MillisecondInFileTime;
-                int remainingTime = (int)(timeUpdateEnd - timeUpdateBegin);
-                if (remainingTime < gameUpdatePeriod) 
+                int remainingTime = (int)(gameUpdatePeriod - (timeUpdateEnd - timeUpdateBegin));
+
+                long realElapsedTime = (timeUpdateEnd - timeGameStarted) / gameUpdatePeriod;
+                gameLag = realElapsedTime - gameElapsedTime;
+               
+                /* Синхронизација на време. Ако gameLag == -1, тогаш времето во играта 
+                 * избрзува за онолку време колку што преостанало од gameUpdatePeriod.
+                 */
+                if (gameLag == -1)
                 {
                     if (!IsRendererRunning)
                     {
-                        IsRendererRunning = true;
+                        IsRendererRunning = true; //ако претходно бил исклучен
                         gamePanel.Invalidate();
                     }
                     Thread.Sleep(remainingTime);
                 }
-                else
+                else if (gameLag > 0)
                 {
                     IsRendererRunning = false;
-                    Thread.Sleep(1);
+
+                    /* времето во играта се пресметува како број на периоди од 40 ms (милисекунди)
+                     * Ако дојде до десинхронизација помеѓу реалното време и времето во играта
+                     * тогаш се исклучува системот за рендерирање и се повикува
+                     * Update се додека времето во играта не го достигне реалното време.                     * 
+                     */
                 }
 
                 if (!this.IsFrameworkRunning || !this.IsGameRunning)

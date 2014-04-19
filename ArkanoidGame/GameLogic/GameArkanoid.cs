@@ -27,7 +27,7 @@ namespace ArkanoidGame.GameLogic
             graphics.DrawImage(MenuBackground, 0, 0, frameWidth, frameHeight);
         }
 
-        public void OnUpdate(IEnumerable<IGameObject> gameObjects)
+        public void OnUpdate(IEnumerable<IGameObject> gameObjects, long gameElapsedTime)
         {
             //throw new NotImplementedException();
         }
@@ -74,8 +74,11 @@ namespace ArkanoidGame.GameLogic
 
         public void OnUpdate()
         {
-            GameState.OnUpdate(null);
-            obj.OnUpdate(null);
+            GameState.OnUpdate(null, ElapsedTime);
+            obj.OnUpdate(null, ElapsedTime);
         }
+
+
+        public long ElapsedTime { get; private set; }
     }
 }

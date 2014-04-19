@@ -15,6 +15,11 @@ namespace ArkanoidGame.Interfaces
         string Name { get; }
 
         /// <summary>
+        /// Колку периоди од 40 ms поминале во играта
+        /// </summary>
+        long ElapsedTime { get; }
+
+        /// <summary>
         /// Состојба во која се наоѓа играта
         /// </summary>
         IGameState GameState { get; set; }

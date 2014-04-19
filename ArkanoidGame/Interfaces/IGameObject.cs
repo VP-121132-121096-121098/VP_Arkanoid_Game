@@ -9,7 +9,7 @@ namespace ArkanoidGame.Interfaces
 {
     public interface IGameObject
     {
-        void OnUpdate(IEnumerable<IGameObject> objects);
+        void OnUpdate(IEnumerable<IGameObject> objects, long gameElapsedTime);
 
         void OnDraw(Graphics graphics, int frameWidth, int frameHeight);
 

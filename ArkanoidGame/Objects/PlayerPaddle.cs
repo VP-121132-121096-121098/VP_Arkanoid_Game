@@ -29,7 +29,7 @@ namespace ArkanoidGame.Objects
 
         private readonly Vector2D maxAcceleration;
 
-        public void OnUpdate(IEnumerable<IGameObject> objects)
+        public void OnUpdate(IEnumerable<IGameObject> objects, long gameElapsedTime)
         {
         }
 
