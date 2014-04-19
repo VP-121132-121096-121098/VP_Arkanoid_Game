@@ -66,7 +66,7 @@ namespace ArkanoidGame.GameLogic
         /// <param name="state"></param>
         public GameArkanoid(IGameState initialState)
         {
-            obj = new Paddle(800, 850);
+            obj = new PlayerPaddle(800, 850);
             GameState = initialState;
             Name = "Arkanoid";
         }
@@ -75,7 +75,7 @@ namespace ArkanoidGame.GameLogic
         public void OnUpdate()
         {
             GameState.OnUpdate(null);
-            obj.OnUpdate();
+            obj.OnUpdate(null);
         }
     }
 }

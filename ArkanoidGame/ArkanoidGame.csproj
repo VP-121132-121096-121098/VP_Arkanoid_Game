@@ -65,7 +65,7 @@
     <Compile Include="Interfaces\IGameObject.cs" />
     <Compile Include="Interfaces\IGameState.cs" />
     <Compile Include="Interfaces\IKeyState.cs" />
-    <Compile Include="Objects\Paddle.cs" />
+    <Compile Include="Objects\PlayerPaddle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="AbstractGameWindow.resx">
       <DependentUpon>AbstractGameWindow.cs</DependentUpon>

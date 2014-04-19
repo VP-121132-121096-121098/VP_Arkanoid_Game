@@ -13,48 +13,18 @@ namespace ArkanoidGame.Objects
     {
         private float speedX;
 
+        private long timeLastUpdate;
 
-        public void OnUpdate()
+        public void OnUpdate(IEnumerable<IGameObject> objects)
         {
-            IKeyState leftArrowState = KeyStateInfo.GetAsyncKeyState(Keys.Left);
-            if (leftArrowState.IsPressed || leftArrowState.WasPressedAfterPreviousCall)
-            {
-                speedX = (float)Math.Max(-2.5, speedX - 0.2);
-            }
+            if (timeLastUpdate < 0)
+                timeLastUpdate = DateTime.Now.ToFileTimeUtc();
 
-            IKeyState rightArrowState = KeyStateInfo.GetAsyncKeyState(Keys.Right);
-            if (rightArrowState.IsPressed || rightArrowState.WasPressedAfterPreviousCall)
-            {
-                speedX = (float)Math.Min(2.5, speedX + 0.2);
-            }
+            long timeNow = DateTime.Now.ToFileTimeUtc();
 
-            if (!rightArrowState.IsPressed && !rightArrowState.WasPressedAfterPreviousCall &&
-                !leftArrowState.IsPressed && !leftArrowState.WasPressedAfterPreviousCall)
-            {
-                if (speedX < 0)
-                {
-                    speedX = (int)Math.Min(0, speedX + 0.2);
-                }
-                else if (speedX > 0)
-                {
-                    speedX = (int)Math.Max(0, speedX - 0.2);
-                }
-            }
+            //update logic
 
-            if (speedX < 0 && PositionX + (int)Math.Round(speedX * 2.5) <= 5)
-            {
-                PositionX = 5;
-            }
-            if (speedX > 0 && PositionX + (int)Math.Round(speedX * 2.5) >= previousFrameWidth
-                - (int)Math.Round(previousFrameWidth * PaddleWidth / 100) - 5)
-            {
-                PositionX = previousFrameWidth
-                - (int)Math.Round(previousFrameWidth * PaddleWidth / 100) - 5;
-            }
-            else
-            {
-                this.PositionX += (int)Math.Round(speedX * 2.5);
-            }
+            timeLastUpdate = timeNow;
         }
 
         public void OnDraw(System.Drawing.Graphics graphics, int frameWidth, int frameHeight)
@@ -101,6 +71,7 @@ namespace ArkanoidGame.Objects
             PaddleHeight = 3.5f;
             objectTexture = null;
             speedX = 0;
+            timeLastUpdate = -1;
         }
     }
 }
