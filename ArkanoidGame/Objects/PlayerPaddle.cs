@@ -31,8 +31,8 @@ namespace ArkanoidGame.Objects
 
         private double secondIngameUpdatePeriod;
 
-        public double PaddleWidth { get; set; } 
-        public double PaddleHeight { get; private set; } 
+        public double PaddleWidth { get; set; }
+        public double PaddleHeight { get; private set; }
 
         private int virtualGameWidth;
         private int virtualGameHeight;
@@ -121,10 +121,14 @@ namespace ArkanoidGame.Objects
                     width, height, "PlayerPaddle");
                 objectTexture = StaticBitmapFactory.GetBitmapFromMainMemory("PlayerPaddle");
             }
-            else if(lastFrameWidth != frameWidth || lastFrameHeight != frameHeight)
+            else
             {
-                StaticBitmapFactory.ChangeBitmapResolution("PlayerPaddle", width, height);
                 objectTexture = StaticBitmapFactory.GetBitmapFromMainMemory("PlayerPaddle");
+                if (objectTexture.Width != width || objectTexture.Height != height)
+                {
+                    StaticBitmapFactory.ChangeBitmapResolution("PlayerPaddle", width, height);
+                    objectTexture = StaticBitmapFactory.GetBitmapFromMainMemory("PlayerPaddle");
+                }
             }
 
             graphics.DrawImage(objectTexture, (float)realPositionX, (float)realPositionY, width, height);
