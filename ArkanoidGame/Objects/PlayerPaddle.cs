@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace ArkanoidGame.Objects
 {
-    public class Paddle : IGameObject
+    public class PlayerPaddle : IGameObject
     {
         private float speedX;
 
@@ -30,22 +30,31 @@ namespace ArkanoidGame.Objects
 
             if (!rightArrowState.IsPressed && !rightArrowState.WasPressedAfterPreviousCall &&
                 !leftArrowState.IsPressed && !leftArrowState.WasPressedAfterPreviousCall)
-                speedX = 0;
+            {
+                if (speedX < 0)
+                {
+                    speedX = (int)Math.Min(0, speedX + 0.2);
+                }
+                else if (speedX > 0)
+                {
+                    speedX = (int)Math.Max(0, speedX - 0.2);
+                }
+            }
 
-            if (speedX < 0 && PositionX <= 5)
+            if (speedX < 0 && PositionX + (int)Math.Round(speedX * 2.5) <= 5)
             {
                 PositionX = 5;
-                return;
             }
-            if (speedX > 0 && PositionX >= previousFrameWidth
+            if (speedX > 0 && PositionX + (int)Math.Round(speedX * 2.5) >= previousFrameWidth
                 - (int)Math.Round(previousFrameWidth * PaddleWidth / 100) - 5)
             {
                 PositionX = previousFrameWidth
                 - (int)Math.Round(previousFrameWidth * PaddleWidth / 100) - 5;
-                return;
             }
-
-            this.PositionX += (int)Math.Round(speedX * 2.5);
+            else
+            {
+                this.PositionX += (int)Math.Round(speedX * 2.5);
+            }
         }
 
         public void OnDraw(System.Drawing.Graphics graphics, int frameWidth, int frameHeight)
@@ -84,7 +93,7 @@ namespace ArkanoidGame.Objects
 
         private Bitmap objectTexture;
 
-        public Paddle(int positionX, int positionY)
+        public PlayerPaddle(int positionX, int positionY)
         {
             this.PositionX = positionX;
             this.PositionY = positionY;
