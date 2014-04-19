@@ -32,8 +32,6 @@ namespace ArkanoidGame.Framework
 
         private long FPSLastUpdate; //се користи за броење FPS
 
-        private long FPSTimeLastFrame; //време кога е исцртан последниот frame
-
         private IGame game; //играта која треба да се стартува
 
 
@@ -62,7 +60,7 @@ namespace ArkanoidGame.Framework
         /// </summary>
         private bool Initialized { get; set; }
 
-        public GameFramework(IGame game)
+        public GameFramework(IGame game, int gameUpdatePeriod)
         {
             this.IsExceptionRaised = false;
             this.game = game;
@@ -70,13 +68,12 @@ namespace ArkanoidGame.Framework
             this.Initialized = false;
             this.IsFrameworkRunning = false;
             this.FPSCounter = 0;
-            this.gameUpdatePeriod = 40; //25 updates per second
+            this.gameUpdatePeriod = gameUpdatePeriod;
             this.PreviousFPSCounterValue = FPSTarget;
             this.FPSLastUpdate = 0;
             this.gamePanel = null;
             this.IsGameRunning = false;
             this.IsRendererRunning = true;
-            this.FPSTimeLastFrame = 0;
         }
 
         /// <summary>
@@ -94,20 +91,14 @@ namespace ArkanoidGame.Framework
                 graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
                 if (FPSLastUpdate == 0)
                     FPSLastUpdate = DateTime.Now.ToFileTimeUtc();
-                if (FPSTimeLastFrame == 0)
-                    FPSTimeLastFrame = DateTime.Now.ToFileTimeUtc();
 
                 if (!IsGameRunning)
                 {
                     graphics.FillRectangle(Brushes.Black, 0, 0, gamePanel.Width, gamePanel.Height);
                 }
-                else if (IsRendererRunning)
-                {
-                    game.OnDraw(graphics, frameWidth, frameHeight);
-                }
                 else
                 {
-                    return;
+                    game.OnDraw(graphics, frameWidth, frameHeight);
                 }
 
                 //FPS Counter Logic
@@ -136,16 +127,6 @@ namespace ArkanoidGame.Framework
                 graphics.DrawString(string.Format("{0} FPS", PreviousFPSCounterValue),
                     SystemFonts.CaptionFont, Brushes.Yellow, frameWidth * 0.01f, frameHeight * 0.01f);
                 FPSCounter++;
-
-                //Колку време поминало од последниот frame
-                int deltaFPSFrameTime = (int)((DateTime.Now.ToFileTimeUtc() - FPSTimeLastFrame)
-                    / MillisecondInFileTime);
-              
-                Thread.Sleep(Math.Max(1, 8 - deltaFPSFrameTime));
-
-                FPSTimeLastFrame = DateTime.Now.ToFileTimeUtc();
-
-                gamePanel.Refresh();
             }
             catch (Exception e)
             {
@@ -235,6 +216,11 @@ namespace ArkanoidGame.Framework
                     continue;
                 }
 
+                if (IsRendererRunning)
+                {
+                    gamePanel.Invalidate();
+                }
+
                 long timeUpdateBegin = DateTime.Now.ToFileTimeUtc() / MillisecondInFileTime;
                 game.OnUpdate();
 
@@ -245,26 +231,28 @@ namespace ArkanoidGame.Framework
 
                 long realElapsedTime = (timeUpdateEnd - timeGameStarted) / gameUpdatePeriod;
                 gameLag = realElapsedTime - gameElapsedTime;
-               
+
                 /* Синхронизација на време. Ако gameLag == -1, тогаш времето во играта 
                  * избрзува за онолку време колку што преостанало од gameUpdatePeriod.
                  */
                 if (gameLag == -1)
                 {
-                    if (!IsRendererRunning)
-                    {
-                        IsRendererRunning = true; //ако претходно бил исклучен
-                        gamePanel.Invalidate();
-                    }
+                    IsRendererRunning = true;
                     Thread.Sleep(remainingTime);
                 }
-                else if (gameLag > 0)
+                else if (gameLag < -1)
+                {
+                    //Времето во играта избрзува премногу
+                    IsRendererRunning = true;
+                    Thread.Sleep(gameUpdatePeriod);
+                }
+                else
                 {
                     IsRendererRunning = false;
 
-                    /* времето во играта се пресметува како број на периоди од 40 ms (милисекунди)
+                    /* времето во играта се пресметува како број на периоди од gameUpdatePeriod
                      * Ако дојде до десинхронизација помеѓу реалното време и времето во играта
-                     * тогаш се исклучува системот за рендерирање и се повикува
+                     * тогаш се исклучува рендерирањето и се повикува
                      * Update се додека времето во играта не го достигне реалното време.                     * 
                      */
                 }

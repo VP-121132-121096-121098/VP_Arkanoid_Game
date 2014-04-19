@@ -17,7 +17,7 @@ namespace ArkanoidGame.Interfaces
         /// <summary>
         /// Колку периоди од 40 ms поминале во играта
         /// </summary>
-        long ElapsedTime { get; }
+        long ElapsedTime { get; set; }
 
         /// <summary>
         /// Состојба во која се наоѓа играта
@@ -33,5 +33,8 @@ namespace ArkanoidGame.Interfaces
         void OnDraw(Graphics graphics, int frameWidth, int frameHeight);
         
         void OnUpdate();
+
+        int VirtualGameWidth { get; }
+        int VirtualGameHeight { get; } //Играта има посебни единици за должина од прозорецот на кој е црта
     }
 }

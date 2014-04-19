@@ -53,12 +53,13 @@
     <Compile Include="AbstractGameWindow.designer.cs">
       <DependentUpon>AbstractGameWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="Framework\GameUnitConversion.cs" />
     <Compile Include="Framework\StaticBitmapFactory.cs" />
-    <Compile Include="GameLogic\GameArkanoid.cs" />
+    <Compile Include="GameArkanoid.cs" />
     <Compile Include="Framework\GameFramework.cs" />
     <Compile Include="Framework\KeyStateInfo.cs" />
     <Compile Include="Framework\Logger.cs" />
-    <Compile Include="GameLogic\Vector2D.cs" />
+    <Compile Include="Framework\Vector2D.cs" />
     <Compile Include="GamePanel.cs">
       <SubType>Component</SubType>
     </Compile>

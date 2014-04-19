@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace ArkanoidGame.GameLogic
+namespace ArkanoidGame.Framework
 {
     public class Vector2D
     {
         //koordinati
-        public float X { get; set; }
-        public float Y { get; set; }
+        public double X { get; set; }
+        public double Y { get; set; }
 
-        public Vector2D(float x, float y)
+        public Vector2D(double x, double y)
         {
             this.X = x;
             this.Y = y;
@@ -29,7 +29,7 @@ namespace ArkanoidGame.GameLogic
         }
 
         //dot product
-        public static float operator *(Vector2D vec1, Vector2D vec2)
+        public static double operator *(Vector2D vec1, Vector2D vec2)
         {
             return vec1.X * vec2.X + vec1.Y * vec2.Y;
         }
@@ -49,7 +49,7 @@ namespace ArkanoidGame.GameLogic
         //vector and scalar multiplication
         public static Vector2D operator *(Vector2D vec, double scalar)
         {
-            return new Vector2D(vec.X * (float)scalar, vec.Y * (float)scalar);
+            return new Vector2D(vec.X * scalar, vec.Y * scalar);
         }
 
         public static Vector2D operator *(double scalar, Vector2D vec)
@@ -59,20 +59,19 @@ namespace ArkanoidGame.GameLogic
 
         public static Vector2D operator -(Vector2D vec)
         {
-            vec.X = -vec.X;
-            vec.Y = -vec.Y;
-            return vec;
+            Vector2D temp = new Vector2D(-vec.X, -vec.Y);
+            return temp;
         }
 
         //division with scalar
         public static Vector2D operator /(Vector2D vec, double scalar)
         {
-            return new Vector2D(vec.X / (float)scalar, vec.Y / (float)scalar);
+            return new Vector2D(vec.X / scalar, vec.Y / scalar);
         }
 
-        public float Magnitude()
+        public double Magnitude()
         {
-            return (float)Math.Sqrt(this * this);
+            return Math.Sqrt(this * this);
         }
     }
 }

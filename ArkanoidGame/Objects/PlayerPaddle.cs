@@ -1,5 +1,4 @@
 ﻿using ArkanoidGame.Framework;
-using ArkanoidGame.GameLogic;
 using ArkanoidGame.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -15,68 +14,139 @@ namespace ArkanoidGame.Objects
     {
         // брзина V, забрзување a, време t, координата X, почетна брзина V0...
         // Тогаш
-        // V(t) = V0 + a * t
-        // a = (V(t) - V0) / t
-        // X(t) = X0 + V0 * t + a * t^2 / 2 //Добиена со интегрирање по t на првата формула
-        // Од втората и третата следува X(t) = X0 + (V + V0) * t / 2
+        // V(t) = V0 + a * dt
+        // a = (V(t) - V0) / dt 
+        // X(t) = X0 + V0 * dt + a * dt^2 / 2 //Добиена со интегрирање по t на првата формула
+        // Од втората и третата следува X(t) = X0 + (V + V0) * dt / 2
+        // Во оваа игра секогаш dt = 1, бидејќи времето се смета како број на повикувања
+        // на update. (број на gameUpdatePeriods)
 
-        private Vector2D velocity; /* брзината ќе биде изминат пат (% од ширината
-                                    * на прозорецот) во секунда */
-        private Vector2D maximumVelocity;
-        private Vector2D acceleration;
+        private Vector2D velocity; /* брзината ќе биде изминат пат (виртуелни единици во секунда) */
+        private Vector2D maxVelocity;
+        private Vector2D acceleration; /* забрзување -> виртуелна единица во секунда на квадрат */
 
-        private long SecondInFileTime { get { return 10000000; } }
+        public Vector2D Position { get; set; }
 
-        private readonly Vector2D maxAcceleration;
+        private int gameUpdatePeriod; //во милисекунди
+
+        private double secondIngameUpdatePeriod;
+
+        public double PaddleWidth { get; set; } 
+        public double PaddleHeight { get; private set; } 
+
+        private int virtualGameWidth;
+        private int virtualGameHeight;
+
+        private Bitmap objectTexture;
+
+        private int lastFrameWidth, lastFrameHeight;
 
         public void OnUpdate(IEnumerable<IGameObject> objects, long gameElapsedTime)
         {
+
+            IKeyState leftArrowState = KeyStateInfo.GetAsyncKeyState(Keys.Left);
+            IKeyState rightArrowState = KeyStateInfo.GetAsyncKeyState(Keys.Right);
+
+            Vector2D velocity_0 = velocity;
+
+            if (leftArrowState.IsPressed && rightArrowState.IsPressed)
+            {
+                if (velocity.Magnitude() < acceleration.Magnitude() * 1.5)
+                    velocity = new Vector2D(0, 0);
+                else if (velocity.X > 0)
+                    velocity -= 1.5 * acceleration;
+                else if (velocity.X < 0)
+                    velocity += 1.5 * acceleration;
+            }
+            else if (leftArrowState.IsPressed)
+            {
+                this.velocity -= acceleration;
+                if (velocity.X > 0)
+                {
+                    this.velocity -= acceleration;
+                }
+                if (velocity.Magnitude() > maxVelocity.Magnitude())
+                {
+                    velocity = -maxVelocity;
+                }
+            }
+            else if (rightArrowState.IsPressed)
+            {
+                this.velocity += acceleration;
+                if (velocity.X < 0)
+                {
+                    this.velocity += acceleration;
+                }
+                if (velocity.Magnitude() > maxVelocity.Magnitude())
+                {
+                    velocity = maxVelocity;
+                }
+            }
+            else if (!rightArrowState.IsPressed && !leftArrowState.IsPressed)
+            {
+                if (velocity.Magnitude() < acceleration.Magnitude())
+                    velocity = new Vector2D(0, 0);
+                else if (velocity.X > 0)
+                    velocity -= acceleration;
+                else if (velocity.X < 0)
+                    velocity += acceleration;
+            }
+
+
+            Position += (velocity + velocity_0) / 2;
+
+            if (Position.X > virtualGameWidth - 10 - PaddleWidth)
+                Position.X = virtualGameWidth - 10 - PaddleWidth;
+            else if (Position.X < 5)
+                Position.X = 5;
+
+            //collision detection with ball
+            //to be implemented
         }
 
         public void OnDraw(System.Drawing.Graphics graphics, int frameWidth, int frameHeight)
         {
+            double realPositionX = 0, realPositionY = 0;
+            GameUnitConversion.ConvertGameUnits(Position.X, Position.Y, out realPositionX, out realPositionY,
+                virtualGameWidth, virtualGameHeight, frameWidth, frameHeight);
 
-            int width = (int)Math.Round(frameWidth * PaddleWidth / 100);
-            int height = (int)Math.Round(frameHeight * PaddleHeight / 100);
+            int width = (int)Math.Round(GameUnitConversion.ConvertLength(
+                PaddleWidth, virtualGameWidth, virtualGameHeight, frameWidth, frameHeight));
+            int height = (int)Math.Round(GameUnitConversion.ConvertLength(
+                PaddleHeight, virtualGameWidth, virtualGameHeight, frameWidth, frameHeight));
 
-            if (objectTexture == null)
+            if (lastFrameWidth == -1 || lastFrameHeight == -1)
             {
-                StaticBitmapFactory.LoadBitmapIntoMainMemory("//Resources//Images//paddleRed.png",
-                    width, height, "PaddleTexture");
-                objectTexture = StaticBitmapFactory.GetBitmapFromMainMemory("PaddleTexture");
+                StaticBitmapFactory.LoadBitmapIntoMainMemory("\\Resources\\Images\\paddleRed.png",
+                    width, height, "PlayerPaddle");
+                objectTexture = StaticBitmapFactory.GetBitmapFromMainMemory("PlayerPaddle");
             }
-            else if (lastFrameWidth != frameWidth || lastFrameHeight != frameHeight)
+            else if(lastFrameWidth != frameWidth || lastFrameHeight != frameHeight)
             {
-                objectTexture = StaticBitmapFactory.GetBitmapFromMainMemory("PaddleTexture", width, height);
+                StaticBitmapFactory.ChangeBitmapResolution("PlayerPaddle", width, height);
+                objectTexture = StaticBitmapFactory.GetBitmapFromMainMemory("PlayerPaddle");
             }
+
+            graphics.DrawImage(objectTexture, (float)realPositionX, (float)realPositionY, width, height);
             lastFrameWidth = frameWidth;
             lastFrameHeight = frameHeight;
-
-            graphics.DrawImage(objectTexture, Position.X, Position.Y,
-                width, height);
         }
 
-        public Vector2D Position { get; set; }
-
-
-        public float PaddleWidth { get; set; } //in %
-        public float PaddleHeight { get; private set; } //in %
-
-        private int lastFrameWidth;
-        private int lastFrameHeight;
-
-        private Bitmap objectTexture;
-
-        public PlayerPaddle(int positionX, int positionY)
+        public PlayerPaddle(Vector2D positionVector, int gameUpdatePeriod,
+            int virtualGameWidth, int virutalGameHeight)
         {
-            this.Position = new Vector2D(positionX, positionY);
-            PaddleWidth = 9.7f;
-            PaddleHeight = 3.5f;
+            this.virtualGameWidth = virtualGameWidth;
+            this.virtualGameHeight = virutalGameHeight;
+            this.Position = new Vector2D(positionVector);
+            this.gameUpdatePeriod = gameUpdatePeriod;
+            PaddleWidth = 380;
+            PaddleHeight = 85;
             objectTexture = null;
             velocity = new Vector2D(0, 0);
-            maximumVelocity = new Vector2D(90, 0);
-            acceleration = new Vector2D(0, 0);
-            maxAcceleration = new Vector2D(150, 0);
+            maxVelocity = new Vector2D(70, 0);
+            acceleration = new Vector2D(10, 0);
+            this.secondIngameUpdatePeriod = 1000.0f / gameUpdatePeriod;
+            lastFrameHeight = lastFrameWidth = -1;
         }
     }
 }

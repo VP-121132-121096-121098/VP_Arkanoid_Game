@@ -1,5 +1,5 @@
-﻿using ArkanoidGame.Framework;
-using ArkanoidGame.GameLogic;
+﻿using ArkanoidGame;
+using ArkanoidGame.Framework;
 using System;
 using System.Threading;
 using System.Windows.Forms;
@@ -15,9 +15,11 @@ namespace ArkanoidGameWindow
 
         private static void StartNewGame(GameWindow window)
         {
-            GameArkanoid game = new GameArkanoid(null);
+            int gameUpdatePeriod = 16; //60 FPS
+            //int gameUpdatePeriod = 9; //debugging;
+            GameArkanoid game = new GameArkanoid(null, gameUpdatePeriod);
             game.GameState = new ArkanoidStateMainMenu(game);
-            window.StartGameFramework(new GameFramework(game));
+            window.StartGameFramework(new GameFramework(game, gameUpdatePeriod));
         }
 
         /// <summary>

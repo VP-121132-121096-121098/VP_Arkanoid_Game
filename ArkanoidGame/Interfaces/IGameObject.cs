@@ -1,4 +1,4 @@
-﻿using ArkanoidGame.GameLogic;
+﻿using ArkanoidGame.Framework;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
