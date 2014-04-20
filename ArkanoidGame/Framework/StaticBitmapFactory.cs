@@ -145,12 +145,26 @@ namespace ArkanoidGame.Framework
         /// <param name="newBitmapRelativePath"></param>
         /// <param name="width"></param>
         /// <param name="height"></param>
-        public static void ChangeBitmapResolution(string uniqueAlias, int width, int height)
+        public static void ResizeBitmap(string uniqueAlias, int width, int height)
         {
             string relativePath = null;
             mapAliasRelativePath.TryGetValue(uniqueAlias, out relativePath);
             RemoveBitmapFromMainMemory(uniqueAlias);
             LoadBitmapIntoMainMemory(relativePath, width, height, uniqueAlias);            
+        }
+
+        public static void AddBitmapInMemory(Bitmap bitmap, int newWidth, int newHeight, string uniqueKey)
+        {
+            Bitmap newBitmap = new Bitmap(newWidth, newHeight);
+            Graphics g = Graphics.FromImage(newBitmap);
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+            g.DrawImage(bitmap, 0, 0, newWidth, newHeight);
+
+            lock (objectLock)
+            {
+                bitmapsInMemory.Add(uniqueKey, newBitmap);
+            }
         }
 
         /// <summary>
@@ -185,7 +199,7 @@ namespace ArkanoidGame.Framework
             bitmapsInMemory.TryGetValue(uniqueAlias, out temp);
             if (temp.Width != width || temp.Height != height)
             {
-                ChangeBitmapResolution(uniqueAlias, width, height);
+                ResizeBitmap(uniqueAlias, width, height);
             }
             bitmapsInMemory.TryGetValue(uniqueAlias, out temp);
             return temp;

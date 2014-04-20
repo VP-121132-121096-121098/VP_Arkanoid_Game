@@ -126,7 +126,7 @@ namespace ArkanoidGame.Objects
                 objectTexture = StaticBitmapFactory.GetBitmapFromMainMemory("PlayerPaddle");
                 if (objectTexture.Width != width || objectTexture.Height != height)
                 {
-                    StaticBitmapFactory.ChangeBitmapResolution("PlayerPaddle", width, height);
+                    StaticBitmapFactory.ResizeBitmap("PlayerPaddle", width, height);
                     objectTexture = StaticBitmapFactory.GetBitmapFromMainMemory("PlayerPaddle");
                 }
             }
@@ -151,6 +151,15 @@ namespace ArkanoidGame.Objects
             acceleration = new Vector2D(10, 0);
             this.secondIngameUpdatePeriod = 1000.0f / gameUpdatePeriod;
             lastFrameHeight = lastFrameWidth = -1;
+        }
+
+
+        public void OnResolutionChanged(int newWidth, int newHeight)
+        {
+            /* бидејќи поради бонусите ширината на овој
+             * објект може да се менува, оваа функционалност е 
+             * имплементирана во OnDraw методот
+             */
         }
     }
 }

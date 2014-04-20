@@ -34,6 +34,8 @@ namespace ArkanoidGame.Framework
 
         private IGame game; //играта која треба да се стартува
 
+        private int lastFrameWidth;
+        private int lastFrameHeight;
 
         /// <summary>
         /// Панелот на кој се црта
@@ -64,7 +66,7 @@ namespace ArkanoidGame.Framework
         {
             this.IsExceptionRaised = false;
             this.game = game;
-
+            this.lastFrameHeight = this.lastFrameWidth = 0;
             this.Initialized = false;
             this.IsFrameworkRunning = false;
             this.FPSCounter = 0;
@@ -98,6 +100,10 @@ namespace ArkanoidGame.Framework
                 }
                 else
                 {
+                    if (lastFrameHeight != frameHeight || lastFrameWidth != frameWidth)
+                    {
+                        game.OnResolutionChanged(frameWidth, frameHeight);
+                    }
                     game.OnDraw(graphics, frameWidth, frameHeight);
                 }
 
@@ -127,6 +133,9 @@ namespace ArkanoidGame.Framework
                 graphics.DrawString(string.Format("{0} FPS", PreviousFPSCounterValue),
                     SystemFonts.CaptionFont, Brushes.Yellow, frameWidth * 0.01f, frameHeight * 0.01f);
                 FPSCounter++;
+
+                lastFrameWidth = frameWidth;
+                lastFrameHeight = frameHeight;
             }
             catch (Exception e)
             {
@@ -176,6 +185,12 @@ namespace ArkanoidGame.Framework
             this.InitializeFramework();
 
             this.IsFrameworkRunning = true;
+            this.lastFrameWidth = gamePanel.Width;
+            this.lastFrameHeight = gamePanel.Height;
+
+            /* се менува од 0 x 0, на gamePanel.Width x gamePanel.Height :) */
+            game.OnResolutionChanged(gamePanel.Width, gamePanel.Height);
+ 
             gamePanel.Invalidate();
 
             try
@@ -232,11 +247,32 @@ namespace ArkanoidGame.Framework
                 long realElapsedTime = (timeUpdateEnd - timeGameStarted) / gameUpdatePeriod;
                 gameLag = realElapsedTime - gameElapsedTime;
 
-                /* Синхронизација на време. Ако gameLag == -1, тогаш времето во играта 
-                 * избрзува за онолку време колку што преостанало од gameUpdatePeriod.
-                 */
-                if (gameLag == -1)
+
+                if (!game.IsTimesynchronizationImportant)
                 {
+                    gameElapsedTime = realElapsedTime;
+                    IsRendererRunning = true;
+
+                    /* бидејќи се бројат цел број пати на изминати периоди
+                     * ако останало време поголемо од 0, тогаш треба да се почека
+                     * да помине цел период и во реално време (онолку колку што
+                     * преостанало од последниот период -> remainingTime).
+                     * Во играта истиот тој период е целосно изминат, па затоа го додаваме
+                     * во вкупниот број на поминати периоди.
+                     */
+                    if (remainingTime > 0)
+                    {
+                        gameElapsedTime++;
+                        Thread.Sleep(remainingTime);
+                    }
+                    gameLag = 0;
+
+                }
+                else if (gameLag == -1)
+                {
+                    /* Синхронизација на време. Ако gameLag == -1, тогаш времето во играта 
+                     * избрзува за онолку време колку што преостанало од gameUpdatePeriod.
+                     */
                     IsRendererRunning = true;
                     Thread.Sleep(remainingTime);
                 }

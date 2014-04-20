@@ -12,20 +12,25 @@ namespace ArkanoidGame
 {
     public class ArkanoidStateMainMenu : IGameState
     {
+        private IDictionary<char, Bitmap> orangeAlphabet;
+        private IDictionary<char, Bitmap> blueAlphabet;
+
+        private bool areAlphabetsReady;
+
+        private IDictionary<string, Bitmap> readyStrings; //опции во менито
+
         public void OnDraw(Graphics graphics, int frameWidth, int frameHeight)
         {
-            if (MenuBackground == null)
-            {
-                StaticBitmapFactory.LoadBitmapIntoMainMemory("\\Resources\\Images\\background.jpg",
-                    frameWidth, frameHeight, "MenuBackground");
-                MenuBackground = StaticBitmapFactory.GetBitmapFromMainMemory("MenuBackground");
-            }
-            else if (MenuBackground.Height != frameHeight || MenuBackground.Width != frameWidth)
-            {
-                MenuBackground = StaticBitmapFactory.GetBitmapFromMainMemory("MenuBackground", frameWidth, frameHeight);
-            }
+            if (MenuBackground != null)
+                graphics.DrawImage(MenuBackground, 0, 0, frameWidth, frameHeight);
 
-            graphics.DrawImage(MenuBackground, 0, 0, frameWidth, frameHeight);
+            Bitmap startGameString = null;
+            if (readyStrings != null && readyStrings.TryGetValue("start game", out startGameString))
+            {
+                Vector2D position = new Vector2D((frameWidth - startGameString.Width) / 2,
+                    ((frameHeight - 8 * startGameString.Height) / 2));
+                graphics.DrawImage(startGameString, (float)position.X, (float)position.Y);
+            }
         }
 
         public void OnUpdate(IEnumerable<IGameObject> gameObjects, long gameElapsedTime)
@@ -42,24 +47,95 @@ namespace ArkanoidGame
 
         public ArkanoidStateMainMenu(IGame game)
         {
+            areAlphabetsReady = false;
             MenuBackground = null;
             this.Game = game;
+            this.InitializeAlphabet();
+            areAlphabetsReady = true;
+        }
+
+        public bool IsTimesynchronizationImportant
+        {
+            get { return false; }
+        }
+
+
+        public void OnResolutionChanged(int newWidth, int newHeight)
+        {
+            if (MenuBackground == null)
+            {
+                StaticBitmapFactory.LoadBitmapIntoMainMemory("\\Resources\\Images\\background.jpg",
+                    newWidth, newHeight, "MenuBackground");
+                MenuBackground = StaticBitmapFactory.GetBitmapFromMainMemory("MenuBackground");
+            }
+            else if (MenuBackground.Height != newHeight || MenuBackground.Width != newWidth)
+            {
+                MenuBackground = StaticBitmapFactory.GetBitmapFromMainMemory("MenuBackground", newWidth, newHeight);
+            }
+        }
+
+        private void InitializeAlphabet()
+        {
+            blueAlphabet = new Dictionary<char, Bitmap>();
+            orangeAlphabet = new Dictionary<char, Bitmap>();
+
+            Bitmap bitmapBlueAlphabet = StaticBitmapFactory.GetBitmapFromFile("\\Resources\\Images\\alphabet_blue.png",
+                480, 25);
+            Bitmap bitmapOrangeAlphabet = StaticBitmapFactory.GetBitmapFromFile("\\Resources\\Images\\alphabet_orange.png",
+                480, 25);
+
+            int offsetIncrement = bitmapBlueAlphabet.Width / 26;
+            int offset = 0;
+            for (char i = 'A'; i <= 'Z'; i++)
+            {
+                orangeAlphabet.Add(i, bitmapOrangeAlphabet.Clone(new Rectangle(offset + 1, 0, offsetIncrement - 2,
+                    bitmapOrangeAlphabet.Height), System.Drawing.Imaging.PixelFormat.Format32bppPArgb));
+                blueAlphabet.Add(i, bitmapBlueAlphabet.Clone(new Rectangle(offset + 1, 0, offsetIncrement - 2,
+                    bitmapBlueAlphabet.Height), System.Drawing.Imaging.PixelFormat.Format32bppPArgb));
+                offset += offsetIncrement;
+            }
+        }
+
+        private Bitmap DrawOrangeString(string str)
+        {
+            int charWidth = orangeAlphabet['A'].Width;
+            int charHeight = orangeAlphabet['A'].Height;
+            Bitmap bitmapString = new Bitmap(charWidth * str.Length, charHeight);
+
+            Graphics g = Graphics.FromImage(bitmapString);
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
+
+            int offset = 0;
+            for (int i = 0; i < str.Length; i++)
+            {
+                if (char.IsWhiteSpace(str[i]))
+                {
+                    offset += charWidth;
+                }
+                else
+                {
+                    Bitmap temp = orangeAlphabet[char.ToUpper(str[i])];
+                    g.DrawImage(temp, offset, 0);
+                    offset += charWidth;
+                }
+            }
+
+            return bitmapString;
         }
     }
 
     public class GameArkanoid : IGame
     {
-        public string Name { get; private set; }        
+        //Стартна позиција на играчот (1750, 2010);
+
+        public string Name { get; private set; }
 
         public IGameState GameState { get; set; }
 
         public void OnDraw(Graphics graphics, int frameWidth, int frameHeight)
         {
             this.GameState.OnDraw(graphics, frameWidth, frameHeight);
-            obj.OnDraw(graphics, frameWidth, frameHeight);
         }
-
-        private IGameObject obj;
 
         //во милисекунди
         private int gameUpdatePeriod;
@@ -78,14 +154,25 @@ namespace ArkanoidGame
             Name = "Arkanoid";
             VirtualGameWidth = 3840;
             VirtualGameHeight = 2160;
-            obj = new PlayerPaddle(new Vector2D(1750, 2010), gameUpdatePeriod, VirtualGameWidth, VirtualGameHeight);
         }
 
         public void OnUpdate()
         {
             ElapsedTime++; //поминал еден период
             GameState.OnUpdate(null, ElapsedTime);
-            obj.OnUpdate(null, ElapsedTime);
+        }
+
+        /// <summary>
+        /// Овде се менуваат сите слики што се претходно биле 
+        /// вчитани во главната меморија, но во друга резолуција.
+        /// Бидејќи прозорецот има друга резолуција, мора и сликите
+        /// да се вчитаат во друга резолуција.
+        /// </summary>
+        /// <param name="newWidth"></param>
+        /// <param name="newHeight"></param>
+        public void OnResolutionChanged(int newWidth, int newHeight)
+        {
+            this.GameState.OnResolutionChanged(newWidth, newHeight);
         }
 
         public long ElapsedTime { get; set; }
@@ -98,5 +185,25 @@ namespace ArkanoidGame
         public int VirtualGameWidth { get; private set; }
 
         public int VirtualGameHeight { get; private set; }
+
+        /// <summary>
+        /// Пример во главното мени не е важно дали ќе задоцни времето во играта. Пример корисникот
+        /// отворил нова форма од главното мени, но формата е отворена од методот update, па 
+        /// целото време во кое што е отворена формата ќе се смета за еден период. Со ова
+        /// property му кажуваме на главниот loop дека нема потреба да повикува update 10000 
+        /// пати (ќе има голем лаг во овој случај) бидејќи во спротивно сликата ќе биде
+        /// замрзната подолго време. Од друга страна додека се игра многу е важно
+        /// времето да биде синхронизирано, инаку ќе дојде до различна брзина на анимациите
+        /// на различни компјутери. Ако хардверот не може да ги изврши сите пресметки
+        /// во дадениот период тогаш не се рендерира и ќе дојде до секцање во играта,
+        /// но бројот на поминати периоди најверојатно ќе остане ист.
+        /// </summary>
+        public bool IsTimesynchronizationImportant
+        {
+            get
+            {
+                return GameState.IsTimesynchronizationImportant;
+            }
+        }
     }
 }
