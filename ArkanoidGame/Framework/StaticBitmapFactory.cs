@@ -45,7 +45,7 @@ namespace ArkanoidGame.Framework
      *                                                                        *
      **************************************************************************/
 
-    public class StaticBitmapFactory
+    public class BitmapExtensionMethods
     {
 
         /// <summary>
@@ -153,18 +153,15 @@ namespace ArkanoidGame.Framework
             LoadBitmapIntoMainMemory(relativePath, width, height, uniqueAlias);            
         }
 
-        public static void AddBitmapInMemory(Bitmap bitmap, int newWidth, int newHeight, string uniqueKey)
+        public static Bitmap ResizeBitmap(Bitmap bitmapToResize, int newWidth, int newHeight, string uniqueKey)
         {
             Bitmap newBitmap = new Bitmap(newWidth, newHeight);
             Graphics g = Graphics.FromImage(newBitmap);
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
             g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-            g.DrawImage(bitmap, 0, 0, newWidth, newHeight);
+            g.DrawImage(bitmapToResize, 0, 0, newWidth, newHeight);
 
-            lock (objectLock)
-            {
-                bitmapsInMemory.Add(uniqueKey, newBitmap);
-            }
+            return newBitmap;
         }
 
         /// <summary>
@@ -208,7 +205,7 @@ namespace ArkanoidGame.Framework
         private static Dictionary<string, Bitmap> bitmapsInMemory; //map <uniqueAlias, Bitmap>
         private static Dictionary<string, string> mapAliasRelativePath; // <alias, relativePath>
 
-        static StaticBitmapFactory()
+        static BitmapExtensionMethods()
         {
             bitmapsInMemory = new Dictionary<string, Bitmap>();
             mapAliasRelativePath = new Dictionary<string, string>();
