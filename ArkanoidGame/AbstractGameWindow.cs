@@ -66,6 +66,13 @@ namespace ArkanoidGame
                 return; /* Претходно бил повикан Dispose() методот.
                          * Не прави ништо во овој случај, формата е веќе затворена */
             }
+            catch (Exception)
+            {
+                if (!this.IsDisposed)
+                {
+                    this.CloseAsync();
+                }
+            }
         }
 
         /// <summary>
