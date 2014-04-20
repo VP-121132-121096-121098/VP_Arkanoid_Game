@@ -48,6 +48,8 @@ namespace ArkanoidGame
             MenuBackground = null;
             this.Game = game;
             this.InitializeAlphabet();
+            readyStrings = new Dictionary<string, Bitmap>();
+            readyStrings.Add("start game", DrawOrangeString("start game"));
         }
 
         public bool IsTimesynchronizationImportant

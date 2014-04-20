@@ -153,7 +153,7 @@ namespace ArkanoidGame.Framework
             LoadBitmapIntoMainMemory(relativePath, width, height, uniqueAlias);            
         }
 
-        public static Bitmap ResizeBitmap(Bitmap bitmapToResize, int newWidth, int newHeight, string uniqueKey)
+        public static Bitmap ResizeBitmap(Bitmap bitmapToResize, int newWidth, int newHeight)
         {
             Bitmap newBitmap = new Bitmap(newWidth, newHeight);
             Graphics g = Graphics.FromImage(newBitmap);
