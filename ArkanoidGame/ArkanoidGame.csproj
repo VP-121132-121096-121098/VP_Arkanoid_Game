@@ -102,6 +102,32 @@
     <Content Include="Resources\Images\background.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Resources\Images\ballBlue.png" />
+    <Content Include="Resources\Images\ballGrey.png" />
+    <Content Include="Resources\Images\element_blue_rectangle.png" />
+    <Content Include="Resources\Images\element_blue_rectangle_glossy.png" />
+    <Content Include="Resources\Images\element_blue_square.png" />
+    <Content Include="Resources\Images\element_blue_square_glossy.png" />
+    <Content Include="Resources\Images\element_green_rectangle.png" />
+    <Content Include="Resources\Images\element_green_rectangle_glossy.png" />
+    <Content Include="Resources\Images\element_green_square.png" />
+    <Content Include="Resources\Images\element_green_square_glossy.png" />
+    <Content Include="Resources\Images\element_grey_rectangle.png" />
+    <Content Include="Resources\Images\element_grey_rectangle_glossy.png" />
+    <Content Include="Resources\Images\element_grey_square.png" />
+    <Content Include="Resources\Images\element_grey_square_glossy.png" />
+    <Content Include="Resources\Images\element_purple_cube_glossy.png" />
+    <Content Include="Resources\Images\element_purple_rectangle.png" />
+    <Content Include="Resources\Images\element_purple_rectangle_glossy.png" />
+    <Content Include="Resources\Images\element_purple_square.png" />
+    <Content Include="Resources\Images\element_red_rectangle.png" />
+    <Content Include="Resources\Images\element_red_rectangle_glossy.png" />
+    <Content Include="Resources\Images\element_red_square.png" />
+    <Content Include="Resources\Images\element_red_square_glossy.png" />
+    <Content Include="Resources\Images\element_yellow_rectangle.png" />
+    <Content Include="Resources\Images\element_yellow_rectangle_glossy.png" />
+    <Content Include="Resources\Images\element_yellow_square.png" />
+    <Content Include="Resources\Images\element_yellow_square_glossy.png" />
     <Content Include="Resources\Images\paddleBlue.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
