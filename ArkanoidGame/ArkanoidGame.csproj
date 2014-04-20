@@ -54,7 +54,7 @@
       <DependentUpon>AbstractGameWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="Framework\GameUnitConversion.cs" />
-    <Compile Include="Framework\StaticBitmapFactory.cs" />
+    <Compile Include="Framework\BitmapExtensionMethods.cs" />
     <Compile Include="GameArkanoid.cs" />
     <Compile Include="Framework\GameFramework.cs" />
     <Compile Include="Framework\KeyStateInfo.cs" />

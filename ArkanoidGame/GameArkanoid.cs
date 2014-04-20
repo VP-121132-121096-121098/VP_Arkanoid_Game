@@ -15,8 +15,6 @@ namespace ArkanoidGame
         private IDictionary<char, Bitmap> orangeAlphabet;
         private IDictionary<char, Bitmap> blueAlphabet;
 
-        private bool areAlphabetsReady;
-
         private IDictionary<string, Bitmap> readyStrings; //опции во менито
 
         public void OnDraw(Graphics graphics, int frameWidth, int frameHeight)
@@ -47,11 +45,9 @@ namespace ArkanoidGame
 
         public ArkanoidStateMainMenu(IGame game)
         {
-            areAlphabetsReady = false;
             MenuBackground = null;
             this.Game = game;
             this.InitializeAlphabet();
-            areAlphabetsReady = true;
         }
 
         public bool IsTimesynchronizationImportant
@@ -64,13 +60,13 @@ namespace ArkanoidGame
         {
             if (MenuBackground == null)
             {
-                StaticBitmapFactory.LoadBitmapIntoMainMemory("\\Resources\\Images\\background.jpg",
+                BitmapExtensionMethods.LoadBitmapIntoMainMemory("\\Resources\\Images\\background.jpg",
                     newWidth, newHeight, "MenuBackground");
-                MenuBackground = StaticBitmapFactory.GetBitmapFromMainMemory("MenuBackground");
+                MenuBackground = BitmapExtensionMethods.GetBitmapFromMainMemory("MenuBackground");
             }
             else if (MenuBackground.Height != newHeight || MenuBackground.Width != newWidth)
             {
-                MenuBackground = StaticBitmapFactory.GetBitmapFromMainMemory("MenuBackground", newWidth, newHeight);
+                MenuBackground = BitmapExtensionMethods.GetBitmapFromMainMemory("MenuBackground", newWidth, newHeight);
             }
         }
 
@@ -79,9 +75,9 @@ namespace ArkanoidGame
             blueAlphabet = new Dictionary<char, Bitmap>();
             orangeAlphabet = new Dictionary<char, Bitmap>();
 
-            Bitmap bitmapBlueAlphabet = StaticBitmapFactory.GetBitmapFromFile("\\Resources\\Images\\alphabet_blue.png",
+            Bitmap bitmapBlueAlphabet = BitmapExtensionMethods.GetBitmapFromFile("\\Resources\\Images\\alphabet_blue.png",
                 480, 25);
-            Bitmap bitmapOrangeAlphabet = StaticBitmapFactory.GetBitmapFromFile("\\Resources\\Images\\alphabet_orange.png",
+            Bitmap bitmapOrangeAlphabet = BitmapExtensionMethods.GetBitmapFromFile("\\Resources\\Images\\alphabet_orange.png",
                 480, 25);
 
             int offsetIncrement = bitmapBlueAlphabet.Width / 26;

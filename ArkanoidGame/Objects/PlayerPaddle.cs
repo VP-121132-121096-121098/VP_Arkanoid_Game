@@ -117,17 +117,17 @@ namespace ArkanoidGame.Objects
 
             if (lastFrameWidth == -1 || lastFrameHeight == -1)
             {
-                StaticBitmapFactory.LoadBitmapIntoMainMemory("\\Resources\\Images\\paddleRed.png",
+                BitmapExtensionMethods.LoadBitmapIntoMainMemory("\\Resources\\Images\\paddleRed.png",
                     width, height, "PlayerPaddle");
-                objectTexture = StaticBitmapFactory.GetBitmapFromMainMemory("PlayerPaddle");
+                objectTexture = BitmapExtensionMethods.GetBitmapFromMainMemory("PlayerPaddle");
             }
             else
             {
-                objectTexture = StaticBitmapFactory.GetBitmapFromMainMemory("PlayerPaddle");
+                objectTexture = BitmapExtensionMethods.GetBitmapFromMainMemory("PlayerPaddle");
                 if (objectTexture.Width != width || objectTexture.Height != height)
                 {
-                    StaticBitmapFactory.ResizeBitmap("PlayerPaddle", width, height);
-                    objectTexture = StaticBitmapFactory.GetBitmapFromMainMemory("PlayerPaddle");
+                    BitmapExtensionMethods.ResizeBitmap("PlayerPaddle", width, height);
+                    objectTexture = BitmapExtensionMethods.GetBitmapFromMainMemory("PlayerPaddle");
                 }
             }
 
