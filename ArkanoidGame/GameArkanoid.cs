@@ -53,7 +53,7 @@ namespace ArkanoidGame
             }
         }
 
-        public int OnUpdate(IEnumerable<IGameObject> gameObjects, long gameElapsedTime)
+        public int OnUpdate(IEnumerable<IGameObject> gameObjects)
         {
             Point cursorPosition = Game.CursorRelativeToPanel;
 
@@ -263,8 +263,7 @@ namespace ArkanoidGame
         public int OnUpdate(Point cursorPanelCoordinates)
         {
             CursorRelativeToPanel = cursorPanelCoordinates;
-            ElapsedTime++; //поминал еден период
-            return GameState.OnUpdate(null, ElapsedTime);
+            return GameState.OnUpdate(null);
         }
 
         /// <summary>
@@ -279,8 +278,6 @@ namespace ArkanoidGame
         {
             this.GameState.OnResolutionChanged(newWidth, newHeight);
         }
-
-        public long ElapsedTime { get; set; }
 
 
         /* Играта ќе има посебни единици за должина, посебни просторот за цртање.
