@@ -1,4 +1,5 @@
 ﻿using ArkanoidGame.Framework;
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -22,6 +23,32 @@ namespace ArkanoidGame
             else
             {
                 GameFramework.Draw(e.Graphics, this.Width, this.Height);
+            }
+        }
+
+        /// <summary>
+        /// Cross-thread верзија на PointToClient
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public Point PointToClientAsync(Point point)
+        {
+            try
+            {
+                if (!InvokeRequired)
+                {
+                    return this.PointToClient(point);
+                }
+                else
+                {
+                    Point temp = new Point(0, 0);
+                    this.Invoke(new Action(() => { temp = this.PointToClient(point); }));
+                    return temp;
+                }
+            }
+            catch(Exception)
+            {
+                return new Point(0, 0);
             }
         }
     }

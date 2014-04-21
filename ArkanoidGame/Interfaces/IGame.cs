@@ -10,6 +10,12 @@ namespace ArkanoidGame.Interfaces
     public interface IGame
     {
         /// <summary>
+        /// Позиција на курсорот релативно во однос на панелот.
+        /// Координатите се реалните од екранот, не оние од играта.
+        /// </summary>
+        Point CursorRelativeToPanel { get; }
+
+        /// <summary>
         /// Име на играта
         /// </summary>
         string Name { get; }
@@ -32,7 +38,16 @@ namespace ArkanoidGame.Interfaces
         /// <param name="frameHeight"></param>
         void OnDraw(Graphics graphics, int frameWidth, int frameHeight);
         
-        void OnUpdate();
+        /// <summary>
+        /// Прави update на сите објекти во играта. Ако функцијата врати 0,
+        /// тоа значи дека играта треба да се исклучи.
+        /// Ако функцијата врати 100 тогаш играта не треба да се исклучи.
+        /// Ако функцијата врати друг број или фрли исклучок значи настанала грешка означена
+        /// со соодветниот број (код на грешка).
+        /// </summary>
+        /// <param name="cursorPanelCoordinates"></param>
+        /// <returns></returns>
+        int OnUpdate(Point cursorPanelCoordinates);
 
         int VirtualGameWidth { get; }
         int VirtualGameHeight { get; } //Играта има посебни единици за должина од прозорецот на кој е црта

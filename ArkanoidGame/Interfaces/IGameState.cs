@@ -18,11 +18,21 @@ namespace ArkanoidGame.Interfaces
         void OnDraw(Graphics graphics, int frameWidth, int frameHeight);
 
         /// <summary>
-        /// Функција која дефинира што се случува со објектите во играта при 
-        /// повик на Update() во состојбата во која моментално се наоѓа играта
+        /// Прави update на сите објекти во играта. Ако функцијата врати 0,
+        /// тоа значи дека играта треба да се исклучи.
+        /// Ако функцијата врати 100 тогаш играта не треба да се исклучи.
+        /// Ако функцијата врати друг број или фрли исклучок значи настанала грешка означена
+        /// со соодветниот број (код на грешка). Притоа elapsedTime е број на изминато време
+        /// во играта. Овој начин е подобар отколку да се пресметува време помеѓу два повици
+        /// на update бидејќи таквото време е мало и било какви
+        /// пресметки со таквата вредност веројатно ќе доведат до грешки при заокружување.
+        /// gameObjects е колекција од сите објекти во играта, корисно за алгоритми од типот 
+        /// на детекција на судир.
         /// </summary>
         /// <param name="gameObjects"></param>
-        void OnUpdate(IEnumerable<IGameObject> gameObjects, long gameElapsedTime);
+        /// <param name="gameElapsedTime"></param>
+        /// <returns></returns>
+        int OnUpdate(IEnumerable<IGameObject> gameObjects, long gameElapsedTime);
 
         /// <summary>
         /// Референца кон играта

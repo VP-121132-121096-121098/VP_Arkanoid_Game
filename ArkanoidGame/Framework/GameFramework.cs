@@ -237,7 +237,14 @@ namespace ArkanoidGame.Framework
                 }
 
                 long timeUpdateBegin = DateTime.Now.ToFileTimeUtc() / MillisecondInFileTime;
-                game.OnUpdate();
+                IsGameRunning = game.OnUpdate(gamePanel
+                    .PointToClientAsync(Cursor.Position)) == 100; /* се праќа и позиција на 
+                                                                   * курсорот релативна на 
+                                                                   * панелот на кој се црта.
+                                                                   * Може да се искористи на пример
+                                                                   * во менито. Ако update вратил
+                                                                   * број различен од 100, тогаш излези.
+                                                                   */
 
                 gameElapsedTime++;
 
@@ -289,7 +296,7 @@ namespace ArkanoidGame.Framework
                     /* времето во играта се пресметува како број на периоди од gameUpdatePeriod
                      * Ако дојде до десинхронизација помеѓу реалното време и времето во играта
                      * тогаш се исклучува рендерирањето и се повикува
-                     * Update се додека времето во играта не го достигне реалното време.                     * 
+                     * Update се додека времето во играта не го достигне реалното време.                      
                      */
                 }
 

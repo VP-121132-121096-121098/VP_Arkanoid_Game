@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Windows.Forms;
 
 namespace ArkanoidGame
 {
@@ -15,25 +16,89 @@ namespace ArkanoidGame
         private IDictionary<char, Bitmap> orangeAlphabet;
         private IDictionary<char, Bitmap> blueAlphabet;
 
-        private IDictionary<string, Bitmap> readyStrings; //опции во менито
+        private IDictionary<string, Bitmap> menuOptions; //опции во менито
+        private IDictionary<string, Bitmap> readyStrings; //стрингови што се чуваат во меморија
+
+        private Point quitGamePosition;
+        private Point startGamePosition;
+        //спремни за исцртување
 
         public void OnDraw(Graphics graphics, int frameWidth, int frameHeight)
         {
             if (MenuBackground != null)
                 graphics.DrawImage(MenuBackground, 0, 0, frameWidth, frameHeight);
 
-            Bitmap startGameString = null;
-            if (readyStrings != null && readyStrings.TryGetValue("start game", out startGameString))
+            Bitmap tempBitmap = null;
+            if (menuOptions != null)
             {
-                Vector2D position = new Vector2D((frameWidth - startGameString.Width) / 2,
-                    ((frameHeight - 8 * startGameString.Height) / 2));
-                graphics.DrawImage(startGameString, (float)position.X, (float)position.Y);
+                lock (this)
+                {
+                    if (menuOptions.TryGetValue("start game", out tempBitmap))
+                    {
+                        startGamePosition = new Point((frameWidth - tempBitmap.Width) / 2,
+                            ((frameHeight - 8 * tempBitmap.Height) / 2));
+                        graphics.DrawImage(tempBitmap, (float)startGamePosition.X, (float)startGamePosition.Y);
+                    }
+                }
+
+                lock (this)
+                {
+                    if (menuOptions.TryGetValue("quit game", out tempBitmap))
+                    {
+                        quitGamePosition = new Point((frameWidth - tempBitmap.Width) / 2,
+                            ((frameHeight - 5 * tempBitmap.Height) / 2));
+                        graphics.DrawImage(tempBitmap, (float)quitGamePosition.X, (float)quitGamePosition.Y);
+                    }
+                }
             }
         }
 
-        public void OnUpdate(IEnumerable<IGameObject> gameObjects, long gameElapsedTime)
+        public int OnUpdate(IEnumerable<IGameObject> gameObjects, long gameElapsedTime)
         {
-            //throw new NotImplementedException();
+            Point cursorPosition = Game.CursorRelativeToPanel;
+
+            //синхронизација бидејќи позицијата зависи од местото каде е исцртана опцијата,
+            //а цртањето се прави на посебен Thread.
+            lock (this)
+            {
+
+                //ако курсорот е над опцијата обој ја плаво, во спротивно портокалово
+                if (cursorPosition.X >= startGamePosition.X
+                    && cursorPosition.X <= startGamePosition.X + menuOptions["start game"].Width
+                    && cursorPosition.Y >= startGamePosition.Y
+                    && cursorPosition.Y <= startGamePosition.Y + menuOptions["start game"].Height)
+                {
+                    menuOptions["start game"] = readyStrings["start game hover"];
+                }
+                else
+                {
+                    menuOptions["start game"] = readyStrings["start game"];
+                }
+            }
+
+            lock (this)
+            {
+                //ако курсорот е над опцијата обој ја плаво, во спротивно портокалово
+                if (cursorPosition.X >= quitGamePosition.X
+                    && cursorPosition.X <= quitGamePosition.X + menuOptions["quit game"].Width
+                    && cursorPosition.Y >= quitGamePosition.Y
+                    && cursorPosition.Y <= quitGamePosition.Y + menuOptions["quit game"].Height)
+                {
+                    menuOptions["quit game"] = readyStrings["quit game hover"];
+                    if (KeyStateInfo.GetAsyncKeyState(Keys.LButton).WasPressedAfterPreviousCall
+                        && KeyStateInfo.GetAsyncKeyState(Keys.LButton).IsPressed)
+                    {
+                        //ако е притиснат левиот клик, тогаш избрана е опцијата quit
+                        return 0; //извести го framework-от да го прекине loop-ot
+                    }
+                }
+                else
+                {
+                    menuOptions["quit game"] = readyStrings["quit game"];
+                }
+            }
+
+            return 100;
         }
 
         /// <summary>
@@ -48,8 +113,15 @@ namespace ArkanoidGame
             MenuBackground = null;
             this.Game = game;
             this.InitializeAlphabet();
+            menuOptions = new Dictionary<string, Bitmap>();
             readyStrings = new Dictionary<string, Bitmap>();
             readyStrings.Add("start game", DrawOrangeString("start game"));
+            readyStrings.Add("quit game", DrawOrangeString("quit game"));
+            readyStrings.Add("start game hover", DrawBlueString("start game"));
+            readyStrings.Add("quit game hover", DrawBlueString("quit game"));
+            menuOptions.Add("start game", DrawOrangeString("start game"));
+            menuOptions.Add("quit game", DrawOrangeString("quit game"));
+            quitGamePosition = startGamePosition = new Point(0, 0);
         }
 
         public bool IsTimesynchronizationImportant
@@ -120,6 +192,33 @@ namespace ArkanoidGame
 
             return bitmapString;
         }
+
+        private Bitmap DrawBlueString(string str)
+        {
+            int charWidth = blueAlphabet['A'].Width;
+            int charHeight = blueAlphabet['A'].Height;
+            Bitmap bitmapString = new Bitmap(charWidth * str.Length, charHeight);
+
+            Graphics g = Graphics.FromImage(bitmapString);
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
+
+            int offset = 0;
+            for (int i = 0; i < str.Length; i++)
+            {
+                if (char.IsWhiteSpace(str[i]))
+                {
+                    offset += charWidth;
+                }
+                else
+                {
+                    Bitmap temp = blueAlphabet[char.ToUpper(str[i])];
+                    g.DrawImage(temp, offset, 0);
+                    offset += charWidth;
+                }
+            }
+
+            return bitmapString;
+        }
     }
 
     public class GameArkanoid : IGame
@@ -127,6 +226,12 @@ namespace ArkanoidGame
         //Стартна позиција на играчот (1750, 2010);
 
         public string Name { get; private set; }
+
+        /// <summary>
+        /// Позиција на курсорот релативно во однос на панелот.
+        /// Координатите се реалните од екранот, не оние од играта.
+        /// </summary>
+        public Point CursorRelativeToPanel { get; private set; }
 
         public IGameState GameState { get; set; }
 
@@ -147,6 +252,7 @@ namespace ArkanoidGame
         /// <param name="gameUpdatePeriod"></param>
         public GameArkanoid(IGameState initialState, int gameUpdatePeriod)
         {
+            CursorRelativeToPanel = Cursor.Position;
             this.gameUpdatePeriod = gameUpdatePeriod;
             GameState = initialState;
             Name = "Arkanoid";
@@ -154,10 +260,11 @@ namespace ArkanoidGame
             VirtualGameHeight = 2160;
         }
 
-        public void OnUpdate()
+        public int OnUpdate(Point cursorPanelCoordinates)
         {
+            CursorRelativeToPanel = cursorPanelCoordinates;
             ElapsedTime++; //поминал еден период
-            GameState.OnUpdate(null, ElapsedTime);
+            return GameState.OnUpdate(null, ElapsedTime);
         }
 
         /// <summary>
