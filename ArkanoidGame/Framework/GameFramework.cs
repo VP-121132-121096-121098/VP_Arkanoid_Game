@@ -289,7 +289,7 @@ namespace ArkanoidGame.Framework
                     IsRendererRunning = true;
                     Thread.Sleep(gameUpdatePeriod);
                 }
-                else
+                else /* Времето во играта задоцнува зад реалното време */
                 {
                     IsRendererRunning = false;
 
