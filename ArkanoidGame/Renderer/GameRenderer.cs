@@ -172,11 +172,10 @@ namespace ArkanoidGame.Renderer
             this.FrameWidth = frameWidth;
             this.FrameHeight = frameHeight;
 
-            for (int i = 0; i < bitmaps.Count; i++ )
+            foreach (IList<GameBitmap> bitmapList in bitmaps)
             {
-                for(int j = 0; j < bitmaps[i].Count; j++)
+                foreach (GameBitmap bitmap in bitmapList)
                 {
-                    GameBitmap bitmap = bitmaps[i][j];
                     Bitmap temp = RendererCache.GetBitmapFromMainMemory(bitmap.PictureID,
                         (int)Math.Round(ToScreenLength(bitmap.X, bitmap.Y,
                         bitmap.X + bitmap.WidthInGameUnits, bitmap.Y)),

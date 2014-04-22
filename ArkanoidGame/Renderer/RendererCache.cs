@@ -144,11 +144,6 @@ namespace ArkanoidGame.Renderer
         {
             lock (objectLock)
             {
-                Dictionary<long, Bitmap>.Enumerator it = bitmapsInMemory.GetEnumerator();
-                while (it.MoveNext())
-                {
-                    it.Current.Value.Dispose();
-                }
                 bitmapsInMemory = new Dictionary<long, Bitmap>();
                 mapIDRelativePath = new Dictionary<long, string>();
             }

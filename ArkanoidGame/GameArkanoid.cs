@@ -5,6 +5,7 @@ using ArkanoidGame.Renderer;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -16,11 +17,14 @@ namespace ArkanoidGame
         private IDictionary<string, GameBitmap> menuOptions; //опции во менито
         private IDictionary<string, GameBitmap> readyStrings; //стрингови
 
-        private IList<IList<GameBitmap>> bitmaps; //слики од позадината и сите опции заедно
+        public IList<IList<GameBitmap>> BitmapsToRender { get; private set; } //слики од позадината и сите опции заедно
+        private IList<IList<GameBitmap>> rendererBitmaps; /* на рендерерот се праќа копија од листа
+                                                           * за да се избегнат проблемите со нејзино модифицирање
+                                                           */
 
         public void OnDraw(Graphics graphics, int frameWidth, int frameHeight)
         {
-            Game.Renderer.Render(bitmaps, graphics, frameWidth, frameHeight);
+            Game.Renderer.Render(rendererBitmaps, graphics, frameWidth, frameHeight);
         }
 
         public int OnUpdate(IList<IGameObject> gameObjects)
@@ -32,7 +36,7 @@ namespace ArkanoidGame
             if (cursor.X >= startGame.X && cursor.X <= startGame.X + startGame.WidthInGameUnits
                 && cursor.Y >= startGame.Y && cursor.Y <= startGame.Y + startGame.HeightInGameUnits)
             {
-                bitmaps[1][0] = readyStrings["start game hover"];
+                BitmapsToRender[1][0] = readyStrings["start game hover"];
                 if (KeyStateInfo.GetAsyncKeyState(Keys.LButton).WasPressedAfterPreviousCall
                         && KeyStateInfo.GetAsyncKeyState(Keys.LButton).IsPressed)
                 {
@@ -50,14 +54,14 @@ namespace ArkanoidGame
             }
             else
             {
-                bitmaps[1][0] = readyStrings["start game"];
+                BitmapsToRender[1][0] = readyStrings["start game"];
             }
 
             GameBitmap quitGame = menuOptions["quit game"];
             if (cursor.X >= quitGame.X && cursor.X <= quitGame.X + quitGame.WidthInGameUnits
                 && cursor.Y >= quitGame.Y && cursor.Y <= quitGame.Y + quitGame.HeightInGameUnits)
             {
-                bitmaps[1][1] = readyStrings["quit game hover"];
+                BitmapsToRender[1][1] = readyStrings["quit game hover"];
                 if (KeyStateInfo.GetAsyncKeyState(Keys.LButton).WasPressedAfterPreviousCall
                         && KeyStateInfo.GetAsyncKeyState(Keys.LButton).IsPressed)
                 {
@@ -67,8 +71,20 @@ namespace ArkanoidGame
             }
             else
             {
-                bitmaps[1][1] = readyStrings["quit game"];
+                BitmapsToRender[1][1] = readyStrings["quit game"];
             }
+            
+            //Посебна readonly копија за рендерерот
+            List<IList<GameBitmap>> tempList = new List<IList<GameBitmap>>();
+            for (int i = 0; i < BitmapsToRender.Count; i++)
+            {
+                tempList.Add(new List<GameBitmap>());
+                for (int j = 0; j < BitmapsToRender[i].Count; j++)
+                {
+                    tempList[i].Add(BitmapsToRender[i][j]);
+                }
+            }
+            rendererBitmaps = tempList;
 
             return 100;
         }
@@ -83,10 +99,11 @@ namespace ArkanoidGame
         public ArkanoidStateMainMenu(IGame game)
         {
             MenuBackground = null;
-            bitmaps = new List<IList<GameBitmap>>();
-            bitmaps.Add(new List<GameBitmap>());
-            bitmaps[0].Add(new GameBitmap("\\Resources\\Images\\background.jpg", 0, 0, game.VirtualGameWidth,
+            BitmapsToRender = new List<IList<GameBitmap>>();
+            BitmapsToRender.Add(new List<GameBitmap>());
+            BitmapsToRender[0].Add(new GameBitmap("\\Resources\\Images\\background.jpg", 0, 0, game.VirtualGameWidth,
                 game.VirtualGameHeight));
+            rendererBitmaps = new List<IList<GameBitmap>>();
 
             // додади ги сите опции во меморија
             readyStrings = new Dictionary<string, GameBitmap>();
@@ -103,9 +120,9 @@ namespace ArkanoidGame
             menuOptions.Add("start game", readyStrings["start game"]);
             menuOptions.Add("quit game", readyStrings["quit game"]);
 
-            bitmaps.Add(new List<GameBitmap>());
-            bitmaps[1].Add(menuOptions["start game"]);
-            bitmaps[1].Add(menuOptions["quit game"]);
+            BitmapsToRender.Add(new List<GameBitmap>());
+            BitmapsToRender[1].Add(menuOptions["start game"]);
+            BitmapsToRender[1].Add(menuOptions["quit game"]);
 
             this.Game = game;
         }
@@ -114,8 +131,6 @@ namespace ArkanoidGame
         {
             get { return false; }
         }
-
-        public IList<IList<GameBitmap>> BitmapsToRender { get; private set; }
     }
 
     public class ArkanoidGamePlayState : IGameState
@@ -124,6 +139,7 @@ namespace ArkanoidGame
         {
             this.Game = game;
             BitmapsToRender = new List<IList<GameBitmap>>();
+            rendererBitmaps = new List<IList<GameBitmap>>();
             List<GameBitmap> background = new List<GameBitmap>();
             background.Add(new GameBitmap("\\Resources\\Images\\background.jpg", 0, 0, game.VirtualGameWidth,
                 game.VirtualGameHeight));
@@ -138,7 +154,7 @@ namespace ArkanoidGame
 
         public void OnDraw(Graphics graphics, int frameWidth, int frameHeight)
         {
-            Game.Renderer.Render(BitmapsToRender, graphics, frameWidth, frameHeight);
+            Game.Renderer.Render(rendererBitmaps, graphics, frameWidth, frameHeight);
         }
 
         public long ElapsedTime { get; private set; }
@@ -153,6 +169,18 @@ namespace ArkanoidGame
                 else
                     BitmapsToRender[i + 1] = gameObjects[i].ObjectTextures;
             }
+
+            //Посебна readonly копија за рендерерот
+            List<IList<GameBitmap>> tempList = new List<IList<GameBitmap>>();
+            for (int i = 0; i < BitmapsToRender.Count; i++)
+            {
+                tempList.Add(new List<GameBitmap>());
+                for (int j = 0; j < BitmapsToRender[i].Count; j++)
+                {
+                    tempList[i].Add(BitmapsToRender[i][j]);
+                }
+            }
+            rendererBitmaps = tempList;
 
             ElapsedTime++; //поминал еден период
 
@@ -172,6 +200,7 @@ namespace ArkanoidGame
         }
 
         public IList<IList<GameBitmap>> BitmapsToRender { get; private set; }
+        private IList<IList<GameBitmap>> rendererBitmaps;
     }
 
     public class GameArkanoid : IGame
