@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ArkanoidGame.Renderer;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -29,7 +30,7 @@ namespace ArkanoidGame.Interfaces
         /// <param name="gameObjects"></param>
         /// <param name="gameElapsedTime"></param>
         /// <returns></returns>
-        int OnUpdate(IEnumerable<IGameObject> gameObjects);
+        int OnUpdate(IList<IGameObject> gameObjects);
 
         /// <summary>
         /// Референца кон играта
@@ -51,13 +52,16 @@ namespace ArkanoidGame.Interfaces
         bool IsTimesynchronizationImportant { get; }
 
         /// <summary>
-        /// Овде се менуваат сите слики што се претходно биле 
-        /// вчитани во главната меморија, но во друга резолуција.
-        /// Бидејќи прозорецот има друга резолуција, мора и сликите
-        /// да се вчитаат во друга резолуција.
+        /// Сликите што ќе бидат рендерирани. Оваа листа содржи листи каде што секоја
+        /// листа ги содржи сликите (текстурите) од еден објект. 
+        /// Поинаку кажано се работи за матрица каде што редиците се објекти, 
+        /// а колоните текстури од соодветниот објект. При исцртување
+        /// листата ќе се третира како да е редица (FIFO). Ова може да се 
+        /// искористи за однапред да се одреди редоследот на исцртување. На 
+        /// пример позадината треба да се исцртува прва.
+        /// На овој начин се знае и редоследот на исцртување на објектите и редоследот
+        /// на исцртување на секоја слика од тој објект.
         /// </summary>
-        /// <param name="newWidth"></param>
-        /// <param name="newHeight"></param>
-        void OnResolutionChanged(int newWidth, int newHeight);
+        IList<IList<GameBitmap>> BitmapsToRender { get; }
     }
 }

@@ -43,18 +43,5 @@ namespace ArkanoidGame.Framework
             realX = (double)realWidth / virtualWidth * virtualX;
             realY = (double)realHeight / virtualHeight * virtualY;
         }
-
-        public static int ConvertLength(int virtualLength, int virtualWidth, int virtualHeight, int realWidth, int realHeight)
-        {
-            return (int)Math.Round(virtualLength * Math.Sqrt(realWidth * realWidth + realHeight * realHeight)
-                / Math.Sqrt(virtualWidth * virtualWidth + virtualHeight * virtualHeight));
-        }
-
-        public static double ConvertLength(double virtualLength, int virtualWidth,
-            int virtualHeight, int realWidth, int realHeight)
-        {
-            return virtualLength * Math.Sqrt(realWidth * realWidth + realHeight * realHeight)
-                / Math.Sqrt(virtualWidth * virtualWidth + virtualHeight * virtualHeight);
-        }
     }
 }

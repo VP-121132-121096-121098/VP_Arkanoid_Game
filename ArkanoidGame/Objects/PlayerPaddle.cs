@@ -1,11 +1,9 @@
 ﻿using ArkanoidGame.Framework;
 using ArkanoidGame.Interfaces;
+using ArkanoidGame.Renderer;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Windows.Forms;
 
 namespace ArkanoidGame.Objects
@@ -27,21 +25,13 @@ namespace ArkanoidGame.Objects
 
         public Vector2D Position { get; set; }
 
-        private int gameUpdatePeriod; //во милисекунди
-
-        private double secondIngameUpdatePeriod;
-
         public double PaddleWidth { get; set; }
         public double PaddleHeight { get; private set; }
 
         private int virtualGameWidth;
         private int virtualGameHeight;
 
-        private Bitmap objectTexture;
-
-        private int lastFrameWidth, lastFrameHeight;
-
-        public void OnUpdate(IEnumerable<IGameObject> objects, long gameElapsedTime)
+        public void OnUpdate(IList<IGameObject> objects, long gameElapsedTime)
         {
 
             IKeyState leftArrowState = KeyStateInfo.GetAsyncKeyState(Keys.Left);
@@ -102,55 +92,24 @@ namespace ArkanoidGame.Objects
 
             //collision detection with ball
             //to be implemented
+
+            ObjectTextures[0].X = Position.X;
+            ObjectTextures[0].Y = Position.Y;
         }
 
-        public void OnDraw(System.Drawing.Graphics graphics, int frameWidth, int frameHeight)
-        {
-            double realPositionX = 0, realPositionY = 0;
-            GameUnitConversion.ConvertGameUnits(Position.X, Position.Y, out realPositionX, out realPositionY,
-                virtualGameWidth, virtualGameHeight, frameWidth, frameHeight);
-
-            int width = (int)Math.Round(GameUnitConversion.ConvertLength(
-                PaddleWidth, virtualGameWidth, virtualGameHeight, frameWidth, frameHeight));
-            int height = (int)Math.Round(GameUnitConversion.ConvertLength(
-                PaddleHeight, virtualGameWidth, virtualGameHeight, frameWidth, frameHeight));
-
-            if (lastFrameWidth == -1 || lastFrameHeight == -1)
-            {
-                BitmapExtensionMethods.LoadBitmapIntoMainMemory("\\Resources\\Images\\paddleRed.png",
-                    width, height, "PlayerPaddle");
-                objectTexture = BitmapExtensionMethods.GetBitmapFromMainMemory("PlayerPaddle");
-            }
-            else
-            {
-                objectTexture = BitmapExtensionMethods.GetBitmapFromMainMemory("PlayerPaddle");
-                if (objectTexture.Width != width || objectTexture.Height != height)
-                {
-                    BitmapExtensionMethods.ResizeBitmap("PlayerPaddle", width, height);
-                    objectTexture = BitmapExtensionMethods.GetBitmapFromMainMemory("PlayerPaddle");
-                }
-            }
-
-            graphics.DrawImage(objectTexture, (float)realPositionX, (float)realPositionY, width, height);
-            lastFrameWidth = frameWidth;
-            lastFrameHeight = frameHeight;
-        }
-
-        public PlayerPaddle(Vector2D positionVector, int gameUpdatePeriod,
-            int virtualGameWidth, int virutalGameHeight)
+        public PlayerPaddle(Vector2D positionVector, int virtualGameWidth, int virutalGameHeight)
         {
             this.virtualGameWidth = virtualGameWidth;
             this.virtualGameHeight = virutalGameHeight;
             this.Position = new Vector2D(positionVector);
-            this.gameUpdatePeriod = gameUpdatePeriod;
-            PaddleWidth = 380;
+            PaddleWidth = 400;
             PaddleHeight = 85;
-            objectTexture = null;
+            ObjectTextures = new List<GameBitmap>();
+            ObjectTextures.Add(new GameBitmap("\\Resources\\Images\\paddleRed.png", positionVector.X,
+                positionVector.Y, 400, 85));
             velocity = new Vector2D(0, 0);
             maxVelocity = new Vector2D(70, 0);
             acceleration = new Vector2D(10, 0);
-            this.secondIngameUpdatePeriod = 1000.0f / gameUpdatePeriod;
-            lastFrameHeight = lastFrameWidth = -1;
         }
 
 
@@ -161,5 +120,8 @@ namespace ArkanoidGame.Objects
              * имплементирана во OnDraw методот
              */
         }
+
+
+        public IList<GameBitmap> ObjectTextures { get; private set; }
     }
 }

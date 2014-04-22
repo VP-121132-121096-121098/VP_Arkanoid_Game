@@ -53,8 +53,11 @@
     <Compile Include="AbstractGameWindow.designer.cs">
       <DependentUpon>AbstractGameWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\IGameRenderer.cs" />
+    <Compile Include="Renderer\GameBitmap.cs" />
     <Compile Include="Framework\GameUnitConversion.cs" />
-    <Compile Include="Framework\BitmapExtensionMethods.cs" />
+    <Compile Include="Renderer\GameRenderer.cs" />
+    <Compile Include="Renderer\RendererCache.cs" />
     <Compile Include="GameArkanoid.cs" />
     <Compile Include="Framework\GameFramework.cs" />
     <Compile Include="Framework\KeyStateInfo.cs" />
@@ -69,6 +72,7 @@
     <Compile Include="Interfaces\IKeyState.cs" />
     <Compile Include="Objects\PlayerPaddle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Renderer\StaticStringFactory.cs" />
     <EmbeddedResource Include="AbstractGameWindow.resx">
       <DependentUpon>AbstractGameWindow.cs</DependentUpon>
     </EmbeddedResource>
@@ -91,6 +95,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Content Include="Resources\Fonts\Forte.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\Images\alphabet_blue.png">
@@ -178,6 +185,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\Images\element_yellow_square_glossy.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Images\numbers_blue.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Images\numbers_orange.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\Images\paddleBlue.png">

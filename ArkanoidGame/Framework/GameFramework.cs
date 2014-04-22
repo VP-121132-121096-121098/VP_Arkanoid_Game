@@ -100,10 +100,6 @@ namespace ArkanoidGame.Framework
                 }
                 else
                 {
-                    if (lastFrameHeight != frameHeight || lastFrameWidth != frameWidth)
-                    {
-                        game.OnResolutionChanged(frameWidth, frameHeight);
-                    }
                     game.OnDraw(graphics, frameWidth, frameHeight);
                 }
 
@@ -188,9 +184,6 @@ namespace ArkanoidGame.Framework
             this.lastFrameWidth = gamePanel.Width;
             this.lastFrameHeight = gamePanel.Height;
 
-            /* се менува од 0 x 0, на gamePanel.Width x gamePanel.Height :) */
-            game.OnResolutionChanged(gamePanel.Width, gamePanel.Height);
- 
             gamePanel.Invalidate();
 
             try
@@ -289,7 +282,7 @@ namespace ArkanoidGame.Framework
                     IsRendererRunning = true;
                     Thread.Sleep(gameUpdatePeriod);
                 }
-                else /* Времето во играта задоцнува зад реалното време */
+                else if(gameLag > 0) /* Времето во играта задоцнува зад реалното време */
                 {
                     IsRendererRunning = false;
 

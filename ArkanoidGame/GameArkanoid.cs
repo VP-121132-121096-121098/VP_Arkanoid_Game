@@ -1,11 +1,10 @@
 ﻿using ArkanoidGame.Framework;
 using ArkanoidGame.Interfaces;
 using ArkanoidGame.Objects;
+using ArkanoidGame.Renderer;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -13,89 +12,62 @@ namespace ArkanoidGame
 {
     public class ArkanoidStateMainMenu : IGameState
     {
-        private IDictionary<char, Bitmap> orangeAlphabet;
-        private IDictionary<char, Bitmap> blueAlphabet;
 
-        private IDictionary<string, Bitmap> menuOptions; //опции во менито
-        private IDictionary<string, Bitmap> readyStrings; //стрингови што се чуваат во меморија
+        private IDictionary<string, GameBitmap> menuOptions; //опции во менито
+        private IDictionary<string, GameBitmap> readyStrings; //стрингови
 
-        private Point quitGamePosition;
-        private Point startGamePosition;
-        //спремни за исцртување
+        private IList<IList<GameBitmap>> bitmaps; //слики од позадината и сите опции заедно
 
         public void OnDraw(Graphics graphics, int frameWidth, int frameHeight)
         {
-            if (MenuBackground != null)
-                graphics.DrawImage(MenuBackground, 0, 0, frameWidth, frameHeight);
-
-            Bitmap tempBitmap = null;
-            if (menuOptions != null)
-            {
-                lock (this)
-                {
-                    if (menuOptions.TryGetValue("start game", out tempBitmap))
-                    {
-                        startGamePosition = new Point((frameWidth - tempBitmap.Width) / 2,
-                            ((frameHeight - 8 * tempBitmap.Height) / 2));
-                        graphics.DrawImage(tempBitmap, (float)startGamePosition.X, (float)startGamePosition.Y);
-                    }
-                }
-
-                lock (this)
-                {
-                    if (menuOptions.TryGetValue("quit game", out tempBitmap))
-                    {
-                        quitGamePosition = new Point((frameWidth - tempBitmap.Width) / 2,
-                            ((frameHeight - 5 * tempBitmap.Height) / 2));
-                        graphics.DrawImage(tempBitmap, (float)quitGamePosition.X, (float)quitGamePosition.Y);
-                    }
-                }
-            }
+            Game.Renderer.Render(bitmaps, graphics, frameWidth, frameHeight);
         }
 
-        public int OnUpdate(IEnumerable<IGameObject> gameObjects)
+        public int OnUpdate(IList<IGameObject> gameObjects)
         {
-            Point cursorPosition = Game.CursorRelativeToPanel;
+            Point cursor = Game.CursorIngameCoordinates;
 
-            //синхронизација бидејќи позицијата зависи од местото каде е исцртана опцијата,
-            //а цртањето се прави на посебен Thread.
-            lock (this)
+            GameBitmap startGame = menuOptions["start game"];
+
+            if (cursor.X >= startGame.X && cursor.X <= startGame.X + startGame.WidthInGameUnits
+                && cursor.Y >= startGame.Y && cursor.Y <= startGame.Y + startGame.HeightInGameUnits)
             {
+                bitmaps[1][0] = readyStrings["start game hover"];
+                if (KeyStateInfo.GetAsyncKeyState(Keys.LButton).WasPressedAfterPreviousCall
+                        && KeyStateInfo.GetAsyncKeyState(Keys.LButton).IsPressed)
+                {
+                    //Ако се притисне глушецот на quit game тогаш излези нормално
+                    Game.GameState = new ArkanoidGamePlayState(Game);
+                    Thread.Sleep(100);
 
-                //ако курсорот е над опцијата обој ја плаво, во спротивно портокалово
-                if (cursorPosition.X >= startGamePosition.X
-                    && cursorPosition.X <= startGamePosition.X + menuOptions["start game"].Width
-                    && cursorPosition.Y >= startGamePosition.Y
-                    && cursorPosition.Y <= startGamePosition.Y + menuOptions["start game"].Height)
-                {
-                    menuOptions["start game"] = readyStrings["start game hover"];
-                }
-                else
-                {
-                    menuOptions["start game"] = readyStrings["start game"];
+                    foreach (KeyValuePair<string, GameBitmap> bitmap in readyStrings)
+                    {
+                        RendererCache.RemoveBitmapFromMainMemory(bitmap.Value.PictureID);
+                    }
+
+                    return 100;
                 }
             }
-
-            lock (this)
+            else
             {
-                //ако курсорот е над опцијата обој ја плаво, во спротивно портокалово
-                if (cursorPosition.X >= quitGamePosition.X
-                    && cursorPosition.X <= quitGamePosition.X + menuOptions["quit game"].Width
-                    && cursorPosition.Y >= quitGamePosition.Y
-                    && cursorPosition.Y <= quitGamePosition.Y + menuOptions["quit game"].Height)
-                {
-                    menuOptions["quit game"] = readyStrings["quit game hover"];
-                    if (KeyStateInfo.GetAsyncKeyState(Keys.LButton).WasPressedAfterPreviousCall
+                bitmaps[1][0] = readyStrings["start game"];
+            }
+
+            GameBitmap quitGame = menuOptions["quit game"];
+            if (cursor.X >= quitGame.X && cursor.X <= quitGame.X + quitGame.WidthInGameUnits
+                && cursor.Y >= quitGame.Y && cursor.Y <= quitGame.Y + quitGame.HeightInGameUnits)
+            {
+                bitmaps[1][1] = readyStrings["quit game hover"];
+                if (KeyStateInfo.GetAsyncKeyState(Keys.LButton).WasPressedAfterPreviousCall
                         && KeyStateInfo.GetAsyncKeyState(Keys.LButton).IsPressed)
-                    {
-                        //ако е притиснат левиот клик, тогаш избрана е опцијата quit
-                        return 0; //извести го framework-от да го прекине loop-ot
-                    }
-                }
-                else
                 {
-                    menuOptions["quit game"] = readyStrings["quit game"];
+                    //Ако се притисне глушецот на quit game тогаш излези нормално
+                    return 0;
                 }
+            }
+            else
+            {
+                bitmaps[1][1] = readyStrings["quit game"];
             }
 
             return 100;
@@ -111,17 +83,31 @@ namespace ArkanoidGame
         public ArkanoidStateMainMenu(IGame game)
         {
             MenuBackground = null;
+            bitmaps = new List<IList<GameBitmap>>();
+            bitmaps.Add(new List<GameBitmap>());
+            bitmaps[0].Add(new GameBitmap("\\Resources\\Images\\background.jpg", 0, 0, game.VirtualGameWidth,
+                game.VirtualGameHeight));
+
+            // додади ги сите опции во меморија
+            readyStrings = new Dictionary<string, GameBitmap>();
+            readyStrings.Add("start game", new GameBitmap(StaticStringFactory.CreateOrangeString("start game"),
+                (game.VirtualGameWidth - 550) / 2, 750, 600, 90));
+            readyStrings.Add("quit game", new GameBitmap(StaticStringFactory.CreateOrangeString("quit game"),
+                (game.VirtualGameWidth - 500) / 2, 880, 550, 90));
+            readyStrings.Add("start game hover", new GameBitmap(StaticStringFactory.CreateBlueString("start game"),
+                (game.VirtualGameWidth - 550) / 2, 750, 600, 90));
+            readyStrings.Add("quit game hover", new GameBitmap(StaticStringFactory.CreateBlueString("quit game"),
+                (game.VirtualGameWidth - 500) / 2, 880, 550, 90));
+
+            menuOptions = new Dictionary<string, GameBitmap>();
+            menuOptions.Add("start game", readyStrings["start game"]);
+            menuOptions.Add("quit game", readyStrings["quit game"]);
+
+            bitmaps.Add(new List<GameBitmap>());
+            bitmaps[1].Add(menuOptions["start game"]);
+            bitmaps[1].Add(menuOptions["quit game"]);
+
             this.Game = game;
-            this.InitializeAlphabet();
-            menuOptions = new Dictionary<string, Bitmap>();
-            readyStrings = new Dictionary<string, Bitmap>();
-            readyStrings.Add("start game", DrawOrangeString("start game"));
-            readyStrings.Add("quit game", DrawOrangeString("quit game"));
-            readyStrings.Add("start game hover", DrawBlueString("start game"));
-            readyStrings.Add("quit game hover", DrawBlueString("quit game"));
-            menuOptions.Add("start game", DrawOrangeString("start game"));
-            menuOptions.Add("quit game", DrawOrangeString("quit game"));
-            quitGamePosition = startGamePosition = new Point(0, 0);
         }
 
         public bool IsTimesynchronizationImportant
@@ -129,111 +115,82 @@ namespace ArkanoidGame
             get { return false; }
         }
 
+        public IList<IList<GameBitmap>> BitmapsToRender { get; private set; }
+    }
 
-        public void OnResolutionChanged(int newWidth, int newHeight)
+    public class ArkanoidGamePlayState : IGameState
+    {
+        public ArkanoidGamePlayState(IGame game)
         {
-            if (MenuBackground == null)
-            {
-                BitmapExtensionMethods.LoadBitmapIntoMainMemory("\\Resources\\Images\\background.jpg",
-                    newWidth, newHeight, "MenuBackground");
-                MenuBackground = BitmapExtensionMethods.GetBitmapFromMainMemory("MenuBackground");
-            }
-            else if (MenuBackground.Height != newHeight || MenuBackground.Width != newWidth)
-            {
-                MenuBackground = BitmapExtensionMethods.GetBitmapFromMainMemory("MenuBackground", newWidth, newHeight);
-            }
+            this.Game = game;
+            BitmapsToRender = new List<IList<GameBitmap>>();
+            List<GameBitmap> background = new List<GameBitmap>();
+            background.Add(new GameBitmap("\\Resources\\Images\\background.jpg", 0, 0, game.VirtualGameWidth,
+                game.VirtualGameHeight));
+            BitmapsToRender.Add(background);
+
+            //додади го играчот на позиција (1750, 2010).
+            PlayerPaddle player = new PlayerPaddle(new Vector2D(1750, 2010), Game.VirtualGameWidth,
+                Game.VirtualGameHeight);
+            Game.GameObjects.Add(player);
+            ElapsedTime = 0;
         }
 
-        private void InitializeAlphabet()
+        public void OnDraw(Graphics graphics, int frameWidth, int frameHeight)
         {
-            blueAlphabet = new Dictionary<char, Bitmap>();
-            orangeAlphabet = new Dictionary<char, Bitmap>();
-
-            Bitmap bitmapBlueAlphabet = BitmapExtensionMethods.GetBitmapFromFile("\\Resources\\Images\\alphabet_blue.png",
-                480, 25);
-            Bitmap bitmapOrangeAlphabet = BitmapExtensionMethods.GetBitmapFromFile("\\Resources\\Images\\alphabet_orange.png",
-                480, 25);
-
-            int offsetIncrement = bitmapBlueAlphabet.Width / 26;
-            int offset = 0;
-            for (char i = 'A'; i <= 'Z'; i++)
-            {
-                orangeAlphabet.Add(i, bitmapOrangeAlphabet.Clone(new Rectangle(offset + 1, 0, offsetIncrement - 2,
-                    bitmapOrangeAlphabet.Height), System.Drawing.Imaging.PixelFormat.Format32bppPArgb));
-                blueAlphabet.Add(i, bitmapBlueAlphabet.Clone(new Rectangle(offset + 1, 0, offsetIncrement - 2,
-                    bitmapBlueAlphabet.Height), System.Drawing.Imaging.PixelFormat.Format32bppPArgb));
-                offset += offsetIncrement;
-            }
+            Game.Renderer.Render(BitmapsToRender, graphics, frameWidth, frameHeight);
         }
 
-        private Bitmap DrawOrangeString(string str)
+        public long ElapsedTime { get; private set; }
+
+        public int OnUpdate(IList<IGameObject> gameObjects)
         {
-            int charWidth = orangeAlphabet['A'].Width;
-            int charHeight = orangeAlphabet['A'].Height;
-            Bitmap bitmapString = new Bitmap(charWidth * str.Length, charHeight);
-
-            Graphics g = Graphics.FromImage(bitmapString);
-            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
-
-            int offset = 0;
-            for (int i = 0; i < str.Length; i++)
+            for (int i = 0; i < gameObjects.Count; i++)
             {
-                if (char.IsWhiteSpace(str[i]))
-                {
-                    offset += charWidth;
-                }
+                gameObjects[i].OnUpdate(gameObjects, ElapsedTime);
+                if (i + 1 >= BitmapsToRender.Count)
+                    BitmapsToRender.Add(gameObjects[i].ObjectTextures);
                 else
-                {
-                    Bitmap temp = orangeAlphabet[char.ToUpper(str[i])];
-                    g.DrawImage(temp, offset, 0);
-                    offset += charWidth;
-                }
+                    BitmapsToRender[i + 1] = gameObjects[i].ObjectTextures;
             }
 
-            return bitmapString;
-        }
+            ElapsedTime++; //поминал еден период
 
-        private Bitmap DrawBlueString(string str)
-        {
-            int charWidth = blueAlphabet['A'].Width;
-            int charHeight = blueAlphabet['A'].Height;
-            Bitmap bitmapString = new Bitmap(charWidth * str.Length, charHeight);
-
-            Graphics g = Graphics.FromImage(bitmapString);
-            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
-
-            int offset = 0;
-            for (int i = 0; i < str.Length; i++)
+            if (KeyStateInfo.GetAsyncKeyState(Keys.Escape).IsPressed)
             {
-                if (char.IsWhiteSpace(str[i]))
-                {
-                    offset += charWidth;
-                }
-                else
-                {
-                    Bitmap temp = blueAlphabet[char.ToUpper(str[i])];
-                    g.DrawImage(temp, offset, 0);
-                    offset += charWidth;
-                }
+                return 0;
             }
 
-            return bitmapString;
+            return 100;
         }
+
+        public IGame Game { get; private set; }
+
+        public bool IsTimesynchronizationImportant
+        {
+            get { return true; }
+        }
+
+        public IList<IList<GameBitmap>> BitmapsToRender { get; private set; }
     }
 
     public class GameArkanoid : IGame
     {
         //Стартна позиција на играчот (1750, 2010);
 
+        private readonly object gameStateLock = new Object();
+
         public string Name { get; private set; }
 
         /// <summary>
-        /// Позиција на курсорот релативно во однос на панелот.
-        /// Координатите се реалните од екранот, не оние од играта.
+        /// Позиција на курсорот изразена како координати од играта,
+        /// не од прозорецот на играта.
         /// </summary>
-        public Point CursorRelativeToPanel { get; private set; }
+        public Point CursorIngameCoordinates { get; private set; }
 
         public IGameState GameState { get; set; }
+
+        public IList<IGameObject> GameObjects { get; private set; }
 
         public void OnDraw(Graphics graphics, int frameWidth, int frameHeight)
         {
@@ -252,31 +209,21 @@ namespace ArkanoidGame
         /// <param name="gameUpdatePeriod"></param>
         public GameArkanoid(IGameState initialState, int gameUpdatePeriod)
         {
-            CursorRelativeToPanel = Cursor.Position;
+            VirtualGameWidth = 3840;
+            VirtualGameHeight = 2160;
+            this.Renderer = new GameRenderer(VirtualGameWidth, VirtualGameHeight);
+            CursorIngameCoordinates = Cursor.Position;
             this.gameUpdatePeriod = gameUpdatePeriod;
             GameState = initialState;
             Name = "Arkanoid";
-            VirtualGameWidth = 3840;
-            VirtualGameHeight = 2160;
+            GameObjects = new List<IGameObject>();
         }
 
         public int OnUpdate(Point cursorPanelCoordinates)
         {
-            CursorRelativeToPanel = cursorPanelCoordinates;
-            return GameState.OnUpdate(null);
-        }
+            this.CursorIngameCoordinates = Renderer.ToGameCoordinates(cursorPanelCoordinates);
 
-        /// <summary>
-        /// Овде се менуваат сите слики што се претходно биле 
-        /// вчитани во главната меморија, но во друга резолуција.
-        /// Бидејќи прозорецот има друга резолуција, мора и сликите
-        /// да се вчитаат во друга резолуција.
-        /// </summary>
-        /// <param name="newWidth"></param>
-        /// <param name="newHeight"></param>
-        public void OnResolutionChanged(int newWidth, int newHeight)
-        {
-            this.GameState.OnResolutionChanged(newWidth, newHeight);
+            return GameState.OnUpdate(GameObjects);
         }
 
 
@@ -307,5 +254,8 @@ namespace ArkanoidGame
                 return GameState.IsTimesynchronizationImportant;
             }
         }
+
+
+        public IGameRenderer Renderer { get; private set; }
     }
 }

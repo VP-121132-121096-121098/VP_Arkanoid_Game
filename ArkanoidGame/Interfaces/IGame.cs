@@ -1,4 +1,5 @@
 ﻿using ArkanoidGame.Framework;
+using ArkanoidGame.Renderer;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -10,10 +11,15 @@ namespace ArkanoidGame.Interfaces
     public interface IGame
     {
         /// <summary>
-        /// Позиција на курсорот релативно во однос на панелот.
-        /// Координатите се реалните од екранот, не оние од играта.
+        /// Позиција на курсорот изразена како координати од играта,
+        /// не од прозорецот на играта.
         /// </summary>
-        Point CursorRelativeToPanel { get; }
+        Point CursorIngameCoordinates { get; }
+
+        /// <summary>
+        /// Листа од сите објекти во играта.
+        /// </summary>
+        IList<IGameObject> GameObjects { get; }
 
         /// <summary>
         /// Име на играта
@@ -62,13 +68,8 @@ namespace ArkanoidGame.Interfaces
         bool IsTimesynchronizationImportant { get; }
 
         /// <summary>
-        /// Овде се менуваат сите слики што се претходно биле 
-        /// вчитани во главната меморија, но во друга резолуција.
-        /// Бидејќи прозорецот има друга резолуција, мора и сликите
-        /// да се вчитаат во друга резолуција.
+        /// Рендерер
         /// </summary>
-        /// <param name="newWidth"></param>
-        /// <param name="newHeight"></param>
-        void OnResolutionChanged(int newWidth, int newHeight);
+        IGameRenderer Renderer { get; }
     }
 }
