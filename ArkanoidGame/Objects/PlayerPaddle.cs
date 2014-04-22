@@ -28,8 +28,8 @@ namespace ArkanoidGame.Objects
         public double PaddleWidth { get; set; }
         public double PaddleHeight { get; private set; }
 
-        private int virtualGameWidth;
-        private int virtualGameHeight;
+        public int ObjectWidth { get; private set; }
+        public int ObjectHeight { get; private set; }
 
         public void OnUpdate(IList<IGameObject> objects, long gameElapsedTime)
         {
@@ -85,8 +85,8 @@ namespace ArkanoidGame.Objects
 
             Position += (velocity + velocity_0) / 2;
 
-            if (Position.X > virtualGameWidth - 10 - PaddleWidth)
-                Position.X = virtualGameWidth - 10 - PaddleWidth;
+            if (Position.X > ObjectWidth - 10 - PaddleWidth)
+                Position.X = ObjectWidth - 10 - PaddleWidth;
             else if (Position.X < 5)
                 Position.X = 5;
 
@@ -99,8 +99,8 @@ namespace ArkanoidGame.Objects
 
         public PlayerPaddle(Vector2D positionVector, int virtualGameWidth, int virutalGameHeight)
         {
-            this.virtualGameWidth = virtualGameWidth;
-            this.virtualGameHeight = virutalGameHeight;
+            this.ObjectWidth = virtualGameWidth;
+            this.ObjectHeight = virutalGameHeight;
             this.Position = new Vector2D(positionVector);
             PaddleWidth = 400;
             PaddleHeight = 85;

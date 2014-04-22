@@ -18,6 +18,16 @@ namespace ArkanoidGame.Interfaces
         Vector2D Position { get; set; }
 
         /// <summary>
+        /// Должина на објектот во виртуелна единица
+        /// </summary>
+        int ObjectWidth { get; }
+
+        /// <summary>
+        /// Ширина на објектот во виртуелна единица
+        /// </summary>
+        int ObjectHeight { get; }
+
+        /// <summary>
         /// Текстурите на објектите подредени по редоследот по кој треба да се црта
         /// </summary>
         IList<GameBitmap> ObjectTextures { get; }
