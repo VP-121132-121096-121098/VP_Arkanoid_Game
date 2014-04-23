@@ -163,7 +163,7 @@ namespace ArkanoidGame
         {
             for (int i = 0; i < gameObjects.Count; i++)
             {
-                gameObjects[i].OnUpdate(gameObjects, ElapsedTime);
+                gameObjects[i].OnUpdate(ElapsedTime);
                 if (i + 1 >= BitmapsToRender.Count)
                     BitmapsToRender.Add(gameObjects[i].ObjectTextures);
                 else

@@ -31,7 +31,7 @@ namespace ArkanoidGame.Objects
         public int ObjectWidth { get; private set; }
         public int ObjectHeight { get; private set; }
 
-        public void OnUpdate(IList<IGameObject> objects, long gameElapsedTime)
+        public void OnUpdate(long gameElapsedTime)
         {
 
             IKeyState leftArrowState = KeyStateInfo.GetAsyncKeyState(Keys.Left);
@@ -89,9 +89,6 @@ namespace ArkanoidGame.Objects
                 Position.X = ObjectWidth - 10 - PaddleWidth;
             else if (Position.X < 5)
                 Position.X = 5;
-
-            //collision detection with ball
-            //to be implemented
 
             ObjectTextures[0].X = Position.X;
             ObjectTextures[0].Y = Position.Y;

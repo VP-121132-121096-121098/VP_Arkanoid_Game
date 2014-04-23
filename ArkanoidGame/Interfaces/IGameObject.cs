@@ -10,7 +10,7 @@ namespace ArkanoidGame.Interfaces
 {
     public interface IGameObject
     {
-        void OnUpdate(IList<IGameObject> objects, long gameElapsedTime);
+        void OnUpdate(long gameElapsedTime);
 
         /// <summary>
         /// Позиција на објектот во виртуелни координати
