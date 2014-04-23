@@ -189,6 +189,7 @@ namespace ArkanoidGame.Framework
             try
             {
                 this.IsGameRunning = true;
+                game.GameUpdatePeriod = gameUpdatePeriod;
                 this.GameMainLoop();
             }
             catch (Exception e)
