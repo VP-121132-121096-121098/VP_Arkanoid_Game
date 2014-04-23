@@ -71,5 +71,10 @@ namespace ArkanoidGame.Interfaces
         /// Рендерер
         /// </summary>
         IGameRenderer Renderer { get; }
+
+        /// <summary>
+        /// во милисекунди
+        /// </summary>
+        int GameUpdatePeriod { get; set; }
     }
 }

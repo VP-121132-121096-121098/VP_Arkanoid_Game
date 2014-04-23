@@ -227,25 +227,44 @@ namespace ArkanoidGame
         }
 
         //во милисекунди
-        private int gameUpdatePeriod;
+        public int GameUpdatePeriod { get; set; }
 
         /// <summary>
-        /// Креира нова игра и ја поставува во почетна состојба initialState.
-        /// gameUpdatePeriod е во милисекунди и означува на колкав период
-        /// се повикува методот update()
+        /// Креира нова игра и ја поставува во почетна состојба ArkanoidStateMainMenu.
         /// </summary>
-        /// <param name="initialState"></param>
-        /// <param name="gameUpdatePeriod"></param>
-        public GameArkanoid(IGameState initialState, int gameUpdatePeriod)
+        private GameArkanoid()
         {
             VirtualGameWidth = 3840;
             VirtualGameHeight = 2160;
             this.Renderer = new GameRenderer(VirtualGameWidth, VirtualGameHeight);
             CursorIngameCoordinates = Cursor.Position;
-            this.gameUpdatePeriod = gameUpdatePeriod;
-            GameState = initialState;
+            this.GameUpdatePeriod = 0;
+            GameState = new ArkanoidStateMainMenu(this);
             Name = "Arkanoid";
             GameObjects = new List<IGameObject>();
+        }
+
+        static GameArkanoid()
+        {
+            instance = null;
+            lockObject = new object();
+        }
+
+        private static GameArkanoid instance;
+        private static readonly object lockObject;
+
+        public static GameArkanoid GetInstance()
+        {
+            if (instance == null)
+            {
+                lock (lockObject)
+                {
+                    if (instance == null)
+                        instance = new GameArkanoid();
+                }
+            }
+
+            return instance;
         }
 
         public int OnUpdate(Point cursorPanelCoordinates)
