@@ -28,7 +28,7 @@ namespace ArkanoidGame.Interfaces
         int ObjectHeight { get; }
 
         /// <summary>
-        /// Текстурите на објектите подредени по редоследот по кој треба да се црта
+        /// Текстурите на објектите подредени по редоследот по кој треба да се цртаат
         /// </summary>
         IList<GameBitmap> ObjectTextures { get; }
     }
