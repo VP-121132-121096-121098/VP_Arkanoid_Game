@@ -42,7 +42,6 @@ namespace ArkanoidGame
                 {
                     //Ако се притисне глушецот на quit game тогаш излези нормално
                     Game.GameState = new ArkanoidGamePlayState(Game);
-                    Thread.Sleep(100);
 
                     foreach (KeyValuePair<string, GameBitmap> bitmap in readyStrings)
                     {
@@ -209,6 +208,8 @@ namespace ArkanoidGame
 
         private readonly object gameStateLock = new Object();
 
+        private bool isRendererEnabled;
+
         public string Name { get; private set; }
 
         /// <summary>
@@ -223,6 +224,11 @@ namespace ArkanoidGame
 
         public void OnDraw(Graphics graphics, int frameWidth, int frameHeight)
         {
+            if (!isRendererEnabled)
+            {
+                return;
+            }
+
             this.GameState.OnDraw(graphics, frameWidth, frameHeight);
         }
 
@@ -234,6 +240,8 @@ namespace ArkanoidGame
         /// </summary>
         private GameArkanoid()
         {
+            isRendererEnabled = false;
+
             VirtualGameWidth = 3840;
             VirtualGameHeight = 2160;
             this.Renderer = new GameRenderer(VirtualGameWidth, VirtualGameHeight);
@@ -242,6 +250,8 @@ namespace ArkanoidGame
             GameState = new ArkanoidStateMainMenu(this);
             Name = "Arkanoid";
             GameObjects = new List<IGameObject>();
+
+            isRendererEnabled = true;
         }
 
         static GameArkanoid()

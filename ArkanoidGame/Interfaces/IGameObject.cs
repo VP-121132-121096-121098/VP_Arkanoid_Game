@@ -20,16 +20,21 @@ namespace ArkanoidGame.Interfaces
         /// <summary>
         /// Должина на објектот во виртуелна единица
         /// </summary>
-        int ObjectWidth { get; }
+        double ObjectWidth { get; }
 
         /// <summary>
         /// Ширина на објектот во виртуелна единица
         /// </summary>
-        int ObjectHeight { get; }
+        double ObjectHeight { get; }
 
         /// <summary>
         /// Текстурите на објектите подредени по редоследот по кој треба да се цртаат
         /// </summary>
         IList<GameBitmap> ObjectTextures { get; }
+
+        /// <summary>
+        /// Моментална брзина на објектот изразена како векторска величина
+        /// </summary>
+        Vector2D Velocity { get; }
     }
 }
