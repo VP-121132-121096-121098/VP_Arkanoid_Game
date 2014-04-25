@@ -72,6 +72,46 @@ namespace ArkanoidGame
             {
                 BitmapsToRender[1][1] = readyStrings["quit game"];
             }
+
+            GameBitmap controls = menuOptions["controls"];
+            if (cursor.X >= controls.X && cursor.X <= controls.X + controls.WidthInGameUnits
+                && cursor.Y >= controls.Y && cursor.Y <= controls.Y + controls.HeightInGameUnits)
+            {
+
+                if (Game.IsControllerMouse)
+                {
+                    BitmapsToRender[1][2] = readyStrings["Game controls mouse hover"];
+                }
+                else
+                {
+                    BitmapsToRender[1][2] = readyStrings["Game controls keyboard hover"];
+                }
+
+
+                if (KeyStateInfo.GetAsyncKeyState(Keys.LButton).WasPressedAfterPreviousCall
+                        && KeyStateInfo.GetAsyncKeyState(Keys.LButton).IsPressed)
+                {
+                    //Ако се притисне глушецот на quit game тогаш излези нормално
+                    if (BitmapsToRender[1][2] == readyStrings["Game controls mouse hover"])
+                    {
+                        BitmapsToRender[1][2] = readyStrings["Game controls keyboard hover"];
+                        Game.IsControllerMouse = false;
+                    }
+                    else
+                    {
+                        BitmapsToRender[1][2] = readyStrings["Game controls mouse hover"];
+                        Game.IsControllerMouse = true;
+                    }
+                }
+            }
+            else if(Game.IsControllerMouse)
+            {
+                BitmapsToRender[1][2] = readyStrings["Game controls mouse"];
+            }
+            else
+            {
+                BitmapsToRender[1][2] = readyStrings["Game controls keyboard"];
+            }
             
             //Посебна readonly копија за рендерерот
             List<IList<GameBitmap>> tempList = new List<IList<GameBitmap>>();
@@ -109,21 +149,37 @@ namespace ArkanoidGame
             readyStrings.Add("start game", new GameBitmap(StaticStringFactory.CreateOrangeString("start game"),
                 (game.VirtualGameWidth - 550) / 2, 750, 600, 90));
             readyStrings.Add("quit game", new GameBitmap(StaticStringFactory.CreateOrangeString("quit game"),
-                (game.VirtualGameWidth - 500) / 2, 880, 550, 90));
+                (game.VirtualGameWidth - 500) / 2, 1100, 550, 90));
             readyStrings.Add("start game hover", new GameBitmap(StaticStringFactory.CreateBlueString("start game"),
                 (game.VirtualGameWidth - 550) / 2, 750, 600, 90));
             readyStrings.Add("quit game hover", new GameBitmap(StaticStringFactory.CreateBlueString("quit game"),
-                (game.VirtualGameWidth - 500) / 2, 880, 550, 90));
+                (game.VirtualGameWidth - 500) / 2, 1100, 550, 90));
+            readyStrings.Add("Game controls mouse", new GameBitmap(StaticStringFactory
+                .CreateOrangeString("Controls: mouse"), (game.VirtualGameWidth - 750) / 2.0, 920,
+                750, 90));
+            readyStrings.Add("Game controls mouse hover", new GameBitmap(StaticStringFactory
+                .CreateBlueString("Controls: mouse"), (game.VirtualGameWidth - 750) / 2.0, 920,
+                750, 90));
+
+            readyStrings.Add("Game controls keyboard", new GameBitmap(StaticStringFactory
+                .CreateOrangeString("Controls: keyboard"), (game.VirtualGameWidth - 750) / 2.0, 920,
+                750, 90));
+            readyStrings.Add("Game controls keyboard hover", new GameBitmap(StaticStringFactory
+                .CreateBlueString("Controls: keyboard"), (game.VirtualGameWidth - 750) / 2.0, 920,
+                750, 90));
 
             menuOptions = new Dictionary<string, GameBitmap>();
             menuOptions.Add("start game", readyStrings["start game"]);
             menuOptions.Add("quit game", readyStrings["quit game"]);
+            menuOptions.Add("controls", readyStrings["Game controls mouse"]);
 
             BitmapsToRender.Add(new List<GameBitmap>());
             BitmapsToRender[1].Add(menuOptions["start game"]);
             BitmapsToRender[1].Add(menuOptions["quit game"]);
+            BitmapsToRender[1].Add(menuOptions["controls"]);
 
             this.Game = game;
+            Game.IsControllerMouse = true;
         }
 
         public bool IsTimesynchronizationImportant
@@ -208,7 +264,7 @@ namespace ArkanoidGame
 
         private readonly object gameStateLock = new Object();
 
-        private bool isRendererEnabled;
+        private bool isRendererEnabled;        
 
         public string Name { get; private set; }
 
@@ -315,5 +371,8 @@ namespace ArkanoidGame
 
 
         public IGameRenderer Renderer { get; private set; }
+
+
+        public bool IsControllerMouse { get; set; }
     }
 }

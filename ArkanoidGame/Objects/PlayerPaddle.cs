@@ -45,9 +45,14 @@ namespace ArkanoidGame.Objects
 
             Vector2D velocity_0 = Velocity;
 
-            //ReadKeyboardInput(leftArrowState, rightArrowState);
-
-            ReadMouseInput(GameArkanoid.GetInstance().CursorIngameCoordinates);
+            if (!GameArkanoid.GetInstance().IsControllerMouse)
+            {
+                ReadKeyboardInput(leftArrowState, rightArrowState);
+            }
+            else
+            {
+                ReadMouseInput(GameArkanoid.GetInstance().CursorIngameCoordinates);
+            }
 
 
             Position += (Velocity + velocity_0) / 2;

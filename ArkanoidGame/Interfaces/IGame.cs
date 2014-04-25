@@ -76,5 +76,10 @@ namespace ArkanoidGame.Interfaces
         /// во милисекунди
         /// </summary>
         int GameUpdatePeriod { get; set; }
+
+        /// <summary>
+        /// Дали paddle-от ќе се контролира со тастатурата или со глувчето
+        /// </summary>
+        bool IsControllerMouse { get; set; }
     }
 }
