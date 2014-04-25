@@ -157,5 +157,15 @@ namespace ArkanoidGame.Objects
 
         public bool IsBall { get { return false; } }
         public bool IsPlayerPaddle { get { return true; } }
+
+        public IGeometricShape GetGeometricShape()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void OnCollisionDetected(IList<IGameObject> collidingObjects)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -10,6 +10,13 @@ namespace ArkanoidGame.Interfaces
 {
     public interface IGameObject
     {
+
+        /// <summary>
+        /// Враќа поедноставена геометриска репрезентација на соодветниот објект.
+        /// Пример за топчето оваа функција враќа Круг со радиус r.
+        /// </summary>
+        IGeometricShape GetGeometricShape();
+
         void OnUpdate(long gameElapsedTime);
 
         /// <summary>
@@ -37,8 +44,21 @@ namespace ArkanoidGame.Interfaces
         /// </summary>
         Vector2D Velocity { get; }
 
+        /// <summary>
+        /// Дали објектот е топчето кое ги крши циглите? Пример paddle-от треба да
+        /// го игнорира секој објект освен топчето.
+        /// </summary>
         bool IsBall { get; }
 
         bool IsPlayerPaddle { get; }
+
+        /// <summary>
+        /// Ако објектот се судри со некој/и друг/и објекти, тогаш кај секој од тие објекти
+        /// се повикува методот OnCollisionDetected и секој објект добива листа од објектите со кои
+        /// се судрил (заради оптимизација во таа листа ќе го има и самиот објект). Ниту 
+        /// еден објект не смее да ја менуваа таа листа!!!
+        /// </summary>
+        /// <param name="collidingObjects"></param>
+        void OnCollisionDetected(IList<IGameObject> collidingObjects);
     }
 }
