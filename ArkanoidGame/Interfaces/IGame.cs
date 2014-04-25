@@ -81,5 +81,10 @@ namespace ArkanoidGame.Interfaces
         /// Дали paddle-от ќе се контролира со тастатурата или со глувчето
         /// </summary>
         bool IsControllerMouse { get; set; }
+
+        /// <summary>
+        /// Дали рендерерот е вклучен или исклучен
+        /// </summary>
+        bool IsRendererEnabled { get; set; }
     }
 }

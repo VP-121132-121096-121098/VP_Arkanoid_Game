@@ -54,6 +54,7 @@
       <DependentUpon>AbstractGameWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\IGameRenderer.cs" />
+    <Compile Include="Objects\Bricks.cs" />
     <Compile Include="Renderer\GameBitmap.cs" />
     <Compile Include="Framework\GameUnitConversion.cs" />
     <Compile Include="Renderer\GameRenderer.cs" />

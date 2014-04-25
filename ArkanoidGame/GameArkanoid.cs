@@ -33,8 +33,7 @@ namespace ArkanoidGame
 
             GameBitmap startGame = menuOptions["start game"];
 
-            if (cursor.X >= startGame.X && cursor.X <= startGame.X + startGame.WidthInGameUnits
-                && cursor.Y >= startGame.Y && cursor.Y <= startGame.Y + startGame.HeightInGameUnits)
+            if (MenuOptionHover(cursor, startGame))
             {
                 BitmapsToRender[1][0] = readyStrings["start game hover"];
                 if (KeyStateInfo.GetAsyncKeyState(Keys.LButton).WasPressedAfterPreviousCall
@@ -42,6 +41,8 @@ namespace ArkanoidGame
                 {
                     //Ако се притисне глушецот на quit game тогаш излези нормално
                     Game.GameState = new ArkanoidGamePlayState(Game);
+
+
 
                     foreach (KeyValuePair<string, GameBitmap> bitmap in readyStrings)
                     {
@@ -57,8 +58,7 @@ namespace ArkanoidGame
             }
 
             GameBitmap quitGame = menuOptions["quit game"];
-            if (cursor.X >= quitGame.X && cursor.X <= quitGame.X + quitGame.WidthInGameUnits
-                && cursor.Y >= quitGame.Y && cursor.Y <= quitGame.Y + quitGame.HeightInGameUnits)
+            if (MenuOptionHover(cursor, quitGame))
             {
                 BitmapsToRender[1][1] = readyStrings["quit game hover"];
                 if (KeyStateInfo.GetAsyncKeyState(Keys.LButton).WasPressedAfterPreviousCall
@@ -74,8 +74,7 @@ namespace ArkanoidGame
             }
 
             GameBitmap controls = menuOptions["controls"];
-            if (cursor.X >= controls.X && cursor.X <= controls.X + controls.WidthInGameUnits
-                && cursor.Y >= controls.Y && cursor.Y <= controls.Y + controls.HeightInGameUnits)
+            if (MenuOptionHover(cursor, controls))
             {
 
                 if (Game.IsControllerMouse)
@@ -104,7 +103,7 @@ namespace ArkanoidGame
                     }
                 }
             }
-            else if(Game.IsControllerMouse)
+            else if (Game.IsControllerMouse)
             {
                 BitmapsToRender[1][2] = readyStrings["Game controls mouse"];
             }
@@ -112,7 +111,7 @@ namespace ArkanoidGame
             {
                 BitmapsToRender[1][2] = readyStrings["Game controls keyboard"];
             }
-            
+
             //Посебна readonly копија за рендерерот
             List<IList<GameBitmap>> tempList = new List<IList<GameBitmap>>();
             for (int i = 0; i < BitmapsToRender.Count; i++)
@@ -126,6 +125,14 @@ namespace ArkanoidGame
             rendererBitmaps = tempList;
 
             return 100;
+        }
+
+        private static bool MenuOptionHover(Point cursor, GameBitmap menuOptionBitmap)
+        {
+            return (cursor.X >= menuOptionBitmap.X
+                && cursor.X <= menuOptionBitmap.X + menuOptionBitmap.WidthInGameUnits
+                            && cursor.Y >= menuOptionBitmap.Y
+                            && cursor.Y <= menuOptionBitmap.Y + menuOptionBitmap.HeightInGameUnits);
         }
 
         /// <summary>
@@ -255,8 +262,19 @@ namespace ArkanoidGame
             get { return true; }
         }
 
-        public IList<IList<GameBitmap>> BitmapsToRender { get; private set; }
-        private IList<IList<GameBitmap>> rendererBitmaps;
+        public IList<IList<GameBitmap>> BitmapsToRender { get; private set; } //текстури за секој објект
+
+        private IList<IList<GameBitmap>> rendererBitmaps; /* Копија од листата BitmapsToRender. Бидејќи
+                                                           * листата BitmapsToRender може да се менува,
+                                                           * а Draw е посебен thread, за да се избегне 
+                                                           * синхронизација помеѓу нишките (што ќе го забави
+                                                           * времето на извршување), може да се прати
+                                                           * копија од листата на слики од последното извршување 
+                                                           * на OnUpdate(). Бидејќи ќе пратиме копија ако дојде 
+                                                           * до отстранување на некоја слика од BitmapsToRender, таа
+                                                           * промена ќе се прикаже на првиот повик на Draw по копирањето 
+                                                           * на сликите во листата rendererBitmaps.
+                                                           */
     }
 
     public class GameArkanoid : IGame
@@ -265,7 +283,7 @@ namespace ArkanoidGame
 
         private readonly object gameStateLock = new Object();
 
-        private bool isRendererEnabled;        
+        public bool IsRendererEnabled { get; set; }
 
         public string Name { get; private set; }
 
@@ -281,8 +299,9 @@ namespace ArkanoidGame
 
         public void OnDraw(Graphics graphics, int frameWidth, int frameHeight)
         {
-            if (!isRendererEnabled)
+            if (!IsRendererEnabled)
             {
+                graphics.FillRectangle(Brushes.Black, 0, 0, frameWidth, frameHeight);
                 return;
             }
 
@@ -297,7 +316,7 @@ namespace ArkanoidGame
         /// </summary>
         private GameArkanoid()
         {
-            isRendererEnabled = false;
+            IsRendererEnabled = false;
 
             VirtualGameWidth = 3840;
             VirtualGameHeight = 2160;
@@ -308,7 +327,7 @@ namespace ArkanoidGame
             Name = "Arkanoid";
             GameObjects = new List<IGameObject>();
 
-            isRendererEnabled = true;
+            IsRendererEnabled = true;
         }
 
         static GameArkanoid()
