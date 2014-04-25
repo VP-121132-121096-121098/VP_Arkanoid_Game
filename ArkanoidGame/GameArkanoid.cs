@@ -204,6 +204,7 @@ namespace ArkanoidGame
             PlayerPaddle player = new PlayerPaddle(new Vector2D(1750, 2010), Game.VirtualGameWidth,
                 Game.VirtualGameHeight);
             Game.GameObjects.Add(player);
+
             ElapsedTime = 0;
         }
 

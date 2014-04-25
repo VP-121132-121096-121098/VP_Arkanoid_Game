@@ -154,5 +154,9 @@ namespace ArkanoidGame.Objects
 
 
         public IList<GameBitmap> ObjectTextures { get; private set; }
+
+
+        public bool IsBall { get { return false; } }
+        public bool IsPlayerPaddle { get { return true; } }
     }
 }

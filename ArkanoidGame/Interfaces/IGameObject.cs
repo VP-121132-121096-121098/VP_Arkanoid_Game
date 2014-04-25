@@ -36,5 +36,9 @@ namespace ArkanoidGame.Interfaces
         /// Моментална брзина на објектот изразена како векторска величина
         /// </summary>
         Vector2D Velocity { get; }
+
+        bool IsBall { get; }
+
+        bool IsPlayerPaddle { get; }
     }
 }
