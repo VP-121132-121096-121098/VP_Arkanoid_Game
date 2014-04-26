@@ -60,10 +60,5 @@ namespace ArkanoidGame.Objects
         {
             throw new NotImplementedException();
         }
-
-        public void OnCollisionDetected(IList<IGameObject> collidingObjects)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
