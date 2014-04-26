@@ -79,7 +79,7 @@ namespace ArkanoidGame.Geometry
         /// <returns></returns>
         private bool Intersects(GameCircle gameCircle, List<Vector2D> points)
         {
-            /* Логички ќе сметаме дека правоаголникот секогаш е претставен како
+            /* Ќе сметаме дека правоаголникот секогаш е претставен како
              * 
              * UL                         UR
              *  ---------------------------
@@ -159,7 +159,7 @@ namespace ArkanoidGame.Geometry
         /// <returns></returns>
         private bool Intersects(GameRectangle rect, List<Vector2D> points)
         {
-            /* Логички ќе сметаме дека правоаголникот секогаш е претставен како
+            /* Ќе сметаме дека правоаголникот секогаш е претставен како
              * 
              * UL                         UR
              *  ---------------------------
