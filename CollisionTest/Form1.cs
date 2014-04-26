@@ -66,6 +66,9 @@ namespace CollisionTest
             g.FillEllipse(Brushes.Green, (float)(circle.Position.X - circle.Radius),
                 (float)(circle.Position.Y - circle.Radius), (float)(2 * circle.Radius),
                 (float)(2 * circle.Radius));
+            g.FillEllipse(Brushes.Purple, (float)(circle2.Position.X - circle2.Radius),
+                (float)(circle2.Position.Y - circle2.Radius), (float)(2 * circle2.Radius),
+                (float)(2 * circle2.Radius));
 
             List<Vector2D> points = new List<Vector2D>();
             rectangle1.Intersects(rectangle2, out points);
@@ -74,10 +77,12 @@ namespace CollisionTest
             points.AddRange(tempPoints);
             rectangle2.Intersects(circle, out tempPoints);
             points.AddRange(tempPoints);
+            circle.Intersects(circle2, out tempPoints);
+            points.AddRange(tempPoints);
 
             foreach (Vector2D point in points)
             {
-                g.DrawEllipse(new Pen(Brushes.Black, 3), (float)point.X - 10, (float)point.Y - 10, 10, 10);
+                g.DrawEllipse(new Pen(Brushes.Black, 3), (float)point.X - 5, (float)point.Y - 5, 10, 10);
             }
         }
 
@@ -117,7 +122,7 @@ namespace CollisionTest
         private void timer1_Tick(object sender, EventArgs e)
         {
             this.UpdateObjects();
-            this.Refresh();
+            this.Invalidate();
         }
     }
 }

@@ -41,6 +41,11 @@ namespace ArkanoidGame.Geometry
             {
                 GameRectangle temp = (GameRectangle)geometricShape;
                 return temp.Intersects(this, out points);
+            } if (geometricShape.ShapeType == GeometricShapeTypes.Circle)
+            {
+                GameCircle circle = (GameCircle)geometricShape;
+                points = GeometricAlgorithms.IntersectCircles(this, circle);
+                return points.Count > 0;
             }
 
             throw new NotImplementedException();

@@ -174,6 +174,56 @@ namespace ArkanoidGame.Geometry
             return returnList;
         }
 
+        public static List<Vector2D> IntersectCircles(GameCircle circle1, GameCircle circle2)
+        {
+            List<Vector2D> listPoints = new List<Vector2D>();
+            ISet<Vector2D> setPoints = new HashSet<Vector2D>();
+
+            Vector2D P0 = circle1.Position; //центар на првиот круг
+            double r0 = circle1.Radius; //радиус на првиот круг
+            Vector2D P1 = circle2.Position; //центар на вториот круг
+            double r1 = circle2.Radius; //радиус на вториот круг
+
+            double d = (P1 - P0).Magnitude(); //растојание помеѓу двата центри
+            if (d > r0 + r1)
+            {
+                return listPoints; /* Растојанието помѓу центрите е поголемо од збирот на радиусите.
+                                    * Значи не може да се допираат ниту да се сечат.
+                                    */
+            }
+
+            if (d < Math.Abs(r0 - r1))
+            {
+                listPoints.Add(circle1.Position);
+                return listPoints;
+                /* Во овој случај едниот круг целосно се содржи во другиот */
+            }
+
+            double a = (r0 * r0 - r1 * r1 + d * d) / (2 * d); /* растојание од центарот на првата кружница
+                                                               * до местото каде што нормалата h спуштена од пресечните
+                                                               * точки ја сече правата P0-P1.
+                                                               */
+
+            Vector2D P2 = P0 + (P1 - P0) * a / d; /* точката каде што нормалата h ја сече правата P0-P1 */
+            
+            // Правецот на нормалата h е било кој вектор кој што скаларно помножен со P0->P1 дава 0.
+            // Нека Pt = (P1 - P0) (вектор)
+            Vector2D Pt = (P1 - P0);
+
+            double h = Math.Sqrt(r0 * r0 - a * a);
+
+            double p3x = P2.X + h * (P1.Y - P0.Y) / d;
+            double p3y = P2.Y - h * (P1.X - P0.X) / d;
+            setPoints.Add(new Vector2D(p3x, p3y));
+
+            p3x = P2.X - h * (P1.Y - P0.Y) / d;
+            p3y = P2.Y + h * (P1.X - P0.X) / d;
+            setPoints.Add(new Vector2D(p3x, p3y));
+
+            listPoints.AddRange(setPoints);
+            return listPoints;
+        }
+
         private static double Distance(Vector2D point1, Vector2D point2)
         {
             return (point2 - point1).Magnitude();
