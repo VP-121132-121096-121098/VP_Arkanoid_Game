@@ -1,4 +1,5 @@
 ﻿using ArkanoidGame.Framework;
+using ArkanoidGame.Geometry;
 using ArkanoidGame.Interfaces;
 using ArkanoidGame.Renderer;
 using System;
@@ -33,7 +34,7 @@ namespace ArkanoidGame.Objects
         public int GameWidth { get; private set; }
         public int GameHeight { get; private set; }
 
-        public void OnUpdate(long gameElapsedTime)
+        public void OnUpdate(long gameElapsedTime, IList<IGameObject> allGameObjects)
         {
             if (MouseLastPosition == null)
             {
@@ -158,7 +159,7 @@ namespace ArkanoidGame.Objects
         public bool IsBall { get { return false; } }
         public bool IsPlayerPaddle { get { return true; } }
 
-        public IGeometricShape GetGeometricShape()
+        public IList<IGeometricShape> GetGeometricShape()
         {
             throw new NotImplementedException();
         }

@@ -1,4 +1,5 @@
 ﻿using ArkanoidGame.Framework;
+using ArkanoidGame.Geometry;
 using ArkanoidGame.Renderer;
 using System;
 using System.Collections.Generic;
@@ -13,11 +14,19 @@ namespace ArkanoidGame.Interfaces
 
         /// <summary>
         /// Враќа поедноставена геометриска репрезентација на соодветниот објект.
-        /// Пример за топчето оваа функција враќа Круг со радиус r.
+        /// Пример за топчето оваа функција враќа круг со радиус r.
         /// </summary>
-        IGeometricShape GetGeometricShape();
+        IList<IGeometricShape> GetGeometricShape();
 
-        void OnUpdate(long gameElapsedTime);
+        /// <summary>
+        /// Се повикува 60 пати во секунда (60 FPS). Притоа elapsedTime е број на поминати периоди
+        /// во играта, а allGameObjects е листа од сите објекти. Може да се искористи за алгоритамот
+        /// за детекција на судири. ВНИМАНИЕ!!! Во allGameObjects има и референца кон самиот објект.
+        /// Треба да се спореди референцата со this за да се избегнат несакани багови.
+        /// </summary>
+        /// <param name="gameElapsedTime"></param>
+        /// <param name="allGameObjects"></param>
+        void OnUpdate(long gameElapsedTime, IList<IGameObject> allGameObjects);
 
         /// <summary>
         /// Позиција на објектот во виртуелни координати
@@ -51,14 +60,5 @@ namespace ArkanoidGame.Interfaces
         bool IsBall { get; }
 
         bool IsPlayerPaddle { get; }
-
-        /// <summary>
-        /// Ако објектот се судри со некој/и друг/и објекти, тогаш кај секој од тие објекти
-        /// се повикува методот OnCollisionDetected и секој објект добива листа од објектите со кои
-        /// се судрил (заради оптимизација во таа листа ќе го има и самиот објект). Ниту 
-        /// еден објект не смее да ја менуваа таа листа!!!
-        /// </summary>
-        /// <param name="collidingObjects"></param>
-        void OnCollisionDetected(IList<IGameObject> collidingObjects);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using ArkanoidGame.Framework;
+using ArkanoidGame.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,19 +22,11 @@ namespace ArkanoidGame.Interfaces
         GeometricShapeTypes ShapeType { get; }
 
         /// <summary>
-        /// Враќа точно (true) ако овој објект го допира или го сече објектот 
-        /// испратен како аргумент, во спротивно враќа неточно (false).
+        /// Ако постојат точки со кои се сечат двете геометриски фигури враќа true и 
+        /// ги враќа точките, во спротивно враќа null.
         /// </summary>
         /// <param name="geometricShape"></param>
         /// <returns></returns>
-        bool Intersects(IGeometricShape geometricShape);
-
-        /// <summary>
-        /// Вектор кој ја одредува локација на објектот (радиус вектор 
-        /// на точката чии координати ја одредуваат позиција на објектот).
-        /// Пример за кругот таквата точка е неговиот центар, за правоаголникот
-        /// може да биде темето во горниот лев агол итн.
-        /// </summary>
-        Vector2D Position { get; }
+        bool Intersects(IGeometricShape geometricShape, out List<Vector2D> points);
     }
 }

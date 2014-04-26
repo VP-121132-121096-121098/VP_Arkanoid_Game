@@ -1,4 +1,5 @@
 ﻿using ArkanoidGame.Framework;
+using ArkanoidGame.Geometry;
 using ArkanoidGame.Interfaces;
 using ArkanoidGame.Objects;
 using ArkanoidGame.Renderer;
@@ -226,7 +227,7 @@ namespace ArkanoidGame
         {
             for (int i = 0; i < gameObjects.Count; i++)
             {
-                gameObjects[i].OnUpdate(ElapsedTime);
+                gameObjects[i].OnUpdate(ElapsedTime, gameObjects);
                 if (i + 1 >= BitmapsToRender.Count)
                     BitmapsToRender.Add(gameObjects[i].ObjectTextures);
                 else

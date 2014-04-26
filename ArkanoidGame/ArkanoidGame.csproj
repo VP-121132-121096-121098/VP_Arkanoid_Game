@@ -53,6 +53,10 @@
     <Compile Include="AbstractGameWindow.designer.cs">
       <DependentUpon>AbstractGameWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="Geometry\GameCircle.cs" />
+    <Compile Include="Geometry\GameRectangle.cs" />
+    <Compile Include="Geometry\GeometricAlgorithms.cs" />
+    <Compile Include="Geometry\Vector3D.cs" />
     <Compile Include="Interfaces\IGameRenderer.cs" />
     <Compile Include="Interfaces\IGeometricShape.cs" />
     <Compile Include="Objects\AbstractBrick.cs" />
@@ -64,7 +68,7 @@
     <Compile Include="Framework\GameFramework.cs" />
     <Compile Include="Framework\KeyStateInfo.cs" />
     <Compile Include="Framework\Logger.cs" />
-    <Compile Include="Framework\Vector2D.cs" />
+    <Compile Include="Geometry\Vector2D.cs" />
     <Compile Include="GamePanel.cs">
       <SubType>Component</SubType>
     </Compile>

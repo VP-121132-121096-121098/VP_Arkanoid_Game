@@ -1,4 +1,5 @@
-﻿using ArkanoidGame.Interfaces;
+﻿using ArkanoidGame.Geometry;
+using ArkanoidGame.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,12 +9,12 @@ namespace ArkanoidGame.Objects
 {
     public abstract class AbstractBrick : IGameObject
     {
-        public void OnUpdate(long gameElapsedTime)
+        public void OnUpdate(long gameElapsedTime, IList<IGameObject> allGameObjects)
         {
             throw new NotImplementedException();
         }
 
-        public Framework.Vector2D Position
+        public Vector2D Position
         {
             get
             {
@@ -40,7 +41,7 @@ namespace ArkanoidGame.Objects
             get { throw new NotImplementedException(); }
         }
 
-        public Framework.Vector2D Velocity
+        public Vector2D Velocity
         {
             get { throw new NotImplementedException(); }
         }
@@ -55,7 +56,7 @@ namespace ArkanoidGame.Objects
             get { throw new NotImplementedException(); }
         }
 
-        public IGeometricShape GetGeometricShape()
+        public IList<IGeometricShape> GetGeometricShape()
         {
             throw new NotImplementedException();
         }

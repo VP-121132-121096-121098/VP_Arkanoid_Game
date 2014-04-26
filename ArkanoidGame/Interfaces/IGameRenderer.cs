@@ -1,4 +1,5 @@
 ﻿using ArkanoidGame.Framework;
+using ArkanoidGame.Geometry;
 using ArkanoidGame.Renderer;
 using System;
 using System.Collections.Generic;

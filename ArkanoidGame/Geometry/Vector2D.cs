@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace ArkanoidGame.Framework
+namespace ArkanoidGame.Geometry
 {
     public class Vector2D
     {
@@ -72,6 +72,36 @@ namespace ArkanoidGame.Framework
         public double Magnitude()
         {
             return Math.Sqrt(this * this);
+        }
+
+        public static implicit operator Vector3D(Vector2D vec) {
+            return new Vector3D(vec);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            Vector2D vec = (Vector2D)obj;
+            return this.X == vec.X && this.Y == vec.Y;
+        }
+
+        public static bool operator ==(Vector2D vec1, Vector2D vec2)
+        {
+            return vec1.Equals(vec2);
+        }
+
+        public static bool operator !=(Vector2D vec1, Vector2D vec2)
+        {
+            return !(vec1 == vec2);
+        }
+
+        public override int GetHashCode()
+        {
+            return (X.GetHashCode() + Y.GetHashCode()) % int.MaxValue;
         }
     }
 }
