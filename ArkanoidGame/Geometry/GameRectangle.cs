@@ -103,6 +103,25 @@ namespace ArkanoidGame.Geometry
             Vector2D center = gameCircle.Position;
             double radius = gameCircle.Radius;
 
+            if(center.X >= pointUL.X && center.X <= pointUR.X && center.Y >= pointUL.Y
+                && center.Y <= pointDL.Y)
+            {
+                Vector2D HUM = (pointUL + pointUR) / 2; //горна хоризонтала средна точка
+                Vector2D VLM = (pointUL + pointDL) / 2; //лева вертикала средна точка
+                Vector2D HDM = (pointDL + pointDR) / 2; //долна хоризонтала средна точка
+                Vector2D VRM = (pointUR + pointDR) / 2; //десна вертикала средна точка
+
+                //Ако векторот помеѓу центарот и сите овие точки има поголема должина од радиусот на кругот
+                //тогаш кругот е во правоаголникот. Врати го неговиот центар во тој случај
+
+                if((HUM - center).Magnitude() > radius && (VLM - center).Magnitude() > radius &&
+                    (HDM - center).Magnitude() > radius && (VRM - center).Magnitude() > radius)
+                {
+                    points.Add(center);
+                    return true;
+                }
+            }
+
             //Провери ги сите четири страни дали се сечат со кругот
             List<Vector2D> temp = GeometricAlgorithms.IntersectLineCircle(pointUL, pointUR, center, radius);
             foreach (Vector2D vec in temp)
@@ -164,6 +183,24 @@ namespace ArkanoidGame.Geometry
             Vector2D pointUR2 = rect.positionVectorUR;
             Vector2D pointDL2 = new Vector2D(rect.positionVectorUL + new Vector2D(0, rect.Height));
             Vector2D pointDR2 = new Vector2D(rect.positionVectorUR + new Vector2D(0, rect.Height));
+
+            //Провери вториот дали се содржи целосно во првиот. Врати ги темињата на внатрешниот во тој случај
+            if (pointUL2.X > pointUL.X && pointUR2.X < pointUR.X && pointDL2.Y < pointDL.Y)
+            {
+                points.Add(pointUL2);
+                points.Add(pointUR2); 
+                points.Add(pointDL2);
+                points.Add(pointDR2);
+                return true;
+            } else if (pointUL.X > pointUL2.X && pointUR.X < pointUR2.X && pointDL.Y < pointDL2.Y)
+            {
+                //обратната ситуација
+                points.Add(pointUL);
+                points.Add(pointUR);
+                points.Add(pointDL);
+                points.Add(pointDR);
+                return true;
+            }
 
             //провери дали двете вертикални од вториот ја сечат горната хоризонтална страна од првиот
             points.AddRange((GeometricAlgorithms.IntersectLineSegments(

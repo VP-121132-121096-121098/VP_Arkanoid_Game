@@ -51,7 +51,7 @@ namespace CollisionTest
             InitializeComponent();
             rectangle1 = new GameRectangle(new Vector2D(30, 10), new Vector2D(120, 10),
                 90, 30);
-            rectangle2 = new GameRectangle(new Vector2D(100, 10), new Vector2D(190, 10), 90, 50);
+            rectangle2 = new GameRectangle(new Vector2D(100, 10), new Vector2D(220, 10), 120, 90);
             circle = new GameCircle(new Vector2D(200, 200), 20);
             circle2 = new GameCircle(new Vector2D(200, 250), 20);
         }
@@ -77,7 +77,11 @@ namespace CollisionTest
             points.AddRange(tempPoints);
             rectangle2.Intersects(circle, out tempPoints);
             points.AddRange(tempPoints);
+            rectangle2.Intersects(circle2, out tempPoints);
+            points.AddRange(tempPoints);
             circle.Intersects(circle2, out tempPoints);
+            points.AddRange(tempPoints);
+            rectangle1.Intersects(circle2, out tempPoints);
             points.AddRange(tempPoints);
 
             foreach (Vector2D point in points)
