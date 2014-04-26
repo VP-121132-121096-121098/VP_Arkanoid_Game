@@ -114,6 +114,10 @@ namespace ArkanoidGame.Geometry
             Vector3D crossQ_PR = ((Vector3D)(q - p)).CrossProduct(r); //(q - p) x r
             Vector3D crossQ_PS = ((Vector3D)(q - p)).CrossProduct(s); //(q - p) x s
 
+            /* Овде во коментарите * значи множење на скалар или скаларен производ, додека
+             * x е векторски производ.
+             */
+
             if (crossRS.Z != 0)
             {
                 double t = crossQ_PS.Z / crossRS.Z;
