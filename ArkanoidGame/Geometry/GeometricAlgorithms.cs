@@ -192,7 +192,7 @@ namespace ArkanoidGame.Geometry
                                     */
             }
 
-            if (d < Math.Abs(r0 - r1))
+            if (d < Math.Abs(r0 - r1) || d == 0)
             {
                 listPoints.Add(circle1.Position);
                 return listPoints;
