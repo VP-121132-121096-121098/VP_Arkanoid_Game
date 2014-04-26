@@ -34,7 +34,7 @@ namespace ArkanoidGame.Objects
         public int GameWidth { get; private set; }
         public int GameHeight { get; private set; }
 
-        public void OnUpdate(long gameElapsedTime, IList<IGameObject> allGameObjects)
+        public void OnUpdate(long gameElapsedTime)
         {
             if (MouseLastPosition == null)
             {

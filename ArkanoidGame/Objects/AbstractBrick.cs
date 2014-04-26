@@ -9,7 +9,7 @@ namespace ArkanoidGame.Objects
 {
     public abstract class AbstractBrick : IGameObject
     {
-        public void OnUpdate(long gameElapsedTime, IList<IGameObject> allGameObjects)
+        public void OnUpdate(long gameElapsedTime)
         {
             throw new NotImplementedException();
         }

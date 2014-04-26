@@ -20,13 +20,10 @@ namespace ArkanoidGame.Interfaces
 
         /// <summary>
         /// Се повикува 60 пати во секунда (60 FPS). Притоа elapsedTime е број на поминати периоди
-        /// во играта, а allGameObjects е листа од сите објекти. Може да се искористи за алгоритамот
-        /// за детекција на судири. ВНИМАНИЕ!!! Во allGameObjects има и референца кон самиот објект.
-        /// Треба да се спореди референцата со this за да се избегнат несакани багови.
+        /// во играта.
         /// </summary>
         /// <param name="gameElapsedTime"></param>
-        /// <param name="allGameObjects"></param>
-        void OnUpdate(long gameElapsedTime, IList<IGameObject> allGameObjects);
+        void OnUpdate(long gameElapsedTime);
 
         /// <summary>
         /// Позиција на објектот во виртуелни координати
