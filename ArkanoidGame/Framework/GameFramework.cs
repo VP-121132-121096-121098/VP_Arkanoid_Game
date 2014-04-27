@@ -224,12 +224,9 @@ namespace ArkanoidGame.Framework
                     continue;
                 }
 
-                if (IsRendererRunning)
-                {
-                    gamePanel.Invalidate();
-                }
-
                 long timeUpdateBegin = DateTime.Now.ToFileTimeUtc() / MillisecondInFileTime;
+
+                //update
                 IsGameRunning = game.OnUpdate(gamePanel
                     .PointToClientAsync(Cursor.Position)) == 100; /* се праќа и позиција на 
                                                                    * курсорот релативна на 
@@ -240,6 +237,12 @@ namespace ArkanoidGame.Framework
                                                                    */
 
                 gameElapsedTime++;
+
+                //render
+                if (IsRendererRunning)
+                {
+                    gamePanel.Invalidate();
+                }
 
                 long timeUpdateEnd = DateTime.Now.ToFileTimeUtc() / MillisecondInFileTime;
                 int remainingTime = (int)(gameUpdatePeriod - (timeUpdateEnd - timeUpdateBegin));
@@ -282,7 +285,6 @@ namespace ArkanoidGame.Framework
                     while (gameLag < -1)
                     {
                         IsRendererRunning = true;
-                        gamePanel.Invalidate();
                         Thread.Sleep(gameUpdatePeriod);
                         realElapsedTime = (DateTime.Now.ToFileTimeUtc() / MillisecondInFileTime
                             - timeGameStarted) / gameUpdatePeriod;
