@@ -6,8 +6,6 @@ using ArkanoidGame.Renderer;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Threading;
 using System.Windows.Forms;
 
 namespace ArkanoidGame

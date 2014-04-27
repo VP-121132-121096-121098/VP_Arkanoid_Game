@@ -209,7 +209,6 @@ namespace ArkanoidGame.Framework
 
         private void GameMainLoop()
         {
-
             long timeGameStarted = DateTime.Now.ToFileTimeUtc() / MillisecondInFileTime;
             long gameElapsedTime = 0;
             long gameLag = 0;
@@ -280,8 +279,15 @@ namespace ArkanoidGame.Framework
                 else if (gameLag < -1)
                 {
                     //Времето во играта избрзува премногу
-                    IsRendererRunning = true;
-                    Thread.Sleep(gameUpdatePeriod);
+                    while (gameLag < -1)
+                    {
+                        IsRendererRunning = true;
+                        gamePanel.Invalidate();
+                        Thread.Sleep(gameUpdatePeriod);
+                        realElapsedTime = (DateTime.Now.ToFileTimeUtc() / MillisecondInFileTime
+                            - timeGameStarted) / gameUpdatePeriod;
+                        gameLag = realElapsedTime - gameElapsedTime;
+                    }
                 }
                 else if(gameLag > 0) /* Времето во играта задоцнува зад реалното време */
                 {
