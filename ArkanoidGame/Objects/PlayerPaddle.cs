@@ -168,5 +168,11 @@ namespace ArkanoidGame.Objects
         {
             throw new NotImplementedException();
         }
+
+        public RectangleF Rectangle
+        {
+            get { return new RectangleF((float)Position.X, (float)Position.Y, 
+                (float)ObjectWidth, (float)ObjectHeight); }
+        }
     }
 }

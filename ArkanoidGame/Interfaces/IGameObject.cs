@@ -9,7 +9,7 @@ using System.Text;
 
 namespace ArkanoidGame.Interfaces
 {
-    public interface IGameObject
+    public interface IGameObject : IHasRectangle
     {
 
         /// <summary>

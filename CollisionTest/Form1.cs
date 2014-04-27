@@ -50,8 +50,9 @@ namespace CollisionTest
             mouseDown = false;
             InitializeComponent();
             rectangle1 = new GameRectangle(new Vector2D(30, 10), new Vector2D(120, 10),
-                90, 30);
-            rectangle2 = new GameRectangle(new Vector2D(100, 10), new Vector2D(220, 10), 120, 90);
+                new Vector2D(30, 40));
+            rectangle2 = new GameRectangle(new Vector2D(100, 10), new Vector2D(220, 10), 
+                new Vector2D(100, 100));
             circle = new GameCircle(new Vector2D(200, 200), 20);
             circle2 = new GameCircle(new Vector2D(200, 250), 20);
         }
@@ -100,20 +101,20 @@ namespace CollisionTest
             
             if (IsHit(rectangle1, PointToClient(MousePosition)))
             {
-                rectangle1 = new GameRectangle(new Vector2D((2 * PointToClient(MousePosition).X - rectangle1.Width) / 2,
-                    (2 * PointToClient(MousePosition).Y - rectangle1.Height) / 2),
-                    new Vector2D((2 * PointToClient(MousePosition).X - rectangle1.Width) / 2 + rectangle1.Width,
-                        (2 * PointToClient(MousePosition).Y - rectangle1.Height) / 2),
-                    rectangle1.Width, rectangle1.Height);
+                Vector2D mouse = new Vector2D(PointToClient(MousePosition).X, PointToClient(MousePosition).Y);
+                rectangle1 = new GameRectangle(mouse - new Vector2D(rectangle1.Width / 2,
+                    rectangle1.Height / 2), mouse + new Vector2D(rectangle1.Width / 2,
+                    -rectangle1.Height / 2), mouse + new Vector2D(-rectangle1.Width / 2,
+                    rectangle1.Height / 2));
             }
 
             if (IsHit(rectangle2, PointToClient(MousePosition)))
             {
-                rectangle2 = new GameRectangle(new Vector2D((2 * PointToClient(MousePosition).X - rectangle2.Width) / 2,
-                    (2 * PointToClient(MousePosition).Y - rectangle2.Height) / 2),
-                    new Vector2D((2 * PointToClient(MousePosition).X - rectangle2.Width) / 2 + rectangle2.Width,
-                        (2 * PointToClient(MousePosition).Y - rectangle2.Height) / 2),
-                    rectangle2.Width, rectangle2.Height);
+                Vector2D mouse = new Vector2D(PointToClient(MousePosition).X, PointToClient(MousePosition).Y);
+                rectangle2 = new GameRectangle(mouse - new Vector2D(rectangle2.Width / 2,
+                   rectangle2.Height / 2), mouse + new Vector2D(rectangle2.Width / 2,
+                   -rectangle2.Height / 2), mouse + new Vector2D(-rectangle2.Width / 2,
+                   rectangle2.Height / 2));
             }
 
             if (IsHit(circle, PointToClient(MousePosition)))
