@@ -354,5 +354,20 @@ namespace ArkanoidGame.Geometry
         {
             get { return new Vector2D(GetPositionVectorDR()); }
         }
+
+
+        public RectangleF GetBoundingRectangle
+        {
+            get
+            {
+                Vector2D leftMost = this.LeftMostPoint;
+                Vector2D topMost = this.TopMostPoint;
+                Vector2D bottomMost = this.BottomMostPoint;
+                Vector2D rightMost = this.RightMostPoint;
+
+                return new RectangleF((float)leftMost.X, (float)topMost.Y,
+                    (float)(rightMost.X - leftMost.X), (float)(bottomMost.Y - topMost.Y));
+            }
+        }
     }
 }

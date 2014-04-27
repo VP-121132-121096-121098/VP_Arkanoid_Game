@@ -2,6 +2,7 @@
 using ArkanoidGame.Geometry;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 
@@ -28,5 +29,10 @@ namespace ArkanoidGame.Interfaces
         /// <param name="geometricShape"></param>
         /// <returns></returns>
         bool Intersects(IGeometricShape geometricShape, out List<Vector2D> points);
+
+        /// <summary>
+        /// Враќа правоаголник во кој целосно ќе се содржи геометриската фигура.
+        /// </summary>
+        RectangleF GetBoundingRectangle { get; }
     }
 }

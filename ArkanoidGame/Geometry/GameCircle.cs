@@ -1,6 +1,7 @@
 ﻿using ArkanoidGame.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 
@@ -8,7 +9,7 @@ namespace ArkanoidGame.Geometry
 {
     public class GameCircle : IGeometricShape
     {
-        public GameCircle(Vector2D position, double radius) 
+        public GameCircle(Vector2D position, double radius)
         {
             this.Position = new Vector2D(position);
             this.Radius = radius;
@@ -49,6 +50,18 @@ namespace ArkanoidGame.Geometry
             }
 
             throw new NotImplementedException();
+        }
+
+
+        public RectangleF GetBoundingRectangle
+        {
+            get
+            {
+                Vector2D position = new Vector2D(this.Position.X - this.Radius,
+                    this.Position.Y - this.Radius);
+                return new RectangleF((float)position.X, (float)position.Y, (float)(2 * this.Radius),
+                    (float)(2 * Radius));
+            }
         }
     }
 }

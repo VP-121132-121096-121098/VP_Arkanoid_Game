@@ -16,7 +16,7 @@ namespace ArkanoidGame.Interfaces
         /// Враќа поедноставена геометриска репрезентација на соодветниот објект.
         /// Пример за топчето оваа функција враќа круг со радиус r.
         /// </summary>
-        IList<IGeometricShape> GetGeometricShape();
+        IGeometricShape GetGeometricShape();
 
         /// <summary>
         /// Се повикува 60 пати во секунда (60 FPS). Притоа elapsedTime е број на поминати периоди

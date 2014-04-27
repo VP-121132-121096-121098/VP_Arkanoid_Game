@@ -159,9 +159,10 @@ namespace ArkanoidGame.Objects
         public bool IsBall { get { return false; } }
         public bool IsPlayerPaddle { get { return true; } }
 
-        public IList<IGeometricShape> GetGeometricShape()
+        public IGeometricShape GetGeometricShape()
         {
-            throw new NotImplementedException();
+            return new GameRectangle(this.Position, this.Position + new Vector2D(this.ObjectWidth, 0),
+                this.Position + new Vector2D(0, this.ObjectHeight));
         }
 
         public void OnCollisionDetected(IList<IGameObject> collidingObjects)
@@ -171,8 +172,7 @@ namespace ArkanoidGame.Objects
 
         public RectangleF Rectangle
         {
-            get { return new RectangleF((float)Position.X, (float)Position.Y, 
-                (float)ObjectWidth, (float)ObjectHeight); }
+            get { return GetGeometricShape().GetBoundingRectangle; }
         }
     }
 }

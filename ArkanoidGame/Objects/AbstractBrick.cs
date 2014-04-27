@@ -57,7 +57,7 @@ namespace ArkanoidGame.Objects
             get { throw new NotImplementedException(); }
         }
 
-        public IList<IGeometricShape> GetGeometricShape()
+        public IGeometricShape GetGeometricShape()
         {
             throw new NotImplementedException();
         }
