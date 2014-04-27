@@ -392,10 +392,14 @@ namespace ArkanoidGame
             }
 
             this.GameState.OnDraw(graphics, frameWidth, frameHeight);
+            if (IsMultithreadingEnabled)
+                Renderer.Render(textMultithreading, graphics, frameWidth, frameHeight);
         }
 
         //во милисекунди
         public int GameUpdatePeriod { get; set; }
+
+        private GameBitmap textMultithreading;
 
         /// <summary>
         /// Креира нова игра и ја поставува во почетна состојба ArkanoidStateMainMenu.
@@ -413,6 +417,10 @@ namespace ArkanoidGame
             GameState = new ArkanoidStateMainMenu(this);
             Name = "Arkanoid";
             GameObjects = new List<IGameObject>();
+
+            Bitmap textMT = StaticStringFactory.CreateOrangeString("Multithreading");
+            textMultithreading = new GameBitmap(textMT, VirtualGameWidth - 400 - 10, 5, 400,
+                60);            
 
             IsRendererEnabled = true;
         }

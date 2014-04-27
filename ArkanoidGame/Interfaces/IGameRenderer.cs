@@ -12,6 +12,15 @@ namespace ArkanoidGame.Interfaces
     public interface IGameRenderer
     {
         /// <summary>
+        /// Исцртување на една слика
+        /// </summary>
+        /// <param name="?"></param>
+        /// <param name="g"></param>
+        /// <param name="frameWidth"></param>
+        /// <param name="frameHeight"></param>
+        void Render(GameBitmap bitmap, Graphics g, int frameWidth, int frameHeight);
+
+        /// <summary>
         /// Претворање на должина од должина во игра на должина на екран
         /// </summary>
         double ToScreenLength(Vector2D vec);

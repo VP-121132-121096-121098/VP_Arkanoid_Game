@@ -191,5 +191,20 @@ namespace ArkanoidGame.Renderer
                 }
             }
         }
+
+        /// <summary>
+        /// Исцртување на една слика
+        /// </summary>
+        /// <param name="?"></param>
+        /// <param name="g"></param>
+        /// <param name="frameWidth"></param>
+        /// <param name="frameHeight"></param>
+        public void Render(GameBitmap bitmap, Graphics g, int frameWidth, int frameHeight) {
+            List<GameBitmap> list = new List<GameBitmap>(1);
+            List<IList<GameBitmap>> list2 = new List<IList<GameBitmap>>();
+            list2.Add(list);
+            list.Add(bitmap);
+            this.Render(list2, g, frameWidth, frameHeight);
+        }
     }
 }
