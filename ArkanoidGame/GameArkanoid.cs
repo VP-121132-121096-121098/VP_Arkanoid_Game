@@ -6,6 +6,7 @@ using ArkanoidGame.Renderer;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace ArkanoidGame
@@ -223,9 +224,18 @@ namespace ArkanoidGame
 
         public int OnUpdate(IList<IGameObject> gameObjects)
         {
+            if (Game.IsMultithreadingEnabled)
+            {
+                UpdateObjectsMT(gameObjects);
+            }
+            else
+            {
+                UpdateObjectsST(gameObjects);
+            }
+
+            //Спреми ги текстурите
             for (int i = 0; i < gameObjects.Count; i++)
             {
-                gameObjects[i].OnUpdate(ElapsedTime);
                 if (i + 1 >= BitmapsToRender.Count)
                     BitmapsToRender.Add(gameObjects[i].ObjectTextures);
                 else
@@ -233,6 +243,75 @@ namespace ArkanoidGame
             }
 
             //Посебна readonly копија за рендерерот
+            CreateCopyForRenderer();
+
+            ElapsedTime++; //поминал еден период
+
+            if (KeyStateInfo.GetAsyncKeyState(Keys.Escape).IsPressed)
+            {
+                return 0;
+            }
+
+            return 100;
+        }
+
+        /// <summary>
+        /// Повикува Update на сите објекти од еден единствен thread.
+        /// </summary>
+        /// <param name="gameObjects"></param>
+        private void UpdateObjectsST(IList<IGameObject> gameObjects)
+        {
+            foreach (IGameObject obj in gameObjects)
+                obj.OnUpdate(ElapsedTime);
+        }
+
+        private static ManualResetEvent resetEvent = new ManualResetEvent(false);
+
+        /// <summary>
+        /// Повикува Update на секој објект во посебен thread. Се користи ThreadPool.
+        /// </summary>
+        /// <param name="gameObjects"></param>
+        private void UpdateObjectsMT(IList<IGameObject> gameObjects)
+        {
+            //CountdownEvent
+            /* http://msdn.microsoft.com/en-us/library/dd997365.aspx */
+
+            using (CountdownEvent e = new CountdownEvent(1))
+            {
+                // fork work: 
+                foreach (IGameObject obj in gameObjects)
+                {
+                    // Dynamically increment signal count.
+                    e.AddCount();
+                    ThreadPool.QueueUserWorkItem(delegate(object state)
+                     {
+                         try
+                         {
+                             UpdateObject((IGameObject)state);
+                         }
+                         finally
+                         {
+                             e.Signal();
+                         }
+                     },
+                     obj);
+                }
+                e.Signal();
+
+                // The first element could be run on this thread. 
+
+                // Join with work.
+                e.Wait();
+            }
+        }
+
+        private void UpdateObject(IGameObject obj)
+        {
+            obj.OnUpdate(ElapsedTime);
+        }
+
+        private void CreateCopyForRenderer()
+        {
             List<IList<GameBitmap>> tempList = new List<IList<GameBitmap>>();
             for (int i = 0; i < BitmapsToRender.Count; i++)
             {
@@ -243,15 +322,6 @@ namespace ArkanoidGame
                 }
             }
             rendererBitmaps = tempList;
-
-            ElapsedTime++; //поминал еден период
-
-            if (KeyStateInfo.GetAsyncKeyState(Keys.Escape).IsPressed)
-            {
-                return 0;
-            }
-
-            return 100;
         }
 
         public IGame Game { get; private set; }
@@ -278,7 +348,24 @@ namespace ArkanoidGame
 
     public class GameArkanoid : IGame
     {
+        
+
         //Стартна позиција на играчот (1750, 2010);
+
+        /// <summary>
+        /// Дали update ќе се извршува на една или повеќе нишки
+        /// </summary>
+        public bool IsMultithreadingEnabled { get; private set; }
+
+        /// <summary>
+        /// Вклучи или исклучи во зависност од тоа дали е пристисната буквата M
+        /// </summary>
+        private void EnableOrDisableMultithreading()
+        {
+            IKeyState keyState = KeyStateInfo.GetAsyncKeyState(Keys.M);
+            if (keyState.IsPressed)
+                IsMultithreadingEnabled = !IsMultithreadingEnabled;
+        }
 
         private readonly object gameStateLock = new Object();
 
@@ -315,6 +402,7 @@ namespace ArkanoidGame
         /// </summary>
         private GameArkanoid()
         {
+            this.IsMultithreadingEnabled = false;
             IsRendererEnabled = false;
 
             VirtualGameWidth = 3840;
@@ -354,6 +442,8 @@ namespace ArkanoidGame
 
         public int OnUpdate(Point cursorPanelCoordinates)
         {
+            EnableOrDisableMultithreading();
+
             this.CursorIngameCoordinates = Renderer.ToGameCoordinates(cursorPanelCoordinates);
 
             return GameState.OnUpdate(GameObjects);

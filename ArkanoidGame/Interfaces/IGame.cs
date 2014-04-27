@@ -11,6 +11,11 @@ namespace ArkanoidGame.Interfaces
     public interface IGame
     {
         /// <summary>
+        /// Дали update ќе се извршува на една или повеќе нишки
+        /// </summary>
+        bool IsMultithreadingEnabled { get; }
+
+        /// <summary>
         /// Позиција на курсорот изразена како координати од играта,
         /// не од прозорецот на играта.
         /// </summary>

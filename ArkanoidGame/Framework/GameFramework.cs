@@ -104,31 +104,11 @@ namespace ArkanoidGame.Framework
                 }
 
                 //FPS Counter Logic
-                long FPSFileTimeIntervalCounter = DateTime.Now.ToFileTimeUtc() - FPSLastUpdate;
-                if (FPSFileTimeIntervalCounter > SecondInWinFileTime)
-                {
-                    PreviousFPSCounterValue = FPSCounter;
-                    FPSFileTimeIntervalCounter -= SecondInWinFileTime;
-                    FPSCounter = 0;
-
-                    if (FPSFileTimeIntervalCounter > SecondInWinFileTime)
-                    {
-                        FPSFileTimeIntervalCounter = 0; //Ресетирај го бројачот, веројатно имало подолга пауза
-                    }
-
-                    if (FPSFileTimeIntervalCounter > 0 && PreviousFPSCounterValue > 0)
-                    {
-                        PreviousFPSCounterValue--;
-                        //FPSCounter = 1;
-                    }
-
-                    FPSLastUpdate = DateTime.Now.ToFileTimeUtc();
-                }
+                CountFramesPerSecond();
 
                 //Display FPS
                 graphics.DrawString(string.Format("{0} FPS", PreviousFPSCounterValue),
                     SystemFonts.CaptionFont, Brushes.Yellow, frameWidth * 0.01f, frameHeight * 0.01f);
-                FPSCounter++;
 
                 lastFrameWidth = frameWidth;
                 lastFrameHeight = frameHeight;
@@ -143,6 +123,32 @@ namespace ArkanoidGame.Framework
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 this.IsFrameworkRunning = false;
             }
+        }
+
+        private void CountFramesPerSecond()
+        {
+            long FPSFileTimeIntervalCounter = DateTime.Now.ToFileTimeUtc() - FPSLastUpdate;
+            if (FPSFileTimeIntervalCounter > SecondInWinFileTime)
+            {
+                PreviousFPSCounterValue = FPSCounter;
+                FPSFileTimeIntervalCounter -= SecondInWinFileTime;
+                FPSCounter = 0;
+
+                if (FPSFileTimeIntervalCounter > SecondInWinFileTime)
+                {
+                    FPSFileTimeIntervalCounter = 0; //Ресетирај го бројачот, веројатно имало подолга пауза
+                }
+
+                if (FPSFileTimeIntervalCounter > 0 && PreviousFPSCounterValue > 0)
+                {
+                    PreviousFPSCounterValue--;
+                    //FPSCounter = 1;
+                }
+
+                FPSLastUpdate = DateTime.Now.ToFileTimeUtc();
+            }
+
+            FPSCounter++;
         }
 
         /// <summary>
@@ -211,7 +217,6 @@ namespace ArkanoidGame.Framework
         {
             long timeGameStarted = DateTime.Now.ToFileTimeUtc() / MillisecondInFileTime;
             long gameElapsedTime = 0;
-            long gameLag = 0;
 
             while (true)
             {
@@ -244,66 +249,72 @@ namespace ArkanoidGame.Framework
                     gamePanel.Invalidate();
                 }
 
-                long timeUpdateEnd = DateTime.Now.ToFileTimeUtc() / MillisecondInFileTime;
-                int remainingTime = (int)(gameUpdatePeriod - (timeUpdateEnd - timeUpdateBegin));
-
-                long realElapsedTime = (timeUpdateEnd - timeGameStarted) / gameUpdatePeriod;
-                gameLag = realElapsedTime - gameElapsedTime;
-
-
-                if (!game.IsTimesynchronizationImportant)
-                {
-                    gameElapsedTime = realElapsedTime;
-                    IsRendererRunning = true;
-
-                    /* бидејќи се бројат цел број пати на изминати периоди
-                     * ако останало време поголемо од 0, тогаш треба да се почека
-                     * да помине цел период и во реално време (онолку колку што
-                     * преостанало од последниот период -> remainingTime).
-                     * Во играта истиот тој период е целосно изминат, па затоа го додаваме
-                     * во вкупниот број на поминати периоди.
-                     */
-                    if (remainingTime > 0)
-                    {
-                        gameElapsedTime++;
-                        Thread.Sleep(remainingTime);
-                    }
-                    gameLag = 0;
-
-                }
-                else if (gameLag == -1)
-                {
-                    /* Синхронизација на време. Ако gameLag == -1, тогаш времето во играта 
-                     * избрзува за онолку време колку што преостанало од gameUpdatePeriod.
-                     */
-                    IsRendererRunning = true;
-                    Thread.Sleep(remainingTime);
-                }
-                else if (gameLag < -1)
-                {
-                    //Времето во играта избрзува премногу
-                    while (gameLag < -1)
-                    {
-                        IsRendererRunning = true;
-                        Thread.Sleep(gameUpdatePeriod);
-                        realElapsedTime = (DateTime.Now.ToFileTimeUtc() / MillisecondInFileTime
-                            - timeGameStarted) / gameUpdatePeriod;
-                        gameLag = realElapsedTime - gameElapsedTime;
-                    }
-                }
-                else if(gameLag > 0) /* Времето во играта задоцнува зад реалното време */
-                {
-                    IsRendererRunning = false;
-
-                    /* времето во играта се пресметува како број на периоди од gameUpdatePeriod
-                     * Ако дојде до десинхронизација помеѓу реалното време и времето во играта
-                     * тогаш се исклучува рендерирањето и се повикува
-                     * Update се додека времето во играта не го достигне реалното време.                      
-                     */
-                }
+                SynchronizeTime(timeGameStarted, ref gameElapsedTime, timeUpdateBegin);
 
                 if (!this.IsFrameworkRunning || !this.IsGameRunning)
                     break;
+            }
+        }
+
+        private void SynchronizeTime(long timeGameStarted, ref long gameElapsedTime, long timeUpdateBegin)
+        {
+            long timeUpdateEnd = DateTime.Now.ToFileTimeUtc() / MillisecondInFileTime;
+            int remainingTime = (int)(gameUpdatePeriod - (timeUpdateEnd - timeUpdateBegin));
+
+            long realElapsedTime = (timeUpdateEnd - timeGameStarted) / gameUpdatePeriod;
+            long gameLag = realElapsedTime - gameElapsedTime;
+
+
+            if (!game.IsTimesynchronizationImportant)
+            {
+                gameElapsedTime = realElapsedTime;
+                IsRendererRunning = true;
+
+                /* бидејќи се бројат цел број пати на изминати периоди
+                 * ако останало време поголемо од 0, тогаш треба да се почека
+                 * да помине цел период и во реално време (онолку колку што
+                 * преостанало од последниот период -> remainingTime).
+                 * Во играта истиот тој период е целосно изминат, па затоа го додаваме
+                 * во вкупниот број на поминати периоди.
+                 */
+                if (remainingTime > 0)
+                {
+                    gameElapsedTime++;
+                    Thread.Sleep(remainingTime);
+                }
+                gameLag = 0;
+
+            }
+            else if (gameLag == -1)
+            {
+                /* Синхронизација на време. Ако gameLag == -1, тогаш времето во играта 
+                 * избрзува за онолку време колку што преостанало од gameUpdatePeriod.
+                 */
+                IsRendererRunning = true;
+                if (remainingTime > 0)
+                    Thread.Sleep(remainingTime);
+            }
+            else if (gameLag < -1)
+            {
+                //Времето во играта избрзува премногу
+                while (gameLag < -1)
+                {
+                    IsRendererRunning = true;
+                    Thread.Sleep(gameUpdatePeriod);
+                    realElapsedTime = (DateTime.Now.ToFileTimeUtc() / MillisecondInFileTime
+                        - timeGameStarted) / gameUpdatePeriod;
+                    gameLag = realElapsedTime - gameElapsedTime;
+                }
+            }
+            else if (gameLag > 0) /* Времето во играта задоцнува зад реалното време */
+            {
+                IsRendererRunning = false;
+
+                /* времето во играта се пресметува како број на периоди од gameUpdatePeriod
+                 * Ако дојде до десинхронизација помеѓу реалното време и времето во играта
+                 * тогаш се исклучува рендерирањето и се повикува
+                 * Update се додека времето во играта не го достигне реалното време.                      
+                 */
             }
         }
 
