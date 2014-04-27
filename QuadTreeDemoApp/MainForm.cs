@@ -11,7 +11,7 @@ namespace QuadTreeDemoApp
     {
         QuadTree<Item> m_quadTree;
   
-        QuadTreeRenderer m_renderer;
+        QuadTreeRenderer<Item> m_renderer;
   
         public MainForm()
         {
@@ -41,6 +41,20 @@ namespace QuadTreeDemoApp
         /// <param name="e"></param>
         private void MainForm_Paint(object sender, PaintEventArgs e)
         {
+            m_quadTree.ForEach(delegate(QuadTreeNode<Item> node)
+            {
+
+                // draw the contents of this quad
+                if (node.Contents != null)
+                {
+                    foreach (Item item in node.Contents)
+                    {
+                        using (Brush b = new SolidBrush(item.Color))
+                            e.Graphics.FillEllipse(b, Rectangle.Round(item.Rectangle));
+                    }
+                }
+            });
+
             // draw the QuadTree
             m_renderer.Render(e.Graphics);
 
@@ -72,7 +86,7 @@ namespace QuadTreeDemoApp
         private void Init()
         {
             m_quadTree = new QuadTree<Item>(this.ClientRectangle);
-            m_renderer = new QuadTreeRenderer(m_quadTree);
+            m_renderer = new QuadTreeRenderer<Item>(m_quadTree);
         }
 
         #region mouse interaction code

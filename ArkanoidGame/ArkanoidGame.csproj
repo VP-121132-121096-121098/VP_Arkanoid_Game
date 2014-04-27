@@ -63,6 +63,9 @@
     <Compile Include="Objects\AbstractBrick.cs" />
     <Compile Include="Quadtree\QuadTree.cs" />
     <Compile Include="Quadtree\QuadTreeNode.cs" />
+    <Compile Include="Quadtree\QuadTreeRenderer.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Renderer\GameBitmap.cs" />
     <Compile Include="Framework\GameUnitConversion.cs" />
     <Compile Include="Renderer\GameRenderer.cs" />
