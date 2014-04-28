@@ -206,5 +206,19 @@ namespace ArkanoidGame.Renderer
             list.Add(bitmap);
             this.Render(list2, g, frameWidth, frameHeight);
         }
+
+
+        public void DrawRectangle(Pen pen, RectangleF rectangle, Graphics g, int frameWidth, int frameHeight)
+        {
+            this.FrameWidth = frameWidth;
+            this.FrameHeight = frameHeight;
+
+            float x = rectangle.X;
+            float y = rectangle.Y;
+            this.ToScreenCoordinates(ref x, ref y);
+            float width = (float)ToScreenLength(x, y, x + rectangle.Width, y);
+            float height = (float)ToScreenLength(x, y, x, y + rectangle.Height);
+            g.DrawRectangle(pen, x, y, width, height);
+        }
     }
 }

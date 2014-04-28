@@ -9,8 +9,12 @@ using System.Text;
 
 namespace ArkanoidGame.Interfaces
 {
-    public interface IGameObject : IHasRectangle
+    public interface IGameObject
     {
+        /// <summary>
+        /// Правоаголник потребен за Quadtree
+        /// </summary>
+        RectangleF Rectangle { get; }
 
         /// <summary>
         /// Враќа поедноставена геометриска репрезентација на соодветниот објект.

@@ -43,6 +43,12 @@ namespace ArkanoidGame
         public void OnDraw(Graphics graphics, int frameWidth, int frameHeight)
         {
             Game.Renderer.Render(bitmapsToRenderCopy, graphics, frameWidth, frameHeight);
+
+            if (debugMode && quadtree != null)
+            {
+                new QuadTreeRenderer<IGameObject>(quadtree).Render(Game.Renderer,
+                    graphics, frameWidth, frameHeight, Game.CursorIngameCoordinates);
+            }
         }
 
         public long ElapsedTime { get; private set; }

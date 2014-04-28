@@ -11,7 +11,7 @@ namespace ArkanoidGame.Quadtree
     /// The QuadTreeNode
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class QuadTreeNode<T> where T : IHasRectangle
+    public class QuadTreeNode<T> where T : IGameObject
     {
         /// <summary>
         /// Construct a quadtree node with the given bounds 

@@ -61,7 +61,6 @@
     <Compile Include="Geometry\Vector3D.cs" />
     <Compile Include="Interfaces\IGameRenderer.cs" />
     <Compile Include="Interfaces\IGeometricShape.cs" />
-    <Compile Include="Quadtree\IHasRectangle.cs" />
     <Compile Include="Objects\AbstractBrick.cs" />
     <Compile Include="Quadtree\QuadTree.cs" />
     <Compile Include="Quadtree\QuadTreeNode.cs" />
