@@ -92,7 +92,6 @@
     <Compile Include="Objects\PlayerPaddle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Renderer\StaticStringFactory.cs" />
-    <Content Include="DotNetMatrix\Docs\GeneralMatrix.xml" />
     <Content Include="Resources\Images\projectile.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -109,7 +108,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <None Include="DotNetMatrix\Docs\Documentation.chm" />
     <None Include="Geometry\Algoritam za presek na otsecki.pdf" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
