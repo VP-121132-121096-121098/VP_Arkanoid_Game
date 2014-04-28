@@ -65,6 +65,7 @@ namespace ArkanoidGame
             }
 
             this.GameState.OnDraw(graphics, frameWidth, frameHeight);
+
             if (IsMultithreadingEnabled)
                 Renderer.Render(textMultithreading, graphics, frameWidth, frameHeight);
         }
