@@ -9,6 +9,13 @@ using System.Text;
 
 namespace ArkanoidGame.Interfaces
 {
+    public enum GameObjectType
+    {
+        PlayerPaddle,
+        Ball,
+        Brick
+    }
+
     public interface IGameObject
     {
         /// <summary>
@@ -55,11 +62,8 @@ namespace ArkanoidGame.Interfaces
         Vector2D Velocity { get; }
 
         /// <summary>
-        /// Дали објектот е топчето кое ги крши циглите? Пример paddle-от треба да
-        /// го игнорира секој објект освен топчето.
+        /// Тип на објектот
         /// </summary>
-        bool IsBall { get; }
-
-        bool IsPlayerPaddle { get; }
+        GameObjectType ObjectType { get; }
     }
 }

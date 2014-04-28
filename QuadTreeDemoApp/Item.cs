@@ -93,12 +93,8 @@ namespace QuadTreeDemoApp
             get { throw new NotImplementedException(); }
         }
 
-        public bool IsBall
-        {
-            get { throw new NotImplementedException(); }
-        }
 
-        public bool IsPlayerPaddle
+        public GameObjectType ObjectType
         {
             get { throw new NotImplementedException(); }
         }

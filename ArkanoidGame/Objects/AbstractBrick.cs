@@ -8,8 +8,7 @@ using System.Text;
 namespace ArkanoidGame.Objects
 {
     public abstract class AbstractBrick : IGameObject
-    {      
-
+    {
         public void OnUpdate(long gameElapsedTime)
         {
             throw new NotImplementedException();
@@ -47,16 +46,6 @@ namespace ArkanoidGame.Objects
             get { throw new NotImplementedException(); }
         }
 
-        public bool IsBall
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public bool IsPlayerPaddle
-        {
-            get { throw new NotImplementedException(); }
-        }
-
         public IGeometricShape GetGeometricShape()
         {
             throw new NotImplementedException();
@@ -66,5 +55,8 @@ namespace ArkanoidGame.Objects
         {
             get { throw new NotImplementedException(); }
         }
+
+
+        public GameObjectType ObjectType { get { return GameObjectType.Brick; } }
     }
 }
