@@ -17,13 +17,13 @@ namespace ArkanoidGame
         private IDictionary<string, GameBitmap> readyStrings; //стрингови
 
         public IList<IList<GameBitmap>> BitmapsToRender { get; private set; } //слики од позадината и сите опции заедно
-        private IList<IList<GameBitmap>> rendererBitmaps; /* на рендерерот се праќа копија од листа
-                                                           * за да се избегнат проблемите со нејзино модифицирање
-                                                           */
+        private IList<IList<GameBitmap>> bitmapsToRenderCopy; /* на Draw се праќа копија од листа
+                                                               * за да се избегнат проблемите со нејзино модифицирање
+                                                               */
 
         public void OnDraw(Graphics graphics, int frameWidth, int frameHeight)
         {
-            Game.Renderer.Render(rendererBitmaps, graphics, frameWidth, frameHeight);
+            Game.Renderer.Render(bitmapsToRenderCopy, graphics, frameWidth, frameHeight);
         }
 
         public int OnUpdate(IList<IGameObject> gameObjects)
@@ -121,7 +121,7 @@ namespace ArkanoidGame
                     tempList[i].Add(BitmapsToRender[i][j]);
                 }
             }
-            rendererBitmaps = tempList;
+            bitmapsToRenderCopy = tempList;
 
             return 100;
         }
@@ -148,7 +148,7 @@ namespace ArkanoidGame
             BitmapsToRender.Add(new List<GameBitmap>());
             BitmapsToRender[0].Add(new GameBitmap("\\Resources\\Images\\background.jpg", 0, 0, game.VirtualGameWidth,
                 game.VirtualGameHeight));
-            rendererBitmaps = new List<IList<GameBitmap>>();
+            bitmapsToRenderCopy = new List<IList<GameBitmap>>();
 
             // додади ги сите опции во меморија
             readyStrings = new Dictionary<string, GameBitmap>();

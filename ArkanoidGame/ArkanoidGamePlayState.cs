@@ -2,6 +2,7 @@
 using ArkanoidGame.Geometry;
 using ArkanoidGame.Interfaces;
 using ArkanoidGame.Objects;
+using ArkanoidGame.Quadtree;
 using ArkanoidGame.Renderer;
 using System;
 using System.Collections.Generic;
@@ -17,12 +18,15 @@ namespace ArkanoidGame
     {
         private bool debugMode;
 
+        private QuadTree<IGameObject> quadtree; //со оваа структура може да се подели рамнината на делови
+
         public ArkanoidGamePlayState(IGame game)
         {
+            quadtree = null;
             debugMode = false;
             this.Game = game;
             BitmapsToRender = new List<IList<GameBitmap>>();
-            rendererBitmaps = new List<IList<GameBitmap>>();
+            bitmapsToRenderCopy = new List<IList<GameBitmap>>();
             List<GameBitmap> background = new List<GameBitmap>();
             background.Add(new GameBitmap("\\Resources\\Images\\background.jpg", 0, 0, game.VirtualGameWidth,
                 game.VirtualGameHeight));
@@ -38,7 +42,7 @@ namespace ArkanoidGame
 
         public void OnDraw(Graphics graphics, int frameWidth, int frameHeight)
         {
-            Game.Renderer.Render(rendererBitmaps, graphics, frameWidth, frameHeight);
+            Game.Renderer.Render(bitmapsToRenderCopy, graphics, frameWidth, frameHeight);
         }
 
         public long ElapsedTime { get; private set; }
@@ -93,7 +97,19 @@ namespace ArkanoidGame
         private void UpdateObjectsST(IList<IGameObject> gameObjects)
         {
             foreach (IGameObject obj in gameObjects)
-                obj.OnUpdate(ElapsedTime);
+                UpdateObject(obj);
+
+            InitQuadTree(gameObjects);
+
+
+        }
+
+        private void InitQuadTree(IList<IGameObject> gameObjects)
+        {
+            quadtree = new QuadTree<IGameObject>(new RectangleF(0, 0, (float)Game.VirtualGameWidth + 0.1f,
+                (float)Game.VirtualGameHeight + 0.1f));
+            foreach (IGameObject obj in gameObjects)
+                quadtree.Insert(obj);
         }
 
         private static ManualResetEvent resetEvent = new ManualResetEvent(false);
@@ -134,6 +150,9 @@ namespace ArkanoidGame
                 // Join with work.
                 e.Wait();
             }
+
+            //не може паралелно да се одвива оваа операција
+            InitQuadTree(gameObjects); 
         }
 
         private void UpdateObject(IGameObject obj)
@@ -152,7 +171,7 @@ namespace ArkanoidGame
                     tempList[i].Add(BitmapsToRender[i][j]);
                 }
             }
-            rendererBitmaps = tempList;
+            bitmapsToRenderCopy = tempList;
         }
 
         public IGame Game { get; private set; }
@@ -164,16 +183,17 @@ namespace ArkanoidGame
 
         public IList<IList<GameBitmap>> BitmapsToRender { get; private set; } //текстури за секој објект
 
-        private IList<IList<GameBitmap>> rendererBitmaps; /* Копија од листата BitmapsToRender. Бидејќи
-                                                           * листата BitmapsToRender може да се менува,
-                                                           * а Draw е посебен thread, за да се избегне 
-                                                           * синхронизација помеѓу нишките (што ќе го забави
-                                                           * времето на извршување), може да се прати
-                                                           * копија од листата на слики од последното извршување 
-                                                           * на OnUpdate(). Бидејќи ќе пратиме копија ако дојде 
-                                                           * до отстранување на некоја слика од BitmapsToRender, таа
-                                                           * промена ќе се прикаже на првиот повик на Draw по копирањето 
-                                                           * на сликите во листата rendererBitmaps.
-                                                           */
+        private IList<IList<GameBitmap>> bitmapsToRenderCopy; /* Копија од листата BitmapsToRender. Бидејќи
+                                                               * листата BitmapsToRender може да се менува,
+                                                               * а Draw е посебен thread, за да се избегне 
+                                                               * синхронизација помеѓу нишките (што ќе го забави
+                                                               * времето на извршување), може да се прати
+                                                               * копија од листата на слики од последното извршување 
+                                                               * на OnUpdate(). Бидејќи ќе пратиме копија ако дојде 
+                                                               * до отстранување на некоја слика од BitmapsToRender, таа
+                                                               * промена ќе се прикаже на првиот повик на Draw 
+                                                               * по копирањето 
+                                                               * на сликите во листата rendererBitmaps.
+                                                               */
     }
 }

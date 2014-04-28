@@ -174,5 +174,20 @@ namespace ArkanoidGame.Objects
         {
             get { return GetGeometricShape().GetBoundingRectangle; }
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || obj.GetType() != this.GetType())
+                return false;
+            PlayerPaddle paddle = (PlayerPaddle)obj;
+            return this.Position.Equals(paddle.Position) && this.ObjectWidth == paddle.ObjectWidth
+                && this.ObjectHeight == paddle.ObjectHeight;
+        }
+
+        public override int GetHashCode()
+        {
+            return (((Position.GetHashCode() + ObjectWidth.GetHashCode()) % int.MaxValue) + ObjectHeight.GetHashCode()
+                % int.MaxValue);
+        }
     }
 }
