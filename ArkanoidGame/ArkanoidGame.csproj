@@ -53,6 +53,8 @@
     <Compile Include="AbstractGameWindow.designer.cs">
       <DependentUpon>AbstractGameWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="ArkanoidGamePlayState.cs" />
+    <Compile Include="ArkanoidMainMenuState.cs" />
     <Compile Include="Geometry\GameCircle.cs" />
     <Compile Include="Geometry\GameRectangle.cs" />
     <Compile Include="Geometry\GeometricAlgorithms.cs" />
