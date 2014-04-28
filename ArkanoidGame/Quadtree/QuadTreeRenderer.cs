@@ -111,10 +111,8 @@ namespace ArkanoidGame.Quadtree
             {
                 foreach (T obj in selectedItems)
                 {
-                    Rectangle selectedRect = Rectangle.Round(obj.Rectangle);
-                    selectedRect.Inflate(10, 10);
-                    using (Pen p = new Pen(Color.Red, 2))
-                        renderer.DrawRectangle(p, selectedRect, g, frameWidth, frameHeight);
+                    using (Pen p = new Pen(Color.Aqua, 2))
+                        renderer.DrawRectangle(p, obj.Rectangle, g, frameWidth, frameHeight);
                 }
             }
 
