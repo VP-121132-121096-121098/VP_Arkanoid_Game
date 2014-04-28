@@ -56,7 +56,9 @@ namespace ArkanoidGame
 
         public int OnUpdate(IList<IGameObject> gameObjects)
         {
+#if DEBUG
             EnableOrDisableDebugMode();
+#endif
 
             if (Game.IsMultithreadingEnabled)
             {
