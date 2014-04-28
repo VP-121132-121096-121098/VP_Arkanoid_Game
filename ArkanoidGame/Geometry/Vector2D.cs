@@ -74,7 +74,8 @@ namespace ArkanoidGame.Geometry
             return Math.Sqrt(this * this);
         }
 
-        public static implicit operator Vector3D(Vector2D vec) {
+        public static implicit operator Vector3D(Vector2D vec)
+        {
             return new Vector3D(vec);
         }
 
@@ -102,6 +103,50 @@ namespace ArkanoidGame.Geometry
         public override int GetHashCode()
         {
             return (X.GetHashCode() + Y.GetHashCode()) % int.MaxValue;
+        }
+
+        public double[,] ToMatrix()
+        {
+            double[,] matrix = new double[2, 1];
+            matrix[0,0] = this.X;
+            matrix[1,0] = this.Y;
+            return matrix;
+        }
+
+        public void Rotate(double angleInRadians)
+        {
+            /* http://mathworld.wolfram.com/RotationMatrix.html */
+
+            /* матрица на ротација
+            *             |-               -|
+            *             | cos(a)  -sin(a) |
+            *      R(a) = |                 |
+            *             | sin(a)   cos(a) |
+            *             |-               -|
+            */
+            
+            //V = R(a) * V0
+
+            double[,] vectorMatrix = this.ToMatrix();
+            double[,] rotationMatrix = new double[2, 2];
+            rotationMatrix[0,0] = Math.Cos(angleInRadians);
+            rotationMatrix[0, 1] = -Math.Sin(angleInRadians);
+            rotationMatrix[1, 0] = Math.Sin(angleInRadians);
+            rotationMatrix[1, 1] = Math.Cos(angleInRadians);
+
+            double[,] newVector = MathLibrary.Matrix.Multiply(rotationMatrix, vectorMatrix);
+            this.X = newVector[0,0];
+            this.Y = newVector[1,0];
+        }
+
+        public static Vector2D FromMatrix(double[,] matrix)
+        {
+            return new Vector2D(matrix[0, 0], matrix[1, 0]);
+        }
+
+        public void RotateDeg(double degrees)
+        {
+            this.Rotate(degrees * Math.PI / 180.0);
         }
     }
 }
