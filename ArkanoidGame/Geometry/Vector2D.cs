@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DotNetMatrix;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -105,12 +106,14 @@ namespace ArkanoidGame.Geometry
             return (X.GetHashCode() + Y.GetHashCode()) % int.MaxValue;
         }
 
-        public double[,] ToMatrix()
+        public GeneralMatrix ToMatrix()
         {
-            double[,] matrix = new double[2, 1];
-            matrix[0,0] = this.X;
-            matrix[1,0] = this.Y;
-            return matrix;
+            double[][] matrix = new double[2][];
+            matrix[0] = new double[1];
+            matrix[1] = new double[1];
+            matrix[0][0] = X;
+            matrix[1][0] = Y;
+            return new GeneralMatrix(matrix);
         }
 
         public void Rotate(double angleInRadians)
@@ -124,24 +127,20 @@ namespace ArkanoidGame.Geometry
             *             | sin(a)   cos(a) |
             *             |-               -|
             */
-            
+
             //V = R(a) * V0
+            double[][] temp = new double[2][];
+            temp[0] = new double[1];
+            temp[1] = new double[1];
+            temp[0][0] = Math.Cos(angleInRadians);
+            temp[0][1] = -Math.Sin(angleInRadians);
+            temp[1][0] = Math.Sin(angleInRadians);
+            temp[1][1] = Math.Cos(angleInRadians);
 
-            double[,] vectorMatrix = this.ToMatrix();
-            double[,] rotationMatrix = new double[2, 2];
-            rotationMatrix[0,0] = Math.Cos(angleInRadians);
-            rotationMatrix[0, 1] = -Math.Sin(angleInRadians);
-            rotationMatrix[1, 0] = Math.Sin(angleInRadians);
-            rotationMatrix[1, 1] = Math.Cos(angleInRadians);
-
-            double[,] newVector = MathLibrary.Matrix.Multiply(rotationMatrix, vectorMatrix);
-            this.X = newVector[0,0];
-            this.Y = newVector[1,0];
-        }
-
-        public static Vector2D FromMatrix(double[,] matrix)
-        {
-            return new Vector2D(matrix[0, 0], matrix[1, 0]);
+            GeneralMatrix rotationMatrix = new GeneralMatrix(temp);
+            GeneralMatrix newVector = rotationMatrix.Multiply(this.ToMatrix());
+            this.X = newVector.GetElement(0, 0);
+            this.Y = newVector.GetElement(1, 0);
         }
 
         public void RotateDeg(double degrees)

@@ -55,13 +55,18 @@
     </Compile>
     <Compile Include="ArkanoidGamePlayState.cs" />
     <Compile Include="ArkanoidMainMenuState.cs" />
+    <Compile Include="DotNetMatrix\CholeskyDecomposition.cs" />
+    <Compile Include="DotNetMatrix\EigenvalueDecomposition.cs" />
+    <Compile Include="DotNetMatrix\GeneralMatrix.cs" />
+    <Compile Include="DotNetMatrix\LUDecomposition.cs" />
+    <Compile Include="DotNetMatrix\QRDecomposition.cs" />
+    <Compile Include="DotNetMatrix\SingularValueDecomposition.cs" />
     <Compile Include="Geometry\GameCircle.cs" />
     <Compile Include="Geometry\GameRectangle.cs" />
     <Compile Include="Geometry\GeometricAlgorithms.cs" />
     <Compile Include="Geometry\Vector3D.cs" />
     <Compile Include="Interfaces\IGameRenderer.cs" />
     <Compile Include="Interfaces\IGeometricShape.cs" />
-    <Compile Include="MathLibrary\Matrix.cs" />
     <Compile Include="Objects\AbstractBrick.cs" />
     <Compile Include="Quadtree\QuadTree.cs" />
     <Compile Include="Quadtree\QuadTreeNode.cs" />
