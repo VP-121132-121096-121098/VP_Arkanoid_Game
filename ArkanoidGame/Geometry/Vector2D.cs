@@ -130,8 +130,8 @@ namespace ArkanoidGame.Geometry
 
             //V = R(a) * V0
             double[][] temp = new double[2][];
-            temp[0] = new double[1];
-            temp[1] = new double[1];
+            temp[0] = new double[2];
+            temp[1] = new double[2];
             temp[0][0] = Math.Cos(angleInRadians);
             temp[0][1] = -Math.Sin(angleInRadians);
             temp[1][0] = Math.Sin(angleInRadians);
