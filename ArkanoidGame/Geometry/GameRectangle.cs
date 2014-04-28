@@ -365,10 +365,13 @@ namespace ArkanoidGame.Geometry
                 Vector2D bottomMost = this.BottomMostPoint;
                 Vector2D rightMost = this.RightMostPoint;
 
+                return new RectangleF((float)Math.Max(0, leftMost.X), (float)Math.Max(0, topMost.Y),
+                    (float)(rightMost.X - leftMost.X), (float)(bottomMost.Y - topMost.Y));
+
                 //Се додава 0.1 на секоја страна со цел да се намалат шансите за false negatives при детекција на
                 //можни судири.
-                return new RectangleF((float)Math.Max(0, leftMost.X - 0.1), (float)Math.Max(0, topMost.Y - 0.1),
-                    (float)(rightMost.X - leftMost.X) + 0.2f, (float)(bottomMost.Y - topMost.Y) + 0.2f);
+                //return new RectangleF((float)Math.Max(0, leftMost.X - 0.1), (float)Math.Max(0, topMost.Y - 0.1),
+                  //  (float)(rightMost.X - leftMost.X) + 0.2f, (float)(bottomMost.Y - topMost.Y) + 0.2f);
             }
         }
     }

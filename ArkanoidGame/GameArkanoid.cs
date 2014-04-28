@@ -22,14 +22,22 @@ namespace ArkanoidGame
         /// </summary>
         public bool IsMultithreadingEnabled { get; private set; }
 
+        private int ButtonMWaitNFrames;
+
         /// <summary>
         /// Вклучи или исклучи во зависност од тоа дали е пристисната буквата M
         /// </summary>
         private void EnableOrDisableMultithreading()
         {
+            if (ButtonMWaitNFrames > 0)
+                ButtonMWaitNFrames--;
+
             IKeyState keyState = KeyStateInfo.GetAsyncKeyState(Keys.M);
-            if (keyState.IsPressed)
+            if (keyState.IsPressed && ButtonMWaitNFrames == 0)
+            {
                 IsMultithreadingEnabled = !IsMultithreadingEnabled;
+                ButtonMWaitNFrames = 10;
+            }
         }
 
         private readonly object gameStateLock = new Object();
@@ -71,6 +79,7 @@ namespace ArkanoidGame
         /// </summary>
         private GameArkanoid()
         {
+            this.ButtonMWaitNFrames = 0;
             this.IsMultithreadingEnabled = false;
             IsRendererEnabled = false;
 

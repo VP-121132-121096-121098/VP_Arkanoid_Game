@@ -23,6 +23,7 @@ namespace ArkanoidGame
         public ArkanoidGamePlayState(IGame game)
         {
             quadtree = null;
+            ButtonDWaitNFrames = 0;
             debugMode = false;
             this.Game = game;
             BitmapsToRender = new List<IList<GameBitmap>>();
@@ -88,11 +89,16 @@ namespace ArkanoidGame
             return 100;
         }
 
+        private int ButtonDWaitNFrames;
+
         private void EnableOrDisableDebugMode()
         {
-            if (KeyStateInfo.GetAsyncKeyState(Keys.D).IsPressed)
+            ButtonDWaitNFrames = Math.Max(0, ButtonDWaitNFrames - 1);
+
+            if (KeyStateInfo.GetAsyncKeyState(Keys.D).IsPressed && ButtonDWaitNFrames == 0)
             {
                 debugMode = !debugMode;
+                ButtonDWaitNFrames = 10;
             }
         }
 
