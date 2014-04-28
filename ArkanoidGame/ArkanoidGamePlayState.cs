@@ -45,11 +45,13 @@ namespace ArkanoidGame
         {
             Game.Renderer.Render(bitmapsToRenderCopy, graphics, frameWidth, frameHeight);
 
+#if DEBUG
             if (debugMode && quadtree != null)
             {
                 new QuadTreeRenderer<IGameObject>(quadtree).Render(Game.Renderer,
                     graphics, frameWidth, frameHeight, Game.CursorIngameCoordinates);
             }
+#endif
         }
 
         public long ElapsedTime { get; private set; }
