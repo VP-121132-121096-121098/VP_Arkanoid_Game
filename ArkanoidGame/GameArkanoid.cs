@@ -12,7 +12,8 @@ namespace ArkanoidGame
 
     public class GameArkanoid : IGame
     {
-        
+        //Komentar za proba
+        //Uste eden
 
         //Стартна позиција на играчот (1750, 2010);
 
