@@ -19,20 +19,20 @@ namespace ArkanoidGame.Objects
         }
 
         public SmallGreenBrick(Vector2D positionVector, int virtualGameWidth, int virtualGameHeight)
-            : base(new Vector2D(positionVector), positionVector + new Vector2D(100, 0), //+ висината
-            positionVector + new Vector2D(0, 80) /* + висината */ )
-        {
-            this.GameWidth = virtualGameWidth;
-            this.GameHeight = virtualGameHeight;
-            this.Position = new Vector2D(positionVector);
-            
-            ObjectWidth = 200;
-            ObjectHeight = 80;
-            Velocity = new Vector2D(0, 0);
+             : base(new Vector2D(positionVector), positionVector + new Vector2D(100, 0), //+ висината
+           positionVector + new Vector2D(0, 80) /* + висината */ )
+         {
+             this.GameWidth = virtualGameWidth;
+             this.GameHeight = virtualGameHeight;
+             this.Position = new Vector2D(positionVector);
 
-            this.Health = 200;
-            this.DamageEffect = 200;
-            this.InitTextures();
+             ObjectWidth = 100;
+             ObjectHeight = 80;
+             Velocity = new Vector2D(0, 0);
+
+             this.Health = 200;
+             this.DamageEffect = 200;
+             this.InitTextures();
         }
 
     }

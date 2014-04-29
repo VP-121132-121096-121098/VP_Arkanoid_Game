@@ -55,7 +55,9 @@
     </Compile>
     <Compile Include="ArkanoidGamePlayState.cs" />
     <Compile Include="ArkanoidMainMenuState.cs" />
+    <Compile Include="Objects\BigBlueBrick.cs" />
     <Compile Include="Objects\BigGreenBrick.cs" />
+    <Compile Include="Objects\BigGreyBrick.cs" />
     <Compile Include="Objects\BigPurpleBrick.cs" />
     <Compile Include="DotNetMatrix\CholeskyDecomposition.cs" />
     <Compile Include="DotNetMatrix\EigenvalueDecomposition.cs" />
@@ -73,7 +75,9 @@
     <Compile Include="Objects\BigRedBrick.cs" />
     <Compile Include="Objects\BigYellowBrick.cs" />
     <Compile Include="Objects\BlueBall.cs" />
+    <Compile Include="Objects\SmallBlueBrick.cs" />
     <Compile Include="Objects\SmallGreenBrick.cs" />
+    <Compile Include="Objects\SmallGreyBrick.cs" />
     <Compile Include="Objects\SmallPurpleBrick.cs" />
     <Compile Include="Objects\SmallRedBrick.cs" />
     <Compile Include="Objects\SmallYellowBrick.cs" />

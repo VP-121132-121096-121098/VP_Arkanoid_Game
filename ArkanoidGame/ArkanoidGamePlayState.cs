@@ -77,7 +77,30 @@ namespace ArkanoidGame
             // mala zelena cigla
           SmallGreenBrick sgb = new SmallGreenBrick(new Vector2D(1165, 100), Game.VirtualGameWidth, Game.VirtualGameHeight);
            Game.GameObjects.Add(sgb); 
-
+            // golema siva
+           BigGreyBrick bgr = new BigGreyBrick(new Vector2D(Game.VirtualGameWidth-360, 100), Game.VirtualGameWidth, Game.VirtualGameHeight);
+           Game.GameObjects.Add(bgr); 
+           //mala siva
+           SmallGreyBrick sgg = new SmallGreyBrick(new Vector2D(Game.VirtualGameWidth - 470, 100), Game.VirtualGameWidth, Game.VirtualGameHeight);
+           Game.GameObjects.Add(sgg);
+           SmallYellowBrick ypp = new SmallYellowBrick(new Vector2D(Game.VirtualGameWidth - 580, 100), Game.VirtualGameWidth,
+                Game.VirtualGameHeight);
+           Game.GameObjects.Add(ypp);
+           BigGreenBrick gbb = new BigGreenBrick(new Vector2D(Game.VirtualGameWidth - 790, 100), Game.VirtualGameWidth,
+              Game.VirtualGameHeight);
+           Game.GameObjects.Add(gbb);
+           BigBlueBrick bbb = new BigBlueBrick(new Vector2D(Game.VirtualGameWidth - 1000, 100), Game.VirtualGameWidth,
+            Game.VirtualGameHeight);
+           Game.GameObjects.Add(bbb);
+           SmallBlueBrick smbb = new SmallBlueBrick(new Vector2D(Game.VirtualGameWidth - 1110, 100), Game.VirtualGameWidth,
+              Game.VirtualGameHeight);
+           Game.GameObjects.Add(smbb);
+           SmallGreenBrick smgb = new SmallGreenBrick(new Vector2D(Game.VirtualGameWidth - 1220, 100), Game.VirtualGameWidth,
+            Game.VirtualGameHeight);
+           Game.GameObjects.Add(smgb);
+           SmallYellowBrick sybb = new SmallYellowBrick(new Vector2D(Game.VirtualGameWidth - 1330, 100), Game.VirtualGameWidth,
+            Game.VirtualGameHeight);
+           Game.GameObjects.Add(sybb);
             ElapsedTime = 0;
         }
 
