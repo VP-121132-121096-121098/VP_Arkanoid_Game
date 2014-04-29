@@ -13,7 +13,8 @@ namespace ArkanoidGame.Interfaces
     {
         PlayerPaddle,
         Ball,
-        Brick
+        Brick,
+        RedBrick
     }
 
     public interface IGameObject
