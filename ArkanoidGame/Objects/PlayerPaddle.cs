@@ -71,13 +71,6 @@ namespace ArkanoidGame.Objects
             ObjectTextures[0].PositionUL = Position;
             ObjectTextures[0].PositionUR = Position + new Vector2D(this.ObjectWidth, 0);
             ObjectTextures[0].PositionDL = Position + new Vector2D(0, this.ObjectHeight);
-            
-            /*GameRectangle proba = new GameRectangle(ObjectTextures[0].PositionUL, ObjectTextures[0].PositionUR,
-                ObjectTextures[0].PositionDL);
-            proba.RotateAroundPointDeg(new Vector2D((1738.0 * 2 + ObjectWidth) / 2, (2010.0 * 2 + ObjectWidth) /2), 1);
-            ObjectTextures[0].PositionUL = proba.PositionUL;
-            ObjectTextures[0].PositionUR = proba.PositionUR;
-            ObjectTextures[0].PositionDL = proba.PositionDL;*/
         }
 
         private void ReadMouseInput(Point cursor)
