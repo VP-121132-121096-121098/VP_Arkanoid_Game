@@ -35,6 +35,38 @@ namespace ArkanoidGame.Geometry
             return (positionVectorDL + (positionVectorUR - positionVectorUL));
         }
 
+        /// <summary>
+        /// Го ротира правоаголникот околу некоја точка за одреден агол
+        /// </summary>
+        /// <param name="pointRadiusVector"></param>
+        public void RotateAroundPoint(Vector2D pointRadiusVector, double angleInRadians)
+        {
+            this.PositionUL = RotateVertex(pointRadiusVector, PositionUL, angleInRadians);
+            this.PositionUR = RotateVertex(pointRadiusVector, PositionUR, angleInRadians);
+            this.PositionDL = RotateVertex(pointRadiusVector, PositionDL, angleInRadians);
+        }
+
+        /// <summary>
+        /// Го ротира темето и враќа радиус вектор кон новата локација
+        /// </summary>
+        /// <param name="point"></param>
+        /// <param name="vertexRadiusVector"></param>
+        /// <returns></returns>
+        private Vector2D RotateVertex(Vector2D point, Vector2D vertexRadiusVector, double angleInRadians)
+        {
+            Vector2D vec = vertexRadiusVector - point;
+            vec.Rotate(angleInRadians);
+            return point + vec;
+        }
+
+        /// <summary>
+        /// Го ротира правоаголникот околу некоја точка за одреден агол
+        /// </summary>
+        public void RotateAroundPointDeg(Vector2D pointRadiusVector, double angleInDegrees)
+        {
+            this.RotateAroundPoint(pointRadiusVector, angleInDegrees * Math.PI / 180.0);
+        }
+
         public Vector2D TopMostPoint
         {
             get
