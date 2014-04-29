@@ -68,7 +68,7 @@
     <Compile Include="Interfaces\IGameRenderer.cs" />
     <Compile Include="Interfaces\IGeometricShape.cs" />
     <Compile Include="Objects\AbstractBrick.cs" />
-    <Compile Include="Objects\RedBrick.cs" />
+    <Compile Include="Objects\BigRedBrick.cs" />
     <Compile Include="Quadtree\QuadTree.cs" />
     <Compile Include="Quadtree\QuadTreeNode.cs" />
     <Compile Include="Quadtree\QuadTreeRenderer.cs">

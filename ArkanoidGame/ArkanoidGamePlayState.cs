@@ -38,7 +38,7 @@ namespace ArkanoidGame
                 Game.VirtualGameHeight);
             Game.GameObjects.Add(player);
             //proba da dodadam crvena cigla
-            RedBrick rb = new RedBrick(new Vector2D(20, 100), Game.VirtualGameWidth,
+            BigRedBrick rb = new BigRedBrick(new Vector2D(20, 100), Game.VirtualGameWidth,
                 Game.VirtualGameHeight);
             Game.GameObjects.Add(rb);
 

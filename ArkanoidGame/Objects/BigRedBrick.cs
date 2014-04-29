@@ -8,7 +8,7 @@ using System.Text;
 
 namespace ArkanoidGame.Objects
 {
-    public class RedBrick:ArkanoidGame.Interfaces.IGameObject
+    public class BigRedBrick:ArkanoidGame.Interfaces.IGameObject
     {
         //tezina inicijalno na 400 pa ako e pogodena ednas,se namaluva na pola 
         public int Weight
@@ -105,7 +105,7 @@ namespace ArkanoidGame.Objects
                 Position.Y, ObjectWidth, ObjectHeight));
         }
 
-        public RedBrick(Vector2D positionVector,int virtualGameWidth,int virtualGameHeight)
+        public BigRedBrick(Vector2D positionVector,int virtualGameWidth,int virtualGameHeight)
         {
             this.GameWidth = virtualGameWidth;
             this.GameHeight = virtualGameHeight;
