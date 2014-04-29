@@ -69,12 +69,14 @@ namespace ArkanoidGame.Objects
 
         public double Health
         {
-            get { throw new NotImplementedException(); }
+            get;
+            set;
         }
 
         public double DamageEffect
         {
-            get { throw new NotImplementedException(); }
+            get;
+            set;
         }
 
         public void OnCollisionDetected(IDictionary<IGameObject, IList<Vector2D>> collisionArguments)
