@@ -68,17 +68,17 @@ namespace ArkanoidGame.Objects
 
         private void SetTexturePosition()
         {
-            /*ObjectTextures[0].PositionUL = Position;
+            ObjectTextures[0].PositionUL = Position;
             ObjectTextures[0].PositionUR = Position + new Vector2D(this.ObjectWidth, 0);
-            ObjectTextures[0].PositionDL = Position + new Vector2D(0, this.ObjectHeight);*/
+            ObjectTextures[0].PositionDL = Position + new Vector2D(0, this.ObjectHeight);
             
-            GameRectangle proba = new GameRectangle(ObjectTextures[0].PositionUL, ObjectTextures[0].PositionUR,
+            /*GameRectangle proba = new GameRectangle(ObjectTextures[0].PositionUL, ObjectTextures[0].PositionUR,
                 ObjectTextures[0].PositionDL);
             //proba.RotateAroundPointDeg(new Vector2D((1750.0 * 2 + ObjectWidth) / 2, (2010.0 * 2 + ObjectHeight) / 2), 10);
             proba.RotateAroundPointDeg(new Vector2D(1750, 1005), 1);
             ObjectTextures[0].PositionUL = proba.PositionUL;
             ObjectTextures[0].PositionUR = proba.PositionUR;
-            ObjectTextures[0].PositionDL = proba.PositionDL;
+            ObjectTextures[0].PositionDL = proba.PositionDL;*/
         }
 
         private void ReadMouseInput(Point cursor)
@@ -150,7 +150,7 @@ namespace ArkanoidGame.Objects
         {
             ObjectTextures = new List<GameBitmap>();
             ObjectTextures.Add(new GameBitmap("\\Resources\\Images\\paddleRed.png", Position.X,
-                Position.Y, ObjectWidth, ObjectHeight, "paddleRed"));
+                Position.Y, ObjectWidth, ObjectHeight));
         }
 
         public PlayerPaddle(Vector2D positionVector, int virtualGameWidth, int virutalGameHeight)

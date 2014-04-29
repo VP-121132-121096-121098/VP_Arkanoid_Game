@@ -30,7 +30,7 @@ namespace ArkanoidGame
             bitmapsToRenderCopy = new List<IList<GameBitmap>>();
             List<GameBitmap> background = new List<GameBitmap>();
             background.Add(new GameBitmap("\\Resources\\Images\\background.jpg", 0, 0, game.VirtualGameWidth,
-                game.VirtualGameHeight, "backgroundPS"));
+                game.VirtualGameHeight));
             BitmapsToRender.Add(background);
 
             //додади го играчот на позиција (1750, 2010).

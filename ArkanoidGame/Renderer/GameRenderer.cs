@@ -183,7 +183,7 @@ namespace ArkanoidGame.Renderer
                     double height = ToScreenLength(new Vector2D(positionUL.X, positionUL.Y + bitmap.HeightInGameUnits)
                          - positionUL);
 
-                    Bitmap temp = RendererCache.GetBitmapFromMainMemory(bitmap.UniqueName,
+                    Bitmap temp = RendererCache.GetBitmapFromMainMemory(bitmap.UniqueKey,
                         (int)Math.Round(width), (int)Math.Round(height));
 
                     if (temp == null)

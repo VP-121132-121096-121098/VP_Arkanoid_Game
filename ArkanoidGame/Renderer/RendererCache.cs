@@ -47,14 +47,14 @@ namespace ArkanoidGame.Renderer
     public class RendererCache
     {
         private static readonly object objectLock;
-        private static IDictionary<string, Bitmap> bitmapsInMemory;
-        private static IDictionary<string, string> mapBitmapRelativePath;
+        private static IDictionary<long, Bitmap> bitmapsInMemory;
+        private static IDictionary<long, string> mapBitmapRelativePath;
 
         static RendererCache()
         {
             objectLock = new object();
-            bitmapsInMemory = new Dictionary<string, Bitmap>();
-            mapBitmapRelativePath = new Dictionary<string, string>();
+            bitmapsInMemory = new Dictionary<long, Bitmap>();
+            mapBitmapRelativePath = new Dictionary<long, string>();
         }
 
         /// <summary>
@@ -116,7 +116,7 @@ namespace ArkanoidGame.Renderer
         /// но се скалира во друга резолуција. Потребно е веќе да постои слика
         /// со тој клуч.
         /// </summary>
-        private static void ResizeBitmap(string uniqueKey, int width, int height)
+        private static void ResizeBitmap(long uniqueKey, int width, int height)
         {
             string relativePath = null;
             lock (objectLock)
@@ -136,7 +136,7 @@ namespace ArkanoidGame.Renderer
         /// се користи System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic интерполација
         /// и се користи anti-aliasing (AA).
         /// </summary>
-        private static void LoadBitmapIntoMainMemory(string relativePath, int width, int height, string uniqueKey)
+        private static void LoadBitmapIntoMainMemory(string relativePath, int width, int height, long uniqueKey)
         {
             Bitmap bitmap = GetBitmapFromFile(relativePath, width, height);
 
@@ -147,7 +147,7 @@ namespace ArkanoidGame.Renderer
             }
         }
 
-        public static void LoadBitmapIntoMainMemory(string relativePath, String key)
+        public static void LoadBitmapIntoMainMemory(string relativePath, long key)
         {
             Image image = Image.FromFile(string.Format("{0}{1}",
                 System.Environment.CurrentDirectory, relativePath));
@@ -170,7 +170,7 @@ namespace ArkanoidGame.Renderer
         /// <summary>
         /// Избриши ја сликата од виртуелната меморија.
         /// </summary>
-        public static void RemoveBitmapFromMainMemory(string uniqueKey)
+        public static void RemoveBitmapFromMainMemory(long uniqueKey)
         {
             lock (objectLock)
             {
@@ -189,8 +189,8 @@ namespace ArkanoidGame.Renderer
         {
             lock (objectLock)
             {
-                bitmapsInMemory = new Dictionary<string, Bitmap>();
-                mapBitmapRelativePath = new Dictionary<string, string>();
+                bitmapsInMemory = new Dictionary<long, Bitmap>();
+                mapBitmapRelativePath = new Dictionary<long, string>();
             }
         }
 
@@ -201,7 +201,7 @@ namespace ArkanoidGame.Renderer
         /// </summary>
         /// <param name="uniqueID"></param>
         /// <returns></returns>
-        public static Bitmap GetBitmapFromMainMemory(string uniqueKey)
+        public static Bitmap GetBitmapFromMainMemory(long uniqueKey)
         {
             Bitmap temp = null;
             lock (objectLock)
@@ -219,7 +219,7 @@ namespace ArkanoidGame.Renderer
         /// Ако е потребно скалирање, прво се повикува методот ChangeBitmapResolution().
         /// Сликата претходно треба да е вчитана во виртуелната меморија со повик 
         /// на методот LoadBitmapIntoMainMemory.
-        public static Bitmap GetBitmapFromMainMemory(string uniqueKey, int width, int height)
+        public static Bitmap GetBitmapFromMainMemory(long uniqueKey, int width, int height)
         {
             Bitmap temp = null;
             bitmapsInMemory.TryGetValue(uniqueKey, out temp);
@@ -241,7 +241,7 @@ namespace ArkanoidGame.Renderer
         /// <param name="bitmap"></param>
         /// <param name="uniqueID"></param>
         /// <returns></returns>
-        public static void SaveBitmap(string uniqueKey, Bitmap bitmap)
+        public static void SaveBitmap(long uniqueKey, Bitmap bitmap)
         {
             lock (objectLock)
             {

@@ -13,15 +13,15 @@ namespace ArkanoidGame.Renderer
         private Vector2D positionUL;
         private Vector2D positionDL;
 
-        private string uniqueName;
+        private long uniqueKey;
 
-        public GameBitmapKey(string uniqueName, Vector2D positionUL, Vector2D positionUR, Vector2D positionDL)
+        public GameBitmapKey(long uniqueName, Vector2D positionUL, Vector2D positionUR, Vector2D positionDL)
         {
             this.positionUL = positionUL;
             this.positionUR = positionUR;
             this.positionDL = positionDL;
 
-            this.uniqueName = uniqueName;
+            this.uniqueKey = uniqueName;
         }
 
 
@@ -31,7 +31,7 @@ namespace ArkanoidGame.Renderer
             Vector2D HU = positionUR - positionUL; //горна хоризонтала
             Vector2D VL = positionDL - positionUL; //лева вертикала
             Vector2D HD = (positionDL + (positionUR - positionUL)) - positionDL; //долна хоризонатала
-            int temp = (uniqueName.GetHashCode() + HU.GetHashCode()) % int.MaxValue;
+            int temp = (uniqueKey.GetHashCode() + HU.GetHashCode()) % int.MaxValue;
             temp = (temp + VL.GetHashCode()) % int.MaxValue;
             temp = (temp + HD.GetHashCode()) % int.MaxValue;
             return temp;
@@ -41,10 +41,12 @@ namespace ArkanoidGame.Renderer
     public class GameBitmap
     {
         private static readonly object lockObject;
+        private static long IDCounter;
 
         static GameBitmap()
         {
             lockObject = new object();
+            IDCounter = long.MinValue;
         }
 
         /// <summary>
@@ -98,21 +100,27 @@ namespace ArkanoidGame.Renderer
         /// <returns></returns>
         public GameBitmapKey GetKey()
         {
-            return new GameBitmapKey(UniqueName, PositionUR, PositionUL, PositionDL);
+            return new GameBitmapKey(UniqueKey, PositionUR, PositionUL, PositionDL);
         }
 
-        public virtual string UniqueName { get; protected set; }
+        public long UniqueKey { get; private set; }
 
         public GameBitmap(string relativePath, double x, double y, double widthInGameUnits,
-            double heightInGameUnits, string uniqueName)
+            double heightInGameUnits)
         {
-            RendererCache.LoadBitmapIntoMainMemory(relativePath, uniqueName);
+            long uniqueKey = 0;
+            lock (lockObject)
+            {
+                uniqueKey = IDCounter++;
+            }
+
+            RendererCache.LoadBitmapIntoMainMemory(relativePath, uniqueKey);
             this.WidthInGameUnits = widthInGameUnits;
             this.HeightInGameUnits = heightInGameUnits;
             this.PositionUL = new Vector2D(x, y);
             this.PositionUR = this.PositionUL + new Vector2D(widthInGameUnits, 0);
             this.PositionDL = this.PositionUL + new Vector2D(0, heightInGameUnits);
-            this.UniqueName = uniqueName;
+            this.UniqueKey = uniqueKey;
         }
 
         private void SetDimensions()
@@ -121,39 +129,53 @@ namespace ArkanoidGame.Renderer
             this.HeightInGameUnits = (this.PositionDL - this.PositionUL).Magnitude();
         }
 
-        public GameBitmap(string relativePath, Vector2D positionUL, Vector2D positionUR, Vector2D positionDL,
-            string uniqueName)
+        public GameBitmap(string relativePath, Vector2D positionUL, Vector2D positionUR, Vector2D positionDL)
         {
-            RendererCache.LoadBitmapIntoMainMemory(relativePath, uniqueName);
+            long uniqueKey = 0;
+            lock (lockObject)
+            {
+                uniqueKey = IDCounter++;
+            }
+            RendererCache.LoadBitmapIntoMainMemory(relativePath, uniqueKey);
             this.PositionUL = positionUL;
             this.PositionUR = positionUR;
             this.PositionDL = positionDL;
-            this.UniqueName = uniqueName;
+            this.UniqueKey = uniqueKey;
             this.SetDimensions();
         }
 
         public GameBitmap(Bitmap bitmap, double x,
-            double y, double widthInGameUnits, double heightInGameUnits, string uniqueName)
+            double y, double widthInGameUnits, double heightInGameUnits)
         {
-            RendererCache.SaveBitmap(uniqueName, bitmap);
+
+            long uniqueKey = 0;
+            lock (lockObject)
+            {
+                uniqueKey = IDCounter++;
+            }
+            RendererCache.SaveBitmap(uniqueKey, bitmap);
             this.WidthInGameUnits = widthInGameUnits;
             this.HeightInGameUnits = heightInGameUnits;
             this.PositionUL = new Vector2D(x, y);
             this.PositionUR = this.PositionUL + new Vector2D(widthInGameUnits, 0);
             this.PositionDL = this.PositionUL + new Vector2D(0, heightInGameUnits);
-            this.UniqueName = uniqueName;
+            this.UniqueKey = uniqueKey;
         }
 
-        public GameBitmap(Bitmap bitmap, Vector2D positionUL, Vector2D positionUR, Vector2D positionDL,
-            string uniqueName)
+        public GameBitmap(Bitmap bitmap, Vector2D positionUL, Vector2D positionUR, Vector2D positionDL)
         {
-            RendererCache.SaveBitmap(uniqueName, bitmap);
-            this.UniqueName = uniqueName;
+            long uniqueKey = 0;
+            lock (lockObject)
+            {
+                uniqueKey = IDCounter++;
+            }
+            RendererCache.SaveBitmap(uniqueKey, bitmap);
+            this.UniqueKey = uniqueKey;
             this.PositionUL = positionUL;
             this.PositionUR = positionUR;
             this.PositionDL = positionDL;
             this.SetDimensions();
-            this.UniqueName = uniqueName;
+            this.UniqueKey = uniqueKey;
         }
     }
 }

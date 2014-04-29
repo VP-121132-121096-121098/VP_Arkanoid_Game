@@ -18,7 +18,7 @@ namespace ArkanoidGame.Objects
         {
             ObjectTextures = new List<GameBitmap>();
             ObjectTextures.Add(new GameBitmap("\\Resources\\Images\\element_purple_square.png", Position.X,
-                Position.Y, ObjectWidth, ObjectHeight, "element_purple_square"));
+                Position.Y, ObjectWidth, ObjectHeight));
         }
 
        public SmallPurpleBrick(Vector2D positionVector, int virtualGameWidth, int virtualGameHeight)

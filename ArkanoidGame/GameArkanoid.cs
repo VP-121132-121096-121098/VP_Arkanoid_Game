@@ -95,7 +95,7 @@ namespace ArkanoidGame
 
             Bitmap textMT = StaticStringFactory.CreateOrangeString("Multithreading");
             textMultithreading = new GameBitmap(textMT, VirtualGameWidth - 400 - 10, 5, 400,
-                60, "textMultiThreading");            
+                60);            
 
             IsRendererEnabled = true;
         }

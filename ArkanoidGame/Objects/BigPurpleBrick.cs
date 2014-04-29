@@ -15,7 +15,7 @@ namespace ArkanoidGame.Objects
         {
             ObjectTextures = new List<GameBitmap>();
             ObjectTextures.Add(new GameBitmap("\\Resources\\Images\\element_purple_rectangle.png", PositionUL,
-                PositionUR, PositionDL, "element_purple_rectangle"));
+                PositionUR, PositionDL));
         }
 
         public BigPurpleBrick(Vector2D positionVector, int virtualGameWidth, int virtualGameHeight)

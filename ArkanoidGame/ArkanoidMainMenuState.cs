@@ -45,7 +45,7 @@ namespace ArkanoidGame
 
                     foreach (KeyValuePair<string, GameBitmap> bitmap in readyStrings)
                     {
-                        RendererCache.RemoveBitmapFromMainMemory(bitmap.Value.UniqueName);
+                        RendererCache.RemoveBitmapFromMainMemory(bitmap.Value.UniqueKey);
                     }
 
                     return 100;
@@ -147,32 +147,32 @@ namespace ArkanoidGame
             BitmapsToRender = new List<IList<GameBitmap>>();
             BitmapsToRender.Add(new List<GameBitmap>());
             BitmapsToRender[0].Add(new GameBitmap("\\Resources\\Images\\background.jpg", 0, 0, game.VirtualGameWidth,
-                game.VirtualGameHeight, "background"));
+                game.VirtualGameHeight));
             bitmapsToRenderCopy = new List<IList<GameBitmap>>();
 
             // додади ги сите опции во меморија
             readyStrings = new Dictionary<string, GameBitmap>();
             readyStrings.Add("start game", new GameBitmap(StaticStringFactory.CreateOrangeString("start game"),
-                (game.VirtualGameWidth - 550) / 2, 750, 600, 90, "start game"));
+                (game.VirtualGameWidth - 550) / 2, 750, 600, 90));
             readyStrings.Add("quit game", new GameBitmap(StaticStringFactory.CreateOrangeString("quit game"),
-                (game.VirtualGameWidth - 500) / 2, 1100, 550, 90, "quit game"));
+                (game.VirtualGameWidth - 500) / 2, 1100, 550, 90));
             readyStrings.Add("start game hover", new GameBitmap(StaticStringFactory.CreateBlueString("start game"),
-                (game.VirtualGameWidth - 550) / 2, 750, 600, 90, "start game hover"));
+                (game.VirtualGameWidth - 550) / 2, 750, 600, 90));
             readyStrings.Add("quit game hover", new GameBitmap(StaticStringFactory.CreateBlueString("quit game"),
-                (game.VirtualGameWidth - 500) / 2, 1100, 550, 90, "quit game hover"));
+                (game.VirtualGameWidth - 500) / 2, 1100, 550, 90));
             readyStrings.Add("Game controls mouse", new GameBitmap(StaticStringFactory
                 .CreateOrangeString("Controls: mouse"), (game.VirtualGameWidth - 750) / 2.0, 920,
-                750, 90, "Game controls mouse"));
+                750, 90));
             readyStrings.Add("Game controls mouse hover", new GameBitmap(StaticStringFactory
                 .CreateBlueString("Controls: mouse"), (game.VirtualGameWidth - 750) / 2.0, 920,
-                750, 90, "Game controls mouse hover"));
+                750, 90));
 
             readyStrings.Add("Game controls keyboard", new GameBitmap(StaticStringFactory
                 .CreateOrangeString("Controls: keyboard"), (game.VirtualGameWidth - 750) / 2.0, 920,
-                750, 90, "Game controls keyboard"));
+                750, 90));
             readyStrings.Add("Game controls keyboard hover", new GameBitmap(StaticStringFactory
                 .CreateBlueString("Controls: keyboard"), (game.VirtualGameWidth - 750) / 2.0, 920,
-                750, 90, "Game controls keyboard hover"));
+                750, 90));
 
             menuOptions = new Dictionary<string, GameBitmap>();
             menuOptions.Add("start game", readyStrings["start game"]);

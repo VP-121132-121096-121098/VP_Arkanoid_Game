@@ -19,7 +19,7 @@ namespace ArkanoidGame.Objects
         {
             ObjectTextures = new List<GameBitmap>();
             ObjectTextures.Add(new GameBitmap("\\Resources\\Images\\element_red_square.png", Position.X,
-                Position.Y, ObjectWidth, ObjectHeight, "element_red_square"));
+                Position.Y, ObjectWidth, ObjectHeight));
         }
 
         public SmallRedBrick(Vector2D positionVector, int virtualGameWidth, int virtualGameHeight)

@@ -17,7 +17,7 @@ namespace ArkanoidGame.Objects
         {
             ObjectTextures = new List<GameBitmap>();
             ObjectTextures.Add(new GameBitmap("\\Resources\\Images\\element_yellow_rectangle.png", Position.X,
-                Position.Y, ObjectWidth, ObjectHeight, "element_yellow_rectangle"));
+                Position.Y, ObjectWidth, ObjectHeight));
         }
 
         public BigYellowBrick(Vector2D positionVector, int virtualGameWidth, int virtualGameHeight)
