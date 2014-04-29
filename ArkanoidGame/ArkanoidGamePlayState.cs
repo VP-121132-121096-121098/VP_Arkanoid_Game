@@ -37,10 +37,14 @@ namespace ArkanoidGame
             PlayerPaddle player = new PlayerPaddle(new Vector2D(1750, 2010), Game.VirtualGameWidth,
                 Game.VirtualGameHeight);
             Game.GameObjects.Add(player);
-            //proba da dodadam crvena cigla
-            BigRedBrick rb = new BigRedBrick(new Vector2D(20, 100), Game.VirtualGameWidth,
+            //proba da dodadam golema crvena cigla
+            BigRedBrick grb = new BigRedBrick(new Vector2D(20, 100), Game.VirtualGameWidth,
                 Game.VirtualGameHeight);
-            Game.GameObjects.Add(rb);
+            Game.GameObjects.Add(grb);
+            //proba da dodadam mala crvena cigla
+           SmallRedBrick srb = new SmallRedBrick(new Vector2D(220, 100), Game.VirtualGameWidth,
+                Game.VirtualGameHeight);
+            Game.GameObjects.Add(srb);
 
             ElapsedTime = 0;
         }

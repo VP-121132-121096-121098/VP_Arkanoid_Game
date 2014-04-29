@@ -8,13 +8,34 @@ using System.Text;
 
 namespace ArkanoidGame.Objects
 {
-    public class BigRedBrick:AbstractBrick
+    public class SmallRedBrick : AbstractBrick
+
     {
-        //tezina inicijalno na 400 pa ako e pogodena ednas,se namaluva na pola 
-       
+        //tezina inicijalno na 200 ,pola od tezinata na golemata ciglicka
+        
         
         public override void OnUpdate(long gameElapsedTime)
         {
+            /*if (MouseLastPosition == null)
+            {
+                MouseLastPosition = GameArkanoid.GetInstance().CursorIngameCoordinates;
+            }
+
+            IKeyState leftArrowState = KeyStateInfo.GetAsyncKeyState(Keys.Left);
+            IKeyState rightArrowState = KeyStateInfo.GetAsyncKeyState(Keys.Right);
+
+            Vector2D velocity_0 = Velocity;
+
+            if (!GameArkanoid.GetInstance().IsControllerMouse)
+            {
+                ReadKeyboardInput(leftArrowState, rightArrowState);
+            }
+            else
+            {
+                ReadMouseInput(GameArkanoid.GetInstance().CursorIngameCoordinates);
+            }*/
+
+
             Position += (Velocity) / 2;
 
             if (Position.X > GameWidth - 10 - ObjectWidth)
@@ -26,34 +47,28 @@ namespace ArkanoidGame.Objects
             ObjectTextures[0].Y = Position.Y;
         }
 
-       
-
         
-
-        
-
-       
-
         public override void InitTextures()
         {
             ObjectTextures = new List<GameBitmap>();
-            ObjectTextures.Add(new GameBitmap("\\Resources\\Images\\element_red_rectangle.png", Position.X,
+            ObjectTextures.Add(new GameBitmap("\\Resources\\Images\\element_red_square.png", Position.X,
                 Position.Y, ObjectWidth, ObjectHeight));
         }
 
-        public BigRedBrick(Vector2D positionVector,int virtualGameWidth,int virtualGameHeight):base()
+        public SmallRedBrick(Vector2D positionVector, int virtualGameWidth, int virtualGameHeight):base()
         {
             this.GameWidth = virtualGameWidth;
             this.GameHeight = virtualGameHeight;
             this.Position = new Vector2D(positionVector);
-            ObjectWidth = 200;
+            ObjectWidth = 100;
             ObjectHeight = 80;
             Velocity = new Vector2D(0, 0);
 
-            this.Weight = 400;
+            this.Weight = 200;
             this.InitTextures();
         }
 
-        
+
     }
 }
+
