@@ -20,6 +20,8 @@ namespace ArkanoidGame.Interfaces
         /// <param name="frameHeight"></param>
         void Render(GameBitmap bitmap, Graphics g, int frameWidth, int frameHeight);
 
+        void DrawCircle(Vector2D center, float radius, Graphics g, Color color, int frameWidth, int frameHeight);
+
         /// <summary>
         /// Претворање на должина од должина во игра на должина на екран
         /// </summary>

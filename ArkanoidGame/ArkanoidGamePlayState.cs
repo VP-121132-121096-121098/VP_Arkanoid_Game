@@ -20,11 +20,17 @@ namespace ArkanoidGame
 
         private QuadTree<IGameObject> quadtree; //со оваа структура може да се подели рамнината на делови
 
+        //за секој објект се чува посебна листа од објекти со кои се судрил и во кои точки се судрил со тие објекти
+        private IDictionary<IGameObject, IDictionary<IGameObject, IList<Vector2D>>> collisionArguments;
+
+        private readonly object lockCollisionDetection;
+
         public ArkanoidGamePlayState(IGame game)
         {
+            lockCollisionDetection = new object();
+            debugMode = false;
             quadtree = null;
             ButtonDWaitNFrames = 0;
-            debugMode = false;
             this.Game = game;
             BitmapsToRender = new List<IList<GameBitmap>>();
             bitmapsToRenderCopy = new List<IList<GameBitmap>>();
@@ -37,7 +43,10 @@ namespace ArkanoidGame
             PlayerPaddle player = new PlayerPaddle(new Vector2D(1750, 2010), Game.VirtualGameWidth,
                 Game.VirtualGameHeight);
             Game.GameObjects.Add(player);
-            
+            BlueBall ball = new BlueBall(new Vector2D((player.Position.X * 2 + player.ObjectWidth) / 2,
+               player.Position.Y - 45), 50);
+            Game.GameObjects.Add(ball);
+
             //proba da dodadam golema crvena cigla
             BigRedBrick grb = new BigRedBrick(new Vector2D(20, 100), Game.VirtualGameWidth,
                 Game.VirtualGameHeight);
@@ -72,6 +81,20 @@ namespace ArkanoidGame
             ElapsedTime = 0;
         }
 
+#if DEBUG
+        private void DebugDrawCollisionArguments(IDictionary<IGameObject, IList<Vector2D>> args,
+            Graphics graphics, int frameWidth, int frameHeight)
+        {
+            foreach (KeyValuePair<IGameObject, IList<Vector2D>> arg in args)
+            {
+                foreach (Vector2D point in arg.Value)
+                {
+                    Game.Renderer.DrawCircle(point, 20, graphics, Color.Aqua, frameWidth, frameHeight);
+                }
+            }
+        }
+#endif
+
         public void OnDraw(Graphics graphics, int frameWidth, int frameHeight)
         {
             Game.Renderer.Render(bitmapsToRenderCopy, graphics, frameWidth, frameHeight);
@@ -79,8 +102,21 @@ namespace ArkanoidGame
 #if DEBUG
             if (debugMode && quadtree != null)
             {
-                new QuadTreeRenderer<IGameObject>(quadtree).Render(Game.Renderer,
-                    graphics, frameWidth, frameHeight, Game.CursorIngameCoordinates);
+                Point cursor = Game.CursorIngameCoordinates;
+                QuadTreeRenderer<IGameObject> treeRenderer = new QuadTreeRenderer<IGameObject>(quadtree);
+                treeRenderer.Render(Game.Renderer, graphics, frameWidth, frameHeight,
+                    new RectangleF(cursor.X, cursor.Y, 30, 30), Color.Aqua);
+
+                IDictionary<IGameObject, IDictionary<IGameObject, IList<Vector2D>>> collisions = collisionArguments;
+                foreach (KeyValuePair<IGameObject, IDictionary<IGameObject, IList<Vector2D>>> collision in collisions)
+                {
+                    if (collision.Key.ObjectType == GameObjectType.Ball)
+                    {
+                        treeRenderer.Render(Game.Renderer, graphics, frameWidth, frameHeight,
+                            collision.Key.Rectangle, Color.Red);
+                        this.DebugDrawCollisionArguments(collision.Value, graphics, frameWidth, frameHeight);
+                    }
+                }
             }
 #endif
         }
@@ -147,8 +183,47 @@ namespace ArkanoidGame
                 UpdateObject(obj);
 
             InitQuadTree(gameObjects);
+            InitCollisionArguments(gameObjects);
 
+            foreach (IGameObject obj in gameObjects)
+                CheckForCollisions(obj);
 
+            foreach (IGameObject obj in gameObjects)
+            {
+                PassCollisionArgumentsToObject(obj);
+            }
+        }
+
+        private void InitCollisionArguments(IList<IGameObject> gameObjects)
+        {
+            collisionArguments = new Dictionary<IGameObject, IDictionary<IGameObject, IList<Vector2D>>>();
+            foreach (IGameObject obj in gameObjects)
+            {
+                collisionArguments.Add(obj, new Dictionary<IGameObject, IList<Vector2D>>());
+            }
+        }
+
+        private void CheckForCollisions(IGameObject obj)
+        {
+            List<IGameObject> objectsInArea = quadtree.Query(obj.Rectangle);
+
+            IGeometricShape geometricShape = obj.GetGeometricShape();
+            foreach (IGameObject gameObject in objectsInArea)
+            {
+                if (gameObject == obj)
+                    continue;
+
+                List<Vector2D> temp = null;
+                if (geometricShape.Intersects(gameObject.GetGeometricShape(), out temp))
+                {
+                    collisionArguments[obj].Add(gameObject, temp);
+                }
+            }
+        }
+
+        private void PassCollisionArgumentsToObject(IGameObject obj)
+        {
+            obj.OnCollisionDetected(collisionArguments[obj]);
         }
 
         private void InitQuadTree(IList<IGameObject> gameObjects)
@@ -199,7 +274,66 @@ namespace ArkanoidGame
             }
 
             //не може паралелно да се одвива оваа операција
-            InitQuadTree(gameObjects); 
+            InitQuadTree(gameObjects);
+
+            InitCollisionArguments(gameObjects);
+
+            using (CountdownEvent e = new CountdownEvent(1))
+            {
+                // fork work: 
+                foreach (IGameObject obj in gameObjects)
+                {
+                    // Dynamically increment signal count.
+                    e.AddCount();
+                    ThreadPool.QueueUserWorkItem(delegate(object gameObject)
+                    {
+                        try
+                        {
+                            CheckForCollisions((IGameObject)gameObject);
+                        }
+                        finally
+                        {
+                            e.Signal();
+                        }
+                    },
+                     obj);
+                }
+                e.Signal();
+
+                // The first element could be run on this thread. 
+
+                // Join with work.
+                e.Wait();
+
+            }
+
+            using (CountdownEvent e = new CountdownEvent(1))
+            {
+                // fork work: 
+                foreach (IGameObject obj in gameObjects)
+                {
+                    // Dynamically increment signal count.
+                    e.AddCount();
+                    ThreadPool.QueueUserWorkItem(delegate(object gameObject)
+                    {
+                        try
+                        {
+                            PassCollisionArgumentsToObject((IGameObject)gameObject);
+                        }
+                        finally
+                        {
+                            e.Signal();
+                        }
+                    },
+                     obj);
+                }
+                e.Signal();
+
+                // The first element could be run on this thread. 
+
+                // Join with work.
+                e.Wait();
+            }
         }
 
         private void UpdateObject(IGameObject obj)
