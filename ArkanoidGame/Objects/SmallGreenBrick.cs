@@ -8,12 +8,13 @@ using System.Text;
 
 namespace ArkanoidGame.Objects
 {
-   public class SmallGreenBrick : AbstractBrick
+    public class SmallGreenBrick : AbstractBrick
     {
-        public override void InitTextures()
+        
+         public override void InitTextures()
         {
             ObjectTextures = new List<GameBitmap>();
-            ObjectTextures.Add(new GameBitmap("\\Resources\\Images\\element_green_square_glossy.png", PositionUL,
+            ObjectTextures.Add(new GameBitmap("\\Resources\\Images\\element_green_square.png", PositionUL,
                 PositionUR, PositionDL));
         }
 
@@ -33,5 +34,6 @@ namespace ArkanoidGame.Objects
             this.DamageEffect = 200;
             this.InitTextures();
         }
+
     }
 }
