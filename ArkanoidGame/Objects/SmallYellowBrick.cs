@@ -10,7 +10,7 @@ namespace ArkanoidGame.Objects
 {
     public class SmallYellowBrick : AbstractBrick
     {
-        //tezina inicijalno na 200 ,pola od tezinata na golemata ciglicka
+       
 
 
         public override void OnUpdate(long gameElapsedTime)

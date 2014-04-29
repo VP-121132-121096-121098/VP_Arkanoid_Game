@@ -10,7 +10,7 @@ namespace ArkanoidGame.Objects
 {
     public class BigRedBrick:AbstractBrick
     {
-        //tezina inicijalno na 400 pa ako e pogodena ednas,se namaluva na pola 
+        
        
         
         public override void OnUpdate(long gameElapsedTime)
