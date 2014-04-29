@@ -73,6 +73,7 @@
     <Compile Include="Objects\BigYellowBrick.cs" />
     <Compile Include="Objects\SmallPurpleBrick.cs" />
     <Compile Include="Objects\SmallRedBrick.cs" />
+    <Compile Include="Objects\SmallYellowBrick.cs" />
     <Compile Include="Quadtree\QuadTree.cs" />
     <Compile Include="Quadtree\QuadTreeNode.cs" />
     <Compile Include="Quadtree\QuadTreeRenderer.cs">
@@ -97,7 +98,6 @@
     <Compile Include="Objects\PlayerPaddle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Renderer\StaticStringFactory.cs" />
-    <Compile Include="Objects\SmallYellowBrick.cs" />
     <Content Include="DotNetMatrix\Readme.txt" />
     <Content Include="Resources\Images\projectile.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
