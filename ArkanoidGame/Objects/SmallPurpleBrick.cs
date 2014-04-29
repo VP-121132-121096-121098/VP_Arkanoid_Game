@@ -64,7 +64,8 @@ namespace ArkanoidGame.Objects
             ObjectHeight = 80;
             Velocity = new Vector2D(0, 0);
 
-            this.Weight = 200;
+            this.Health = 100;
+            this.DamageEffect = 100;
             this.InitTextures();
         }
 
