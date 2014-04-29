@@ -74,7 +74,7 @@ namespace ArkanoidGame.Objects
             
             GameRectangle proba = new GameRectangle(ObjectTextures[0].PositionUL, ObjectTextures[0].PositionUR,
                 ObjectTextures[0].PositionDL);
-            proba.RotateAroundPointDeg(new Vector2D((1750.0 * 2 + ObjectWidth) / 2, (2010.0 * 2 + ObjectHeight) / 2), 5);
+            proba.RotateAroundPointDeg(new Vector2D((1750.0 * 2 + ObjectWidth) / 2, (2010.0 * 2 + ObjectHeight) / 2), 10);
             ObjectTextures[0].PositionUL = proba.PositionUL;
             ObjectTextures[0].PositionUR = proba.PositionUR;
             ObjectTextures[0].PositionDL = proba.PositionDL;
