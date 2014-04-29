@@ -13,22 +13,7 @@ namespace ArkanoidGame.Objects
        
 
 
-        public override void OnUpdate(long gameElapsedTime)
-        {
-
-
-            Position += (Velocity) / 2;
-
-            if (Position.X > GameWidth - 10 - ObjectWidth)
-                Position.X = GameWidth - 10 - ObjectWidth;
-            else if (Position.X < 5)
-                Position.X = 5;
-
-            ObjectTextures[0].PositionUL = Position;
-        }
-
-
-        public override void InitTextures()
+       public override void InitTextures()
         {
             ObjectTextures = new List<GameBitmap>();
             ObjectTextures.Add(new GameBitmap("\\Resources\\Images\\element_yellow_square.png", Position.X,

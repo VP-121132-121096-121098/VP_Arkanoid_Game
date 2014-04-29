@@ -9,8 +9,14 @@ namespace ArkanoidGame.Objects
 {
     public abstract class AbstractBrick : IGameObject
     {
-        public virtual void OnUpdate(long gameElapsedTime)
+        public void OnUpdate(long gameElapsedTime)
         {
+            Position += (Velocity) / 2;
+
+            if (Position.X > GameWidth - 10 - ObjectWidth)
+                Position.X = GameWidth - 10 - ObjectWidth;
+            else if (Position.X < 5)
+                Position.X = 5;
             ObjectTextures[0].PositionUL = PositionUL;
             ObjectTextures[0].PositionUR = PositionUR;
             ObjectTextures[0].PositionDL = PositionDL;
