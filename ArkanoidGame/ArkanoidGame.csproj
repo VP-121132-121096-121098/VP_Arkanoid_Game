@@ -92,6 +92,7 @@
     <Compile Include="Objects\PlayerPaddle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Renderer\StaticStringFactory.cs" />
+    <Content Include="DotNetMatrix\Readme.txt" />
     <Content Include="Resources\Images\projectile.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
