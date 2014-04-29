@@ -1,6 +1,7 @@
 ﻿using DotNetMatrix;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 
@@ -78,6 +79,11 @@ namespace ArkanoidGame.Geometry
         public static implicit operator Vector3D(Vector2D vec)
         {
             return new Vector3D(vec);
+        }
+
+        public static implicit operator Point(Vector2D vec)
+        {
+            return new Point((int)Math.Round(vec.X), (int)Math.Round(vec.Y));
         }
 
         public override bool Equals(object obj)
