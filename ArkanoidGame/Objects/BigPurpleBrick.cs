@@ -10,42 +10,22 @@ namespace ArkanoidGame.Objects
 {
     public class BigPurpleBrick : AbstractBrick
     {
-        //tezina inicijalno na 400 pa ako e pogodena ednas,se namaluva na pola 
-
-
-        public override void OnUpdate(long gameElapsedTime)
-        {
-            Position += (Velocity) / 2;
-
-            if (Position.X > GameWidth - 10 - ObjectWidth)
-                Position.X = GameWidth - 10 - ObjectWidth;
-            else if (Position.X < 5)
-                Position.X = 5;
-
-            ObjectTextures[0].PositionUL = Position;
-        }
-
-
-
-
-
-
-
-
 
         public override void InitTextures()
         {
             ObjectTextures = new List<GameBitmap>();
-            ObjectTextures.Add(new GameBitmap("\\Resources\\Images\\element_purple_rectangle.png", Position.X,
-                Position.Y, ObjectWidth, ObjectHeight, "element_purple_rectangle"));
+            ObjectTextures.Add(new GameBitmap("\\Resources\\Images\\element_purple_rectangle.png", PositionUL,
+                PositionUR, PositionDL, "element_purple_rectangle"));
         }
 
         public BigPurpleBrick(Vector2D positionVector, int virtualGameWidth, int virtualGameHeight)
-            : base()
+            : base(new Vector2D(positionVector), positionVector + new Vector2D(200, 0), //+ висината
+            positionVector + new Vector2D(0, 80) /* + висината */ )
         {
             this.GameWidth = virtualGameWidth;
             this.GameHeight = virtualGameHeight;
             this.Position = new Vector2D(positionVector);
+            
             ObjectWidth = 200;
             ObjectHeight = 80;
             Velocity = new Vector2D(0, 0);
