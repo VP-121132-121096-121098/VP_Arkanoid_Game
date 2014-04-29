@@ -19,11 +19,14 @@ namespace ArkanoidGame.Objects
                 Position.Y, ObjectWidth, ObjectHeight, "element_red_rectangle"));
         }
 
-        public BigRedBrick(Vector2D positionVector,int virtualGameWidth,int virtualGameHeight):base()
+        public BigRedBrick(Vector2D positionVector, int virtualGameWidth, int virtualGameHeight)
+            : base(new Vector2D(positionVector), positionVector + new Vector2D(200, 0), //+ висината
+            positionVector + new Vector2D(0, 80) /* + висината */ )
         {
             this.GameWidth = virtualGameWidth;
             this.GameHeight = virtualGameHeight;
             this.Position = new Vector2D(positionVector);
+            
             ObjectWidth = 200;
             ObjectHeight = 80;
             Velocity = new Vector2D(0, 0);
@@ -32,7 +35,6 @@ namespace ArkanoidGame.Objects
             this.DamageEffect = 200;
             this.InitTextures();
         }
-
         
     }
 }
