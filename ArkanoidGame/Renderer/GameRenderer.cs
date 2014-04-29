@@ -185,8 +185,19 @@ namespace ArkanoidGame.Renderer
                         continue;
 
                     Vector2D positionUL = ToScreenCoordinates(bitmap.PositionUL);
+                    double width = ToScreenLength(new Vector2D(positionUL.X + bitmap.WidthInGameUnits, positionUL.Y)
+                         - positionUL);
+                    double height = ToScreenLength(new Vector2D(positionUL.X, positionUL.Y + bitmap.HeightInGameUnits)
+                         - positionUL);
                     Vector2D positionUR = ToScreenCoordinates(bitmap.PositionUR);
+                    Vector2D vecUL_UR = positionUR - positionUL;
+                    vecUL_UR = vecUL_UR / vecUL_UR.Magnitude() * width;
+                    positionUR = positionUL + vecUL_UR;
                     Vector2D positionDL = ToScreenCoordinates(bitmap.PositionDL);
+                    Vector2D vecUL_DL = positionDL - positionUL;
+                    vecUL_DL = vecUL_DL / vecUL_DL.Magnitude() * height;
+                    positionDL = positionUL + vecUL_DL;
+
                     Point[] vertices = new Point[] { positionUL, positionUR, positionDL };
                     g.DrawImage(temp, vertices);
                 }

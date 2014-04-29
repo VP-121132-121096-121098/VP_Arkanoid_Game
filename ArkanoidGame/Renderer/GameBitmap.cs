@@ -93,16 +93,6 @@ namespace ArkanoidGame.Renderer
         }
 
         /// <summary>
-        /// Должина на сликата
-        /// </summary>
-        public double Width { get; protected set; }
-
-        /// <summary>
-        /// Ширина на сликата
-        /// </summary>
-        public double Height { get; protected set; }
-
-        /// <summary>
         /// Клуч за hash и tree мапа.
         /// </summary>
         /// <returns></returns>
@@ -127,8 +117,8 @@ namespace ArkanoidGame.Renderer
 
         private void SetDimensions()
         {
-            this.Width = (this.PositionUR - this.PositionUL).Magnitude();
-            this.Height = (this.PositionDL - this.PositionUL).Magnitude();
+            this.WidthInGameUnits = (this.PositionUR - this.PositionUL).Magnitude();
+            this.HeightInGameUnits = (this.PositionDL - this.PositionUL).Magnitude();
         }
 
         public GameBitmap(string relativePath, Vector2D positionUL, Vector2D positionUR, Vector2D positionDL,

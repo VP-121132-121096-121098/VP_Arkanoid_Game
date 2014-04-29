@@ -18,8 +18,8 @@ namespace ArkanoidGameWindow
 
         private static void StartNewGame(GameWindow window)
         {
-            int gameUpdatePeriod = 16; //~60 FPS
-            //int gameUpdatePeriod = 9; //debugging;
+            //int gameUpdatePeriod = 16; //~60 FPS
+            int gameUpdatePeriod = 9; //debugging;
             window.StartGameFramework(new GameFramework(GameArkanoid.GetInstance(), gameUpdatePeriod));
         }
 
