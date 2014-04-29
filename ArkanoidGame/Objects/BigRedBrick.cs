@@ -22,8 +22,7 @@ namespace ArkanoidGame.Objects
             else if (Position.X < 5)
                 Position.X = 5;
 
-            ObjectTextures[0].X = Position.X;
-            ObjectTextures[0].Y = Position.Y;
+            ObjectTextures[0].PositionUL = Position;
         }
 
        
@@ -38,7 +37,7 @@ namespace ArkanoidGame.Objects
         {
             ObjectTextures = new List<GameBitmap>();
             ObjectTextures.Add(new GameBitmap("\\Resources\\Images\\element_red_rectangle.png", Position.X,
-                Position.Y, ObjectWidth, ObjectHeight));
+                Position.Y, ObjectWidth, ObjectHeight, "element_red_rectangle"));
         }
 
         public BigRedBrick(Vector2D positionVector,int virtualGameWidth,int virtualGameHeight):base()

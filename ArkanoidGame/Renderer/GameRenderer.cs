@@ -9,7 +9,7 @@ using System.Text;
 
 namespace ArkanoidGame.Renderer
 {
-    public class GameRenderer : IGameRenderer
+    public class OldGameRenderer : IGameRenderer
     {
         /// <summary>
         /// Ширина и висина на прозорецот
@@ -26,7 +26,7 @@ namespace ArkanoidGame.Renderer
         /// </summary>
         /// <param name="virtualGameWidth"></param>
         /// <param name="virtualGameHeight"></param>
-        public GameRenderer(int virtualGameWidth, int virtualGameHeight)
+        public OldGameRenderer(int virtualGameWidth, int virtualGameHeight)
         {
             FrameHeight = FrameWidth = 0;
             this.VirtualGameHeight = virtualGameHeight;
@@ -177,17 +177,18 @@ namespace ArkanoidGame.Renderer
             {
                 foreach (GameBitmap bitmap in bitmapList)
                 {
-                    Bitmap temp = RendererCache.GetBitmapFromMainMemory(bitmap.PictureID,
-                        (int)Math.Round(ToScreenLength(bitmap.X, bitmap.Y,
-                        bitmap.X + bitmap.WidthInGameUnits, bitmap.Y)),
-                        (int)Math.Round(ToScreenLength(bitmap.X, bitmap.Y,
-                        bitmap.X, bitmap.Y + bitmap.HeightInGameUnits)));
+                    Bitmap temp = RendererCache.GetBitmapFromMainMemory(bitmap.UniqueName,
+                        (int)Math.Round(ToScreenLength(bitmap.PositionUR - bitmap.PositionUL)),
+                        (int)Math.Round(ToScreenLength(bitmap.PositionDL - bitmap.PositionUL)));
 
                     if (temp == null)
                         continue;
 
-                    Vector2D position = ToScreenCoordinates(new Vector2D(bitmap.X, bitmap.Y));
-                    g.DrawImage(temp, (float)position.X, (float)position.Y);
+                    Vector2D positionUL = ToScreenCoordinates(bitmap.PositionUL);
+                    Vector2D positionUR = ToScreenCoordinates(bitmap.PositionUR);
+                    Vector2D positionDL = ToScreenCoordinates(bitmap.PositionDL);
+                    Point[] vertices = new Point[] { positionUL, positionUR, positionDL };
+                    g.DrawImage(temp, vertices);
                 }
             }
         }

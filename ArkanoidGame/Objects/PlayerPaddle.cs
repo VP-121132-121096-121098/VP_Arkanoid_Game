@@ -63,8 +63,14 @@ namespace ArkanoidGame.Objects
             else if (Position.X < 5)
                 Position.X = 5;
 
-            ObjectTextures[0].X = Position.X;
-            ObjectTextures[0].Y = Position.Y;
+            SetTexturePosition();
+        }
+
+        private void SetTexturePosition()
+        {
+            ObjectTextures[0].PositionUL = Position;
+            ObjectTextures[0].PositionUR = Position + new Vector2D(this.ObjectWidth, 0);
+            ObjectTextures[0].PositionDL = Position + new Vector2D(0, this.ObjectHeight);
         }
 
         private void ReadMouseInput(Point cursor)
@@ -136,7 +142,7 @@ namespace ArkanoidGame.Objects
         {
             ObjectTextures = new List<GameBitmap>();
             ObjectTextures.Add(new GameBitmap("\\Resources\\Images\\paddleRed.png", Position.X,
-                Position.Y, ObjectWidth, ObjectHeight));
+                Position.Y, ObjectWidth, ObjectHeight, "paddleRed"));
         }
 
         public PlayerPaddle(Vector2D positionVector, int virtualGameWidth, int virutalGameHeight)

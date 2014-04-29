@@ -74,7 +74,6 @@ namespace ArkanoidGameWindow
         {
             DirectoryInfo cacheDirectory = new DirectoryInfo(
                 string.Format("{0}\\Resources\\Cache", System.Environment.CurrentDirectory));
-            RendererCache.RemoveAllBitmapsFromMainMemory();
             try
             {
                 cacheDirectory.Delete(true); //пробај да го избришеш фолдерот и сите фајлови во него

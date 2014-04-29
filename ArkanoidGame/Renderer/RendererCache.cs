@@ -46,6 +46,40 @@ namespace ArkanoidGame.Renderer
 
     public class RendererCache
     {
+        private static readonly object objectLock;
+        private static IDictionary<string, Bitmap> bitmapsInMemory;
+        private static IDictionary<string, string> mapBitmapRelativePath;
+
+        static RendererCache()
+        {
+            objectLock = new object();
+            bitmapsInMemory = new Dictionary<string, Bitmap>();
+            mapBitmapRelativePath = new Dictionary<string, string>();
+        }
+
+        /// <summary>
+        /// Вчитува слика од датотека. Локацијата на датотеката се задава како 
+        /// релативна патека, пример: \\Resources\\Images\\background.jpg
+        /// </summary>
+        /// <param name="relativePath"></param>
+        /// <returns></returns>
+        public static Bitmap GetBitmapFromFile(string relativePath)
+        {
+            Image bitmap = Image.FromFile(string.Format("{0}{1}",
+                System.Environment.CurrentDirectory, relativePath));
+            Bitmap tempBitmap = new Bitmap(bitmap.Width, bitmap.Height);
+
+            using (Graphics g = Graphics.FromImage(tempBitmap))
+            {
+                g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                g.DrawImage(bitmap, 0, 0);
+            }
+
+            return tempBitmap;
+        }
+
+
 
         /// <summary>
         /// Вчитува слика од датотека. Локацијата на датотеката се задава како 
@@ -78,30 +112,42 @@ namespace ArkanoidGame.Renderer
         }
 
         /// <summary>
+        /// Повторно ја вчитува сликата со единствен клуч во виртуелната меморија,
+        /// но се скалира во друга резолуција. Потребно е веќе да постои слика
+        /// со тој клуч.
+        /// </summary>
+        private static void ResizeBitmap(string uniqueKey, int width, int height)
+        {
+            string relativePath = null;
+            lock (objectLock)
+            {
+                mapBitmapRelativePath.TryGetValue(uniqueKey, out relativePath);
+            }
+            RemoveBitmapFromMainMemory(uniqueKey);
+            LoadBitmapIntoMainMemory(relativePath, width, height, uniqueKey);
+        }
+
+        /// <summary>
         /// Вчитува слика од датотека. Сликата се чува во вирутелната меморија. Референца кон сликата
-        /// може да се добие со повик на методот GetBitmapFromMainMemory(long uniqueID)
+        /// може да се добие со повик на методот GetBitmapFromMainMemory(string uniqueKey)
         /// Локацијата на датотеката се задава како 
         /// релативна патека, пример: \\Resources\\Images\\background.jpg
         /// Доколку сликата не е во бараната резолуција се прави скалирање, при што
         /// се користи System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic интерполација
         /// и се користи anti-aliasing (AA).
         /// </summary>
-        /// <param name="relativePath"></param>
-        /// <param name="width"></param>
-        /// <param name="height"></param>
-        /// <param name="alias"></param>
-        public static void LoadBitmapIntoMainMemory(string relativePath, int width, int height, long uniqueID)
+        private static void LoadBitmapIntoMainMemory(string relativePath, int width, int height, string uniqueKey)
         {
             Bitmap bitmap = GetBitmapFromFile(relativePath, width, height);
 
             lock (objectLock)
             {
-                bitmapsInMemory.Add(uniqueID, bitmap);
-                mapIDRelativePath.Add(uniqueID, relativePath);
+                bitmapsInMemory.Add(uniqueKey, bitmap);
+                mapBitmapRelativePath.Add(uniqueKey, relativePath);
             }
         }
 
-        public static void LoadBitmapIntoMainMemory(string relativePath, long uniqueID)
+        public static void LoadBitmapIntoMainMemory(string relativePath, String key)
         {
             Image image = Image.FromFile(string.Format("{0}{1}",
                 System.Environment.CurrentDirectory, relativePath));
@@ -116,24 +162,23 @@ namespace ArkanoidGame.Renderer
 
             lock (objectLock)
             {
-                bitmapsInMemory.Add(uniqueID, bitmap);
-                mapIDRelativePath.Add(uniqueID, relativePath);
+                bitmapsInMemory.Add(key, bitmap);
+                mapBitmapRelativePath.Add(key, relativePath);
             }
         }
 
         /// <summary>
         /// Избриши ја сликата од виртуелната меморија.
         /// </summary>
-        /// <param name="uniqueID"></param>
-        public static void RemoveBitmapFromMainMemory(long uniqueID)
+        public static void RemoveBitmapFromMainMemory(string uniqueKey)
         {
             lock (objectLock)
             {
-                if (!bitmapsInMemory.Remove(uniqueID))
+                if (!bitmapsInMemory.Remove(uniqueKey))
                 {
                     throw new UnknownAliasException();
                 }
-                mapIDRelativePath.Remove(uniqueID);
+                mapBitmapRelativePath.Remove(uniqueKey);
             }
         }
 
@@ -144,47 +189,49 @@ namespace ArkanoidGame.Renderer
         {
             lock (objectLock)
             {
-                bitmapsInMemory = new Dictionary<long, Bitmap>();
-                mapIDRelativePath = new Dictionary<long, string>();
+                bitmapsInMemory = new Dictionary<string, Bitmap>();
+                mapBitmapRelativePath = new Dictionary<string, string>();
             }
         }
 
         /// <summary>
-        /// Повторно ја вчитува сликата со ID во виртуелната меморија,
-        /// но се скалира во друга резолуција. Потребно е веќе да постои слика
-        /// со тој ID.
+        /// Враќа референца кон сликата со дадениот клуч.
+        /// Сликата претходно треба да е вчитана во виртуелната меморија со повик 
+        /// на методот LoadBitmapIntoMainMemory.
         /// </summary>
-        /// <param name="alias"></param>
-        /// <param name="newBitmapRelativePath"></param>
-        /// <param name="width"></param>
-        /// <param name="height"></param>
-        public static void ResizeBitmap(long uniqueID, int width, int height)
+        /// <param name="uniqueID"></param>
+        /// <returns></returns>
+        public static Bitmap GetBitmapFromMainMemory(string uniqueKey)
         {
-            string relativePath = null;
+            Bitmap temp = null;
             lock (objectLock)
             {
-                mapIDRelativePath.TryGetValue(uniqueID, out relativePath);
+                if (bitmapsInMemory.TryGetValue(uniqueKey, out temp))
+                {
+                    return temp;
+                }
             }
-            RemoveBitmapFromMainMemory(uniqueID);
-            LoadBitmapIntoMainMemory(relativePath, width, height, uniqueID);
+
+            return null;
         }
 
-        /// <summary>
-        /// Ја менува големината на сликата користејќи Anti-aliasing и HighQualityBicubic интерполација.
-        /// </summary>
-        /// <param name="bitmapToResize"></param>
-        /// <param name="newWidth"></param>
-        /// <param name="newHeight"></param>
-        /// <returns></returns>
-        public static Bitmap ResizeBitmap(Bitmap bitmapToResize, int newWidth, int newHeight)
+        /// Враќа референца кон сликата со бараниот клуч. 
+        /// Ако е потребно скалирање, прво се повикува методот ChangeBitmapResolution().
+        /// Сликата претходно треба да е вчитана во виртуелната меморија со повик 
+        /// на методот LoadBitmapIntoMainMemory.
+        public static Bitmap GetBitmapFromMainMemory(string uniqueKey, int width, int height)
         {
-            Bitmap newBitmap = new Bitmap(newWidth, newHeight);
-            Graphics g = Graphics.FromImage(newBitmap);
-            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-            g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-            g.DrawImage(bitmapToResize, 0, 0, newWidth, newHeight);
+            Bitmap temp = null;
+            bitmapsInMemory.TryGetValue(uniqueKey, out temp);
+            if (temp == null)
+                return null;
 
-            return newBitmap;
+            if (temp.Width != width || temp.Height != height)
+            {
+                ResizeBitmap(uniqueKey, width, height);
+            }
+
+            return temp;
         }
 
         /// <summary>
@@ -194,12 +241,12 @@ namespace ArkanoidGame.Renderer
         /// <param name="bitmap"></param>
         /// <param name="uniqueID"></param>
         /// <returns></returns>
-        public static void SaveBitmap(long uniqueID, Bitmap bitmap)
+        public static void SaveBitmap(string uniqueKey, Bitmap bitmap)
         {
             lock (objectLock)
             {
                 Bitmap temp;
-                if (bitmapsInMemory.TryGetValue(uniqueID, out temp))
+                if (bitmapsInMemory.TryGetValue(uniqueKey, out temp))
                 {
                     return;
                 }
@@ -207,86 +254,12 @@ namespace ArkanoidGame.Renderer
 
             bitmap.Save(string.Format("{0}\\Resources\\Cache\\{1}.bmp",
                 System.Environment.CurrentDirectory,
-                uniqueID), ImageFormat.Png);
+                uniqueKey), ImageFormat.Png);
             lock (objectLock)
             {
-                bitmapsInMemory.Add(uniqueID, bitmap);
-                mapIDRelativePath.Add(uniqueID, string.Format("\\Resources\\Cache\\{0}.bmp", uniqueID));
+                bitmapsInMemory.Add(uniqueKey, bitmap);
+                mapBitmapRelativePath.Add(uniqueKey, string.Format("\\Resources\\Cache\\{0}.bmp", uniqueKey));
             }
-        }
-
-        /// <summary>
-        /// Враќа референца кон сликата со дадениот ID.
-        /// Сликата претходно треба да е вчитана во виртуелната меморија со повик 
-        /// на методот LoadBitmapIntoMainMemory.
-        /// </summary>
-        /// <param name="uniqueID"></param>
-        /// <returns></returns>
-        public static Bitmap GetBitmapFromMainMemory(long uniqueID)
-        {
-            Bitmap temp = null;
-            lock (objectLock)
-            {
-                if (bitmapsInMemory.TryGetValue(uniqueID, out temp))
-                {
-                    return temp;
-                }
-            }
-
-            return null;
-        }
-
-        /// Враќа референца кон сликата со баранаото ID. 
-        /// Ако е потребно скалирање, прво се повикува методот ChangeBitmapResolution().
-        /// Сликата претходно треба да е вчитана во виртуелната меморија со повик 
-        /// на методот LoadBitmapIntoMainMemory.
-        public static Bitmap GetBitmapFromMainMemory(long uniqueID, int width, int height)
-        {
-            Bitmap temp = null;
-            bitmapsInMemory.TryGetValue(uniqueID, out temp);
-            if (temp == null)
-                return null;
-
-            if (temp.Width != width || temp.Height != height)
-            {
-                ResizeBitmap(uniqueID, width, height);
-            }
-
-            return temp;
-        }
-
-        private static Dictionary<long, Bitmap> bitmapsInMemory; //map <uniqueAlias, Bitmap>
-        private static Dictionary<long, string> mapIDRelativePath; // <alias, relativePath>
-
-        static RendererCache()
-        {
-            bitmapsInMemory = new Dictionary<long, Bitmap>();
-            mapIDRelativePath = new Dictionary<long, string>();
-            objectLock = new object();
-        }
-
-        private static readonly object objectLock;
-
-        /// <summary>
-        /// Вчитува слика од датотека. Локацијата на датотеката се задава како 
-        /// релативна патека, пример: \\Resources\\Images\\background.jpg
-        /// </summary>
-        /// <param name="relativePath"></param>
-        /// <returns></returns>
-        public static Bitmap GetBitmapFromFile(string relativePath)
-        {
-            Image bitmap = Image.FromFile(string.Format("{0}{1}",
-                System.Environment.CurrentDirectory, relativePath));
-            Bitmap tempBitmap = new Bitmap(bitmap.Width, bitmap.Height);
-
-            using (Graphics g = Graphics.FromImage(tempBitmap))
-            {
-                g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-                g.DrawImage(bitmap, 0, 0);
-            }
-
-            return tempBitmap;
         }
     }
 }

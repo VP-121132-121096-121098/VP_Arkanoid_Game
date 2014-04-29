@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ArkanoidGame.Geometry;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -6,19 +7,45 @@ using System.Text;
 
 namespace ArkanoidGame.Renderer
 {
+    public class GameBitmapKey
+    {
+        private Vector2D positionUR;
+        private Vector2D positionUL;
+        private Vector2D positionDL;
+
+        private string uniqueName;
+
+        public GameBitmapKey(string uniqueName, Vector2D positionUL, Vector2D positionUR, Vector2D positionDL)
+        {
+            this.positionUL = positionUL;
+            this.positionUR = positionUR;
+            this.positionDL = positionDL;
+
+            this.uniqueName = uniqueName;
+        }
+
+
+
+        public override int GetHashCode()
+        {
+            Vector2D HU = positionUR - positionUL; //горна хоризонтала
+            Vector2D VL = positionDL - positionUL; //лева вертикала
+            Vector2D HD = (positionDL + (positionUR - positionUL)) - positionDL; //долна хоризонатала
+            int temp = (uniqueName.GetHashCode() + HU.GetHashCode()) % int.MaxValue;
+            temp = (temp + VL.GetHashCode()) % int.MaxValue;
+            temp = (temp + HD.GetHashCode()) % int.MaxValue;
+            return temp;
+        }
+    }
+
     public class GameBitmap
     {
-        private static long idCounter;
-
         private static readonly object lockObject;
 
         static GameBitmap()
         {
-            idCounter = long.MinValue;
             lockObject = new object();
         }
-
-        public long PictureID { get; private set; }
 
         /// <summary>
         /// Ширина на сликата во единици од играта
@@ -31,87 +58,112 @@ namespace ArkanoidGame.Renderer
         public double HeightInGameUnits { get; set; }
 
         /// <summary>
-        /// Координати на позиција на сликата во единици од играта
+        /// Позиција на горниот лев агол од сликата во единици од играта
         /// </summary>
-        public double X { get; set; }
+        public Vector2D PositionUL { get; set; }
 
         /// <summary>
-        /// Координати на позиција на сликата во единици од играта
+        /// Позиција на горниот десен агол од сликата
         /// </summary>
-        public double Y { get; set; }
+        public Vector2D PositionUR { get; set; }
 
         /// <summary>
-        /// Креира нова слика од веќе постоечка. Бидејќи сликата се додава само еднаш,
-        /// најдобро е да се прати како аргумент слика во најголема можна резолуција.
-        /// Квалитетот на скалираните слики ќе зависи од сликата што се праќа како аргумент.
+        /// Позиција на долниот лев агол од сликата
         /// </summary>
-        /// <param name="bitmap"></param>
-        /// <param name="widthInGameUnits"></param>
-        /// <param name="heightInGameUnits"></param>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        public GameBitmap(Bitmap bitmap, double x, 
-            double y, double widthInGameUnits, double heightInGameUnits)
+        public Vector2D PositionDL { get; set; }
+
+        /// <summary>
+        /// Позиција на долниот десен агол од сликата
+        /// </summary>
+        public Vector2D PositionDR
         {
-            lock (lockObject)
+            get
             {
-                PictureID = idCounter++;
+                return GetPositionVectorDR();
             }
-            RendererCache.SaveBitmap(PictureID, bitmap);
-            this.WidthInGameUnits = widthInGameUnits;
-            this.HeightInGameUnits = heightInGameUnits;
-            this.X = x;
-            this.Y = y;
         }
 
         /// <summary>
-        /// Сликата што се праќа како аргумент се копира во виртуелната меморија
-        /// и се прават скалирани верзии кога тоа е потребно. Сликата што се наоѓа на
-        /// хард дискот не се менува!!! При секое скалирање се вчитува повторно од диск
-        /// со цел да се минимизира губењето на квалитет на истата.
+        /// Позиција на долниот десен агол од сликата
         /// </summary>
-        /// <param name="relativePath"></param>
-        /// <param name="widthInGameUnits"></param>
-        /// <param name="heightInGameUnits"></param>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
+        /// <returns></returns>
+        private Vector2D GetPositionVectorDR()
+        {
+            return (PositionDL + (PositionUR - PositionUL));
+        }
+
+        /// <summary>
+        /// Должина на сликата
+        /// </summary>
+        public double Width { get; protected set; }
+
+        /// <summary>
+        /// Ширина на сликата
+        /// </summary>
+        public double Height { get; protected set; }
+
+        /// <summary>
+        /// Клуч за hash и tree мапа.
+        /// </summary>
+        /// <returns></returns>
+        public GameBitmapKey GetKey()
+        {
+            return new GameBitmapKey(UniqueName, PositionUR, PositionUL, PositionDL);
+        }
+
+        public virtual string UniqueName { get; protected set; }
+
         public GameBitmap(string relativePath, double x, double y, double widthInGameUnits,
-            double heightInGameUnits)
+            double heightInGameUnits, string uniqueName)
         {
-            lock (lockObject)
-            {
-                PictureID = idCounter++;
-            }
-
-            RendererCache.LoadBitmapIntoMainMemory(relativePath, PictureID);
+            RendererCache.LoadBitmapIntoMainMemory(relativePath, uniqueName);
             this.WidthInGameUnits = widthInGameUnits;
             this.HeightInGameUnits = heightInGameUnits;
-            this.X = x;
-            this.Y = y;
+            this.PositionUL = new Vector2D(x, y);
+            this.PositionUR = this.PositionUL + new Vector2D(widthInGameUnits, 0);
+            this.PositionDL = this.PositionUL + new Vector2D(0, heightInGameUnits);
+            this.UniqueName = uniqueName;
         }
 
-        public GameBitmap(long uniqueID, double x, double y, double widthInGameUnits,
-            double heightInGameUnits)
+        private void SetDimensions()
         {
-            this.X = x;
-            this.Y = y;
+            this.Width = (this.PositionUR - this.PositionUL).Magnitude();
+            this.Height = (this.PositionDL - this.PositionUL).Magnitude();
+        }
+
+        public GameBitmap(string relativePath, Vector2D positionUL, Vector2D positionUR, Vector2D positionDL,
+            string uniqueName)
+        {
+            RendererCache.LoadBitmapIntoMainMemory(relativePath, uniqueName);
+            this.PositionUL = positionUL;
+            this.PositionUR = positionUR;
+            this.PositionDL = positionDL;
+            this.UniqueName = uniqueName;
+            this.SetDimensions();
+        }
+
+        public GameBitmap(Bitmap bitmap, double x,
+            double y, double widthInGameUnits, double heightInGameUnits, string uniqueName)
+        {
+            RendererCache.SaveBitmap(uniqueName, bitmap);
             this.WidthInGameUnits = widthInGameUnits;
             this.HeightInGameUnits = heightInGameUnits;
-            this.PictureID = uniqueID;
+            this.PositionUL = new Vector2D(x, y);
+            this.PositionUR = this.PositionUL + new Vector2D(widthInGameUnits, 0);
+            this.PositionDL = this.PositionUL + new Vector2D(0, heightInGameUnits);
+            this.UniqueName = uniqueName;
         }
 
-        public override bool Equals(object obj)
+        public GameBitmap(Bitmap bitmap, Vector2D positionUL, Vector2D positionUR, Vector2D positionDL,
+            string uniqueName)
         {
-            if (obj == null || obj.GetType() != this.GetType())
-                return false;
-
-            GameBitmap bmp = (GameBitmap)obj;
-            return this.PictureID == bmp.PictureID;
-        }
-
-        public override int GetHashCode()
-        {
-            return PictureID.GetHashCode();
+            RendererCache.SaveBitmap(uniqueName, bitmap);
+            this.UniqueName = uniqueName;
+            this.PositionUL = positionUL;
+            this.PositionUR = positionUR;
+            this.PositionDL = positionDL;
+            this.SetDimensions();
+            this.UniqueName = uniqueName;
         }
     }
 }

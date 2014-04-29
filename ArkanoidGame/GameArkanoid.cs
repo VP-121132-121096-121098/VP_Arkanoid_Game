@@ -86,7 +86,7 @@ namespace ArkanoidGame
 
             VirtualGameWidth = 3840;
             VirtualGameHeight = 2160;
-            this.Renderer = new GameRenderer(VirtualGameWidth, VirtualGameHeight);
+            this.Renderer = new OldGameRenderer(VirtualGameWidth, VirtualGameHeight);
             CursorIngameCoordinates = Cursor.Position;
             this.GameUpdatePeriod = 0;
             GameState = new ArkanoidMainMenuState(this);
@@ -95,7 +95,7 @@ namespace ArkanoidGame
 
             Bitmap textMT = StaticStringFactory.CreateOrangeString("Multithreading");
             textMultithreading = new GameBitmap(textMT, VirtualGameWidth - 400 - 10, 5, 400,
-                60);            
+                60, "textMultiThreading");            
 
             IsRendererEnabled = true;
         }
