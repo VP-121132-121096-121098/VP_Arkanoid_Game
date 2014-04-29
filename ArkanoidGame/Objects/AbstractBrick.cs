@@ -10,8 +10,13 @@ namespace ArkanoidGame.Objects
     public abstract class AbstractBrick : IGameObject
     {
         public abstract void OnUpdate(long gameElapsedTime);
-        
 
+        
+        public Vector2D PositionUL { get; set; }
+        public Vector2D PositionUR { get; set; }
+        public Vector2D PositionDL { get; set; }
+
+ 
         public  Vector2D Position
         {
             get;
