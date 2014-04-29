@@ -46,9 +46,21 @@ namespace ArkanoidGame
                 Game.VirtualGameHeight);
             Game.GameObjects.Add(srb);
             //proba da dodadam golema zolta cigla
-            BigYellowBrick gyb = new BigYellowBrick(new Vector2D(330, 100), Game.VirtualGameWidth,
+            BigYellowBrick gyb = new BigYellowBrick(new Vector2D(325, 100), Game.VirtualGameWidth,
                 Game.VirtualGameHeight);
             Game.GameObjects.Add(gyb);
+            //proba da dodadam mala zolta cigla
+            SmallYellowBrick syb = new SmallYellowBrick(new Vector2D(530, 100), Game.VirtualGameWidth,
+                 Game.VirtualGameHeight);
+            Game.GameObjects.Add(syb);
+            //proba da dodadam golema violetova cigla
+            BigPurpleBrick gpb = new BigPurpleBrick(new Vector2D(640, 100), Game.VirtualGameWidth,
+                Game.VirtualGameHeight);
+            Game.GameObjects.Add(gpb);
+            //proba da dodadam mala zolta cigla
+            SmallPurpleBrick spb = new SmallPurpleBrick(new Vector2D(850, 100), Game.VirtualGameWidth,
+                 Game.VirtualGameHeight);
+            Game.GameObjects.Add(spb);
 
             ElapsedTime = 0;
         }
