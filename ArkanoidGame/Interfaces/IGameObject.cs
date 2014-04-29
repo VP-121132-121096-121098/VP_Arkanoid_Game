@@ -20,6 +20,16 @@ namespace ArkanoidGame.Interfaces
     public interface IGameObject
     {
         /// <summary>
+        /// „Здравје“ на објектот. Кога ќе дојде на 0 објектот е уништен.
+        /// </summary>
+        double Health { get; }
+
+        /// <summary>
+        /// За колку ќе се намали Health на другиот објект со кој овој објект ќе се судри.
+        /// </summary>
+        double DamageEffect { get; }
+
+        /// <summary>
         /// Правоаголник потребен за Quadtree
         /// </summary>
         RectangleF Rectangle { get; }
@@ -32,10 +42,19 @@ namespace ArkanoidGame.Interfaces
 
         /// <summary>
         /// Се повикува 60 пати во секунда (60 FPS). Притоа elapsedTime е број на поминати периоди
-        /// во играта.
+        /// во играта. Овде само се поместува објектот и се проверува дали излегол од границите
+        /// на прозорецот. Ако излегол треба да се врати назад или да се постави Health = 0,
+        /// за соодветно да се избрише од листата на објекти (дали ќе се врати назад во прозорецот или
+        /// ќе „умре“ зависи од типот на објектот.
         /// </summary>
         /// <param name="gameElapsedTime"></param>
         void OnUpdate(long gameElapsedTime);
+
+        /// <summary>
+        /// Со кој објект настанало судир и во кои точки.
+        /// </summary>
+        /// <param name="collisionArguments"></param>
+        void OnCollisionDetected(IDictionary<IGameObject, IList<Vector2D>> collisionArguments);
 
         /// <summary>
         /// Позиција на објектот во виртуелни координати

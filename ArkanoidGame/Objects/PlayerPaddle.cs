@@ -184,5 +184,26 @@ namespace ArkanoidGame.Objects
 
 
         public GameObjectType ObjectType { get { return GameObjectType.PlayerPaddle; } }
+
+        /// <summary>
+        /// Овој објект не може да се уништи.
+        /// </summary>
+        public double Health
+        {
+            get { return 100; }
+        }
+
+        /// <summary>
+        /// Нема никаков ефект со објектите со кои се судира бидејќи се судира само со топчињата.
+        /// </summary>
+        public double DamageEffect
+        {
+            get { return 0; }
+        }
+
+        public void OnCollisionDetected(IDictionary<IGameObject, IList<Vector2D>> collisionArguments)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

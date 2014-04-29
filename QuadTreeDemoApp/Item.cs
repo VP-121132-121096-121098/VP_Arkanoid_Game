@@ -98,5 +98,20 @@ namespace QuadTreeDemoApp
         {
             get { throw new NotImplementedException(); }
         }
+
+        public double Health
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public double DamageEffect
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public void OnCollisionDetected(System.Collections.Generic.IDictionary<IGameObject, System.Collections.Generic.IList<ArkanoidGame.Geometry.Vector2D>> collisionArguments)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

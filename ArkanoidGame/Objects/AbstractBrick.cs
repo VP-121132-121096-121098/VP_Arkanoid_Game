@@ -66,5 +66,20 @@ namespace ArkanoidGame.Objects
 
         public int GameWidth { get; set; }
         public int GameHeight { get;  set; }
+
+        public double Health
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public double DamageEffect
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public void OnCollisionDetected(IDictionary<IGameObject, IList<Vector2D>> collisionArguments)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
