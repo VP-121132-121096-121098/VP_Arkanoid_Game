@@ -62,6 +62,12 @@ namespace ArkanoidGame
             SmallPurpleBrick spb = new SmallPurpleBrick(new Vector2D(850, 100), Game.VirtualGameWidth,
                  Game.VirtualGameHeight);
             Game.GameObjects.Add(spb);
+            //golema zelena cigla
+            BigGreenBrick bgb = new BigGreenBrick(new Vector2D(960, 100), Game.VirtualGameWidth, Game.VirtualGameHeight);
+            Game.GameObjects.Add(bgb);
+            // mala zelena cigla
+            SmallGreenBrick sgb = new SmallGreenBrick(new Vector2D(1165, 100), Game.VirtualGameWidth, Game.VirtualGameHeight);
+            Game.GameObjects.Add(sgb); 
 
             ElapsedTime = 0;
         }
