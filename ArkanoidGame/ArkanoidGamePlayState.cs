@@ -37,6 +37,30 @@ namespace ArkanoidGame
             PlayerPaddle player = new PlayerPaddle(new Vector2D(1750, 2010), Game.VirtualGameWidth,
                 Game.VirtualGameHeight);
             Game.GameObjects.Add(player);
+            //proba da dodadam golema crvena cigla
+            BigRedBrick grb = new BigRedBrick(new Vector2D(20, 100), Game.VirtualGameWidth,
+                Game.VirtualGameHeight);
+            Game.GameObjects.Add(grb);
+            //proba da dodadam mala crvena cigla
+           SmallRedBrick srb = new SmallRedBrick(new Vector2D(220, 100), Game.VirtualGameWidth,
+                Game.VirtualGameHeight);
+            Game.GameObjects.Add(srb);
+            //proba da dodadam golema zolta cigla
+            BigYellowBrick gyb = new BigYellowBrick(new Vector2D(325, 100), Game.VirtualGameWidth,
+                Game.VirtualGameHeight);
+            Game.GameObjects.Add(gyb);
+            //proba da dodadam mala zolta cigla
+            SmallYellowBrick syb = new SmallYellowBrick(new Vector2D(530, 100), Game.VirtualGameWidth,
+                 Game.VirtualGameHeight);
+            Game.GameObjects.Add(syb);
+            //proba da dodadam golema violetova cigla
+            BigPurpleBrick gpb = new BigPurpleBrick(new Vector2D(640, 100), Game.VirtualGameWidth,
+                Game.VirtualGameHeight);
+            Game.GameObjects.Add(gpb);
+            //proba da dodadam mala zolta cigla
+            SmallPurpleBrick spb = new SmallPurpleBrick(new Vector2D(850, 100), Game.VirtualGameWidth,
+                 Game.VirtualGameHeight);
+            Game.GameObjects.Add(spb);
 
             ElapsedTime = 0;
         }
