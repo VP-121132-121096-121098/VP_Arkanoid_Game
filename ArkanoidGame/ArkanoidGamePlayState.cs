@@ -239,39 +239,11 @@ namespace ArkanoidGame
             //CountdownEvent
             /* http://msdn.microsoft.com/en-us/library/dd997365.aspx */
 
-            using (CountdownEvent e = new CountdownEvent(1))
-            {
-                // fork work: 
-                foreach (IGameObject obj in gameObjects)
-                {
-                    // Dynamically increment signal count.
-                    e.AddCount();
-                    ThreadPool.QueueUserWorkItem(delegate(object gameObject)
-                    {
-                        try
-                        {
-                            UpdateObject((IGameObject)gameObject);
-                        }
-                        finally
-                        {
-                            e.Signal();
-                        }
-                    },
-                     obj);
-                }
-                e.Signal();
-
-                // The first element could be run on this thread. 
-
-                // Join with work.
-                e.Wait();
-            }
-
             //не може паралелно да се одвива оваа операција
             InitQuadTree(gameObjects);
-
             InitCollisionArguments(gameObjects);
 
+            //паралелен дел
             using (CountdownEvent e = new CountdownEvent(1))
             {
                 // fork work: 
@@ -284,35 +256,8 @@ namespace ArkanoidGame
                         try
                         {
                             CheckForCollisions((IGameObject)gameObject);
-                        }
-                        finally
-                        {
-                            e.Signal();
-                        }
-                    },
-                     obj);
-                }
-                e.Signal();
-
-                // The first element could be run on this thread. 
-
-                // Join with work.
-                e.Wait();
-
-            }
-
-            using (CountdownEvent e = new CountdownEvent(1))
-            {
-                // fork work: 
-                foreach (IGameObject obj in gameObjects)
-                {
-                    // Dynamically increment signal count.
-                    e.AddCount();
-                    ThreadPool.QueueUserWorkItem(delegate(object gameObject)
-                    {
-                        try
-                        {
                             PassCollisionArgumentsToObject((IGameObject)gameObject);
+                            UpdateObject((IGameObject)gameObject);
                         }
                         finally
                         {
