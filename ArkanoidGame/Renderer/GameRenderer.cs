@@ -211,7 +211,8 @@ namespace ArkanoidGame.Renderer
         /// <param name="g"></param>
         /// <param name="frameWidth"></param>
         /// <param name="frameHeight"></param>
-        public void Render(GameBitmap bitmap, Graphics g, int frameWidth, int frameHeight) {
+        public void Render(GameBitmap bitmap, Graphics g, int frameWidth, int frameHeight)
+        {
             List<GameBitmap> list = new List<GameBitmap>(1);
             List<IList<GameBitmap>> list2 = new List<IList<GameBitmap>>();
             list2.Add(list);
@@ -219,6 +220,18 @@ namespace ArkanoidGame.Renderer
             this.Render(list2, g, frameWidth, frameHeight);
         }
 
+        public void DrawCircle(Vector2D center, float radius, Graphics g, Color color, int frameWidth, int frameHeight)
+        {
+            float x = (float)center.X;
+            float y = (float)center.Y;
+
+            this.FrameWidth = frameWidth;
+            this.FrameHeight = frameHeight;
+
+            this.ToScreenCoordinates(ref x, ref y);
+            radius = (float)ToScreenLength(x, y, x + radius, y);
+            g.DrawEllipse(new Pen(new SolidBrush(color), 2), x - radius, y - radius, 2 * radius, 2 * radius);
+        }
 
         public void DrawRectangle(Pen pen, RectangleF rectangle, Graphics g, int frameWidth, int frameHeight)
         {

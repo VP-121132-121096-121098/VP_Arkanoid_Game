@@ -71,6 +71,7 @@
     <Compile Include="Objects\AbstractBrick.cs" />
     <Compile Include="Objects\BigRedBrick.cs" />
     <Compile Include="Objects\BigYellowBrick.cs" />
+    <Compile Include="Objects\BlueBall.cs" />
     <Compile Include="Objects\SmallPurpleBrick.cs" />
     <Compile Include="Objects\SmallRedBrick.cs" />
     <Compile Include="Objects\SmallYellowBrick.cs" />

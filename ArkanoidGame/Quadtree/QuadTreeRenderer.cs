@@ -100,18 +100,16 @@ namespace ArkanoidGame.Quadtree
         /// <summary>
         /// Render the QuadTree with the given renderer
         /// </summary>
-        /// <param name="graphics"></param>
         public void Render(IGameRenderer renderer, Graphics g, int frameWidth, int frameHeight,
-            Point cursorInGameCoordinates)
+            RectangleF area, Color boundsColor)
         {
-            List<T> selectedItems = this.m_quadTree.Query(new RectangleF(cursorInGameCoordinates.X,
-                cursorInGameCoordinates.Y, 20, 20));
+            List<T> selectedItems = this.m_quadTree.Query(area);
 
             if (selectedItems != null)
             {
                 foreach (T obj in selectedItems)
                 {
-                    using (Pen p = new Pen(Color.Aqua, 2))
+                    using (Pen p = new Pen(boundsColor, 2))
                         renderer.DrawRectangle(p, obj.Rectangle, g, frameWidth, frameHeight);
                 }
             }

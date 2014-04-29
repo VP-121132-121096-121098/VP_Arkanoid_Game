@@ -217,7 +217,7 @@ namespace ArkanoidGame.Objects
 
         public void OnCollisionDetected(IDictionary<IGameObject, IList<Vector2D>> collisionArguments)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
     }
 }
