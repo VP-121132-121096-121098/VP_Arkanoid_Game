@@ -8,7 +8,7 @@ namespace QuadTreeDemoApp
     /// An item with a position, a size and a random colour to test
     /// the QuadTree structure.
     /// </summary>
-    class Item: IHasRectangle
+    class Item: IGameObject
     {
         /// <summary>
         /// Create an item at the given location with the given size.
@@ -50,5 +50,53 @@ namespace QuadTreeDemoApp
         public RectangleF Rectangle { get { return m_rectangle; } }
 
         #endregion
+
+        public IGeometricShape GetGeometricShape()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void OnUpdate(long gameElapsedTime)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ArkanoidGame.Geometry.Vector2D Position
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public double ObjectWidth
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public double ObjectHeight
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public System.Collections.Generic.IList<ArkanoidGame.Renderer.GameBitmap> ObjectTextures
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public ArkanoidGame.Geometry.Vector2D Velocity
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+
+        public GameObjectType ObjectType
+        {
+            get { throw new NotImplementedException(); }
+        }
     }
 }

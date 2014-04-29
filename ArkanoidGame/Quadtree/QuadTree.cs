@@ -15,7 +15,7 @@ namespace ArkanoidGame.Quadtree
     /// that is just big enough to hold it. Each quad has a bucket that 
     /// contain multiple items.
     /// </summary>
-    public class QuadTree<T> where T : IHasRectangle
+    public class QuadTree<T> where T : IGameObject
     {
         /// <summary>
         /// The root QuadTreeNode

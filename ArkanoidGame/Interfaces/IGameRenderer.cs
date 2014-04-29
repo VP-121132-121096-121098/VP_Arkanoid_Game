@@ -99,5 +99,7 @@ namespace ArkanoidGame.Interfaces
         /// <param name="pointInGameCoordinates"></param>
         /// <returns></returns>
         Point ToScreenCoordinates(Point pointInGameCoordinates);
+
+        void DrawRectangle(Pen pen, RectangleF rectangle, Graphics g, int frameWidth, int frameHeight);
     }
 }

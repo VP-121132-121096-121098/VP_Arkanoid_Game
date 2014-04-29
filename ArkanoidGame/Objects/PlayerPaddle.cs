@@ -156,18 +156,10 @@ namespace ArkanoidGame.Objects
 
         public IList<GameBitmap> ObjectTextures { get; private set; }
 
-        public bool IsBall { get { return false; } }
-        public bool IsPlayerPaddle { get { return true; } }
-
         public IGeometricShape GetGeometricShape()
         {
             return new GameRectangle(this.Position, this.Position + new Vector2D(this.ObjectWidth, 0),
                 this.Position + new Vector2D(0, this.ObjectHeight));
-        }
-
-        public void OnCollisionDetected(IList<IGameObject> collidingObjects)
-        {
-            throw new NotImplementedException();
         }
 
         public RectangleF Rectangle
@@ -189,5 +181,8 @@ namespace ArkanoidGame.Objects
             return (((Position.GetHashCode() + ObjectWidth.GetHashCode()) % int.MaxValue) + ObjectHeight.GetHashCode()
                 % int.MaxValue);
         }
+
+
+        public GameObjectType ObjectType { get { return GameObjectType.PlayerPaddle; } }
     }
 }

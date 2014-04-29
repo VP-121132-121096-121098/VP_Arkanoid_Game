@@ -23,6 +23,7 @@ namespace ArkanoidGame
         public ArkanoidGamePlayState(IGame game)
         {
             quadtree = null;
+            ButtonDWaitNFrames = 0;
             debugMode = false;
             this.Game = game;
             BitmapsToRender = new List<IList<GameBitmap>>();
@@ -43,13 +44,23 @@ namespace ArkanoidGame
         public void OnDraw(Graphics graphics, int frameWidth, int frameHeight)
         {
             Game.Renderer.Render(bitmapsToRenderCopy, graphics, frameWidth, frameHeight);
+
+#if DEBUG
+            if (debugMode && quadtree != null)
+            {
+                new QuadTreeRenderer<IGameObject>(quadtree).Render(Game.Renderer,
+                    graphics, frameWidth, frameHeight, Game.CursorIngameCoordinates);
+            }
+#endif
         }
 
         public long ElapsedTime { get; private set; }
 
         public int OnUpdate(IList<IGameObject> gameObjects)
         {
+#if DEBUG
             EnableOrDisableDebugMode();
+#endif
 
             if (Game.IsMultithreadingEnabled)
             {
@@ -82,11 +93,16 @@ namespace ArkanoidGame
             return 100;
         }
 
+        private int ButtonDWaitNFrames;
+
         private void EnableOrDisableDebugMode()
         {
-            if (KeyStateInfo.GetAsyncKeyState(Keys.D).IsPressed)
+            ButtonDWaitNFrames = Math.Max(0, ButtonDWaitNFrames - 1);
+
+            if (KeyStateInfo.GetAsyncKeyState(Keys.D).IsPressed && ButtonDWaitNFrames == 0)
             {
                 debugMode = !debugMode;
+                ButtonDWaitNFrames = 10;
             }
         }
 

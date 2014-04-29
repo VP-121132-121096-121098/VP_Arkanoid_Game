@@ -9,8 +9,19 @@ using System.Text;
 
 namespace ArkanoidGame.Interfaces
 {
-    public interface IGameObject : IHasRectangle
+    public enum GameObjectType
     {
+        PlayerPaddle,
+        Ball,
+        Brick
+    }
+
+    public interface IGameObject
+    {
+        /// <summary>
+        /// Правоаголник потребен за Quadtree
+        /// </summary>
+        RectangleF Rectangle { get; }
 
         /// <summary>
         /// Враќа поедноставена геометриска репрезентација на соодветниот објект.
@@ -51,11 +62,8 @@ namespace ArkanoidGame.Interfaces
         Vector2D Velocity { get; }
 
         /// <summary>
-        /// Дали објектот е топчето кое ги крши циглите? Пример paddle-от треба да
-        /// го игнорира секој објект освен топчето.
+        /// Тип на објектот
         /// </summary>
-        bool IsBall { get; }
-
-        bool IsPlayerPaddle { get; }
+        GameObjectType ObjectType { get; }
     }
 }

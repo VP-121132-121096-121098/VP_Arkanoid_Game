@@ -26,7 +26,7 @@ namespace ArkanoidGame.Quadtree
     /// <summary>
     /// Class draws a QuadTree
     /// </summary>
-    public class QuadTreeRenderer<T> where T : IHasRectangle
+    public class QuadTreeRenderer<T> where T : IGameObject
     {
         /// <summary>
         /// Create the renderer, give the QuadTree to render.
@@ -91,6 +91,47 @@ namespace ArkanoidGame.Quadtree
                     Rectangle inside = Rectangle.Round(node.Bounds);
                     inside.Inflate(-1, -1);
                     graphics.DrawRectangle(p, inside);
+                }
+
+            });
+
+        }
+
+        /// <summary>
+        /// Render the QuadTree with the given renderer
+        /// </summary>
+        /// <param name="graphics"></param>
+        public void Render(IGameRenderer renderer, Graphics g, int frameWidth, int frameHeight,
+            Point cursorInGameCoordinates)
+        {
+            List<T> selectedItems = this.m_quadTree.Query(new RectangleF(cursorInGameCoordinates.X,
+                cursorInGameCoordinates.Y, 20, 20));
+
+            if (selectedItems != null)
+            {
+                foreach (T obj in selectedItems)
+                {
+                    using (Pen p = new Pen(Color.Aqua, 2))
+                        renderer.DrawRectangle(p, obj.Rectangle, g, frameWidth, frameHeight);
+                }
+            }
+
+            m_quadTree.ForEach(delegate(QuadTreeNode<T> node)
+            {                
+                // draw this quad
+
+                // Draw the border
+                Color color = GetColor(node);
+                renderer.DrawRectangle(Pens.Black, node.Bounds,
+                    g, frameWidth, frameHeight);
+
+                // draw the inside of the border in a distinct colour
+                using (Pen p = new Pen(color))
+                {
+                    RectangleF inside = node.Bounds;
+                    inside.Inflate(-1, -1);
+                    renderer.DrawRectangle(p, inside,
+                        g, frameWidth, frameHeight);
                 }
 
             });

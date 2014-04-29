@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DotNetMatrix;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -74,7 +75,8 @@ namespace ArkanoidGame.Geometry
             return Math.Sqrt(this * this);
         }
 
-        public static implicit operator Vector3D(Vector2D vec) {
+        public static implicit operator Vector3D(Vector2D vec)
+        {
             return new Vector3D(vec);
         }
 
@@ -102,6 +104,48 @@ namespace ArkanoidGame.Geometry
         public override int GetHashCode()
         {
             return (X.GetHashCode() + Y.GetHashCode()) % int.MaxValue;
+        }
+
+        public GeneralMatrix ToMatrix()
+        {
+            double[][] matrix = new double[2][];
+            matrix[0] = new double[1];
+            matrix[1] = new double[1];
+            matrix[0][0] = X;
+            matrix[1][0] = Y;
+            return new GeneralMatrix(matrix);
+        }
+
+        public void Rotate(double angleInRadians)
+        {
+            /* http://mathworld.wolfram.com/RotationMatrix.html */
+
+            /* матрица на ротација
+            *             |-               -|
+            *             | cos(a)  -sin(a) |
+            *      R(a) = |                 |
+            *             | sin(a)   cos(a) |
+            *             |-               -|
+            */
+
+            //V = R(a) * V0
+            double[][] temp = new double[2][];
+            temp[0] = new double[2];
+            temp[1] = new double[2];
+            temp[0][0] = Math.Cos(angleInRadians);
+            temp[0][1] = -Math.Sin(angleInRadians);
+            temp[1][0] = Math.Sin(angleInRadians);
+            temp[1][1] = Math.Cos(angleInRadians);
+
+            GeneralMatrix rotationMatrix = new GeneralMatrix(temp);
+            GeneralMatrix newVector = rotationMatrix.Multiply(this.ToMatrix());
+            this.X = newVector.GetElement(0, 0);
+            this.Y = newVector.GetElement(1, 0);
+        }
+
+        public void RotateDeg(double degrees)
+        {
+            this.Rotate(degrees * Math.PI / 180.0);
         }
     }
 }
