@@ -10,30 +10,10 @@ namespace ArkanoidGame.Objects
 {
     public class SmallPurpleBrick : AbstractBrick
     {
-        //tezina inicijalno na 200 ,pola od tezinata na golemata ciglicka
-
-
+       
         public override void OnUpdate(long gameElapsedTime)
         {
-            /*if (MouseLastPosition == null)
-            {
-                MouseLastPosition = GameArkanoid.GetInstance().CursorIngameCoordinates;
-            }
-
-            IKeyState leftArrowState = KeyStateInfo.GetAsyncKeyState(Keys.Left);
-            IKeyState rightArrowState = KeyStateInfo.GetAsyncKeyState(Keys.Right);
-
-            Vector2D velocity_0 = Velocity;
-
-            if (!GameArkanoid.GetInstance().IsControllerMouse)
-            {
-                ReadKeyboardInput(leftArrowState, rightArrowState);
-            }
-            else
-            {
-                ReadMouseInput(GameArkanoid.GetInstance().CursorIngameCoordinates);
-            }*/
-
+            
 
             Position += (Velocity) / 2;
 
