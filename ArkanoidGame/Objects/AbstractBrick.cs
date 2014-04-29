@@ -58,11 +58,7 @@ namespace ArkanoidGame.Objects
         public GameObjectType ObjectType { get { return GameObjectType.Brick; } }
         public abstract void InitTextures();
 
-        public int Weight
-        {
-            get;
-            set;
-        }
+      
 
         public int GameWidth { get; set; }
         public int GameHeight { get;  set; }
