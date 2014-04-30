@@ -128,7 +128,7 @@ namespace ArkanoidGame.Objects
 
                 this.Velocity = velocityAngle * 25;
 
-                collisionDetectorSkipFrames = 11;
+                collisionDetectorSkipFrames = 3;
             }
 
             if (this.Position.Y < this.Radius + 5 || this.Position.Y > GameArkanoid.GetInstance().VirtualGameHeight - Radius - 5)
@@ -354,10 +354,10 @@ namespace ArkanoidGame.Objects
                             this.Velocity.X = -this.Velocity.X;
 
                         /* да се одбие по поголемата брзина за побрзо да излезе
-                         * од објектот и да се прескокне детекција во наредните 10 фрејма за секој случај
+                         * од објектот и да се прескокне детекција во наредните 2 фрејма за секој случај
                          */
 
-                        this.collisionDetectorSkipFrames = 11; //оваа + 10
+                        this.collisionDetectorSkipFrames = 2; //оваа + 1
                         break;
                     }
                 }
