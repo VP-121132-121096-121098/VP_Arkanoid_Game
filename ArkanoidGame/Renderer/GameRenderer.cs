@@ -210,12 +210,6 @@ namespace ArkanoidGame.Renderer
                     diagonal = diagonal / diagonal.Magnitude() * Math.Sqrt(width * width / 4 + height * height / 4);
                     positionUL = center + diagonal;
 
-                    Bitmap temp = RendererCache.GetBitmapFromMainMemory(bitmap.UniqueKey,
-                        (int)Math.Round(width), (int)Math.Round(height));
-
-                    if (temp == null)
-                        continue;
-
                     Vector2D positionUR = ToScreenCoordinates(bitmap.PositionUR);
                     diagonal = positionUR - center;
                     diagonal = diagonal / diagonal.Magnitude() * Math.Sqrt(width * width / 4 + height * height / 4);
@@ -227,6 +221,13 @@ namespace ArkanoidGame.Renderer
                     positionDL = center + diagonal;
 
                     Point[] vertices = new Point[] { positionUL, positionUR, positionDL };
+
+                    Bitmap temp = RendererCache.GetBitmapFromMainMemory(bitmap.UniqueKey,
+                        (int)width, (int)height);
+
+                    if (temp == null)
+                        continue;
+
                     g.DrawImage(temp, vertices);
                 }
             }
