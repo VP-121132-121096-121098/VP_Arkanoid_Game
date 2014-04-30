@@ -8,10 +8,10 @@ using System.Text;
 
 namespace ArkanoidGame.Objects
 {
-    public class SmallGreyBrick : AbstractBrick
+    public class SmallGreyBrick //: AbstractBrick
     {
 
-        public override void InitTextures()
+       /* public override void InitTextures()
         {
             ObjectTextures = new List<GameBitmap>();
             ObjectTextures.Add(new GameBitmap("\\Resources\\Images\\element_grey_square.png", PositionUL,
@@ -20,8 +20,8 @@ namespace ArkanoidGame.Objects
 
         public SmallGreyBrick(Vector2D positionVector, int virtualGameWidth, int virtualGameHeight)
             : base(new Vector2D(positionVector), positionVector + new Vector2D(100, 0), //+ висината
-          positionVector + new Vector2D(0, 80) /* + висината */ )
-        {
+          positionVector + new Vector2D(0, 80) /* + висината */ //)
+       /* {
             this.GameWidth = virtualGameWidth;
             this.GameHeight = virtualGameHeight;
             this.Position = new Vector2D(positionVector);
@@ -35,6 +35,6 @@ namespace ArkanoidGame.Objects
             this.InitTextures();
         }
 
-
+    */
     }
 }

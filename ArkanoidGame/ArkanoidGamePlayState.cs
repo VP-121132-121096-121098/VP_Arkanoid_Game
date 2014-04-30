@@ -46,15 +46,24 @@ namespace ArkanoidGame
             BlueBall ball = new BlueBall(new Vector2D((player.Position.X * 2 + player.ObjectWidth) / 2,
                player.Position.Y - 45), 50);
             Game.GameObjects.Add(ball);
-
-            //proba da dodadam golema crvena cigla
+            BigBrick grb = new BigBrick(new Vector2D(20, 100), Game.VirtualGameWidth,
+                Game.VirtualGameHeight, "element_red_rectangle.png");
+            Game.GameObjects.Add(grb);
+            SmallBrick srb = new SmallBrick(new Vector2D(220, 100), Game.VirtualGameWidth,
+                Game.VirtualGameHeight, "element_red_square.png");
+            Game.GameObjects.Add(srb);
+            SmallBrick smbb = new SmallBrick(new Vector2D(Game.VirtualGameWidth - 1110, 100), Game.VirtualGameWidth,
+              Game.VirtualGameHeight, "element_purple_square.png");
+            Game.GameObjects.Add(smbb);
+            SmallBrick smgb = new SmallBrick(new Vector2D(Game.VirtualGameWidth - 1220, 100), Game.VirtualGameWidth,
+             Game.VirtualGameHeight, "element_green_square.png");
+            Game.GameObjects.Add(smgb);
+           /* //proba da dodadam golema crvena cigla
             BigRedBrick grb = new BigRedBrick(new Vector2D(20, 100), Game.VirtualGameWidth,
                 Game.VirtualGameHeight);
-            Game.GameObjects.Add(grb);
+           
             //proba da dodadam mala crvena cigla
-            SmallRedBrick srb = new SmallRedBrick(new Vector2D(220, 100), Game.VirtualGameWidth,
-                Game.VirtualGameHeight);
-            Game.GameObjects.Add(srb);
+            
             //proba da dodadam golema zolta cigla
             BigYellowBrick gyb = new BigYellowBrick(new Vector2D(325, 100), Game.VirtualGameWidth,
                 Game.VirtualGameHeight);
@@ -92,12 +101,7 @@ namespace ArkanoidGame
            BigPurpleBrick bbb = new BigPurpleBrick(new Vector2D(Game.VirtualGameWidth - 1000, 100), Game.VirtualGameWidth,
             Game.VirtualGameHeight);
            Game.GameObjects.Add(bbb);
-           SmallPurpleBrick smbb = new SmallPurpleBrick(new Vector2D(Game.VirtualGameWidth - 1110, 100), Game.VirtualGameWidth,
-              Game.VirtualGameHeight);
-           Game.GameObjects.Add(smbb);
-           SmallGreenBrick smgb = new SmallGreenBrick(new Vector2D(Game.VirtualGameWidth - 1220, 100), Game.VirtualGameWidth,
-            Game.VirtualGameHeight);
-           Game.GameObjects.Add(smgb);
+           
            SmallYellowBrick sybb = new SmallYellowBrick(new Vector2D(Game.VirtualGameWidth - 1330, 100), Game.VirtualGameWidth,
             Game.VirtualGameHeight);
            Game.GameObjects.Add(sybb);
@@ -116,7 +120,8 @@ namespace ArkanoidGame
            BigGreyBrick nivo2cigla7 = new BigGreyBrick(new Vector2D(Game.VirtualGameWidth - 1540, 300), Game.VirtualGameWidth, Game.VirtualGameHeight);
            Game.GameObjects.Add(nivo2cigla7);
            SmallGreyBrick nivo2cigla8 = new SmallGreyBrick(new Vector2D(Game.VirtualGameWidth - 1330,300), Game.VirtualGameWidth, Game.VirtualGameHeight);
-           Game.GameObjects.Add(nivo2cigla8);
+           Game.GameObjects.Add(nivo2cigla8);*/
+
 
             ElapsedTime = 0;
         }
