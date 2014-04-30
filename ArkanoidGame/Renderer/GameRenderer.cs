@@ -175,13 +175,24 @@ namespace ArkanoidGame.Renderer
 
             foreach (IList<GameBitmap> bitmapList in bitmaps)
             {
+                if (bitmapList == null)
+                    continue;
+
                 foreach (GameBitmap bitmap in bitmapList)
                 {
+                    if (bitmap == null)
+                        continue;
+
                     Vector2D positionUL = ToScreenCoordinates(bitmap.PositionUL);
                     double width = ToScreenLength(new Vector2D(positionUL.X + bitmap.WidthInGameUnits, positionUL.Y)
                          - positionUL);
                     double height = ToScreenLength(new Vector2D(positionUL.X, positionUL.Y + bitmap.HeightInGameUnits)
                          - positionUL);
+
+                    if (bitmap.WidthInGameUnits == bitmap.HeightInGameUnits)
+                    {
+                        height = width = (height + width) / 2;
+                    }
 
                     Bitmap temp = RendererCache.GetBitmapFromMainMemory(bitmap.UniqueKey,
                         (int)Math.Round(width), (int)Math.Round(height));
