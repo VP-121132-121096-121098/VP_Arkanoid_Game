@@ -55,8 +55,43 @@ namespace ArkanoidGame
             Game.GameObjects.Add(ball);
             ballsInPlay.Add(ball);
 
+            CreateBricks();
 
-            BigBrick grb = new BigBrick(new Vector2D(20, 100), Game.VirtualGameWidth,
+
+
+            /* //proba da dodadam golema crvena cigla
+             BigRedBrick grb = new BigRedBrick(new Vector2D(20, 100), Game.VirtualGameWidth,
+                 Game.VirtualGameHeight);
+           
+             //proba da dodadam mala crvena cigla
+            
+             //proba da dodadam golema zolta cigla
+             */
+
+
+            ElapsedTime = 0;
+        }
+
+        private void CreateBricks()
+        {
+            double y = 100;
+
+            for (int i = 0; i < 8; i++)
+            {
+                BigBrick grb = new BigBrick(new Vector2D(20, 100), Game.VirtualGameWidth,
+                Game.VirtualGameHeight, "element_red_rectangle.png");
+                double offset = 20;
+                while (offset + grb.ObjectWidth < Game.VirtualGameWidth - 20)
+                {
+                    Game.GameObjects.Add(new BigBrick(new Vector2D(offset, y), Game.VirtualGameWidth,
+                Game.VirtualGameHeight, "element_red_rectangle.png"));
+                    offset += grb.ObjectWidth + 20;
+                }
+
+                y += grb.ObjectHeight + 10;
+            }
+
+            /*BigBrick grb = new BigBrick(new Vector2D(20, 100), Game.VirtualGameWidth,
                 Game.VirtualGameHeight, "element_red_rectangle.png");
             Game.GameObjects.Add(grb);
             SmallBrick srb = new SmallBrick(new Vector2D(220, 100), Game.VirtualGameWidth,
@@ -123,18 +158,7 @@ namespace ArkanoidGame
             BigBrick nivo2cigla7 = new BigBrick(new Vector2D(Game.VirtualGameWidth - 1540, 300), Game.VirtualGameWidth, Game.VirtualGameHeight, "element_grey_rectangle.png");
             Game.GameObjects.Add(nivo2cigla7);
             SmallBrick nivo2cigla8 = new SmallBrick(new Vector2D(Game.VirtualGameWidth - 1330, 300), Game.VirtualGameWidth, Game.VirtualGameHeight, "element_grey_square.png");
-            Game.GameObjects.Add(nivo2cigla8);
-            /* //proba da dodadam golema crvena cigla
-             BigRedBrick grb = new BigRedBrick(new Vector2D(20, 100), Game.VirtualGameWidth,
-                 Game.VirtualGameHeight);
-           
-             //proba da dodadam mala crvena cigla
-            
-             //proba da dodadam golema zolta cigla
-             */
-
-
-            ElapsedTime = 0;
+            Game.GameObjects.Add(nivo2cigla8);*/
         }
 
 #if DEBUG
