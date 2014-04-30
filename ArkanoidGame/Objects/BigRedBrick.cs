@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace ArkanoidGame.Objects
+/*namespace ArkanoidGame.Objects
 {
     public class BigRedBrick:AbstractBrick
     {
@@ -21,8 +21,8 @@ namespace ArkanoidGame.Objects
 
         public BigRedBrick(Vector2D positionVector, int virtualGameWidth, int virtualGameHeight)
             : base(new Vector2D(positionVector), positionVector + new Vector2D(200, 0), //+ висината
-            positionVector + new Vector2D(0, 80) /* + висината */ )
-        {
+            positionVector + new Vector2D(0, 80) /* + висината */ //)
+       /* {
             this.GameWidth = virtualGameWidth;
             this.GameHeight = virtualGameHeight;
             this.Position = new Vector2D(positionVector);
@@ -38,3 +38,4 @@ namespace ArkanoidGame.Objects
         
     }
 }
+*/

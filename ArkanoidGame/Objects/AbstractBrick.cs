@@ -8,7 +8,9 @@ using System.Text;
 namespace ArkanoidGame.Objects
 {
     public abstract class AbstractBrick : IGameObject
+
     {
+        public string picture { get; set; }
         public void OnUpdate(long gameElapsedTime)
         {
             Position += (Velocity) / 2;
@@ -27,11 +29,12 @@ namespace ArkanoidGame.Objects
 
         }
 
-        public AbstractBrick(Vector2D positionUL, Vector2D positionUR, Vector2D positionDL)
+        public AbstractBrick(Vector2D positionUL, Vector2D positionUR, Vector2D positionDL,string p)
         {
             this.PositionUL = positionUL;
             this.PositionUR = positionUR;
             this.PositionDL = positionDL;
+            this.picture = p;
         }
 
         public Vector2D PositionUL { get; set; }
