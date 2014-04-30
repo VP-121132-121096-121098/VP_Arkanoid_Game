@@ -42,6 +42,17 @@ namespace ArkanoidGame.Geometry
         }
 
         /// <summary>
+        /// Пресек на дијагоналите
+        /// </summary>
+        /// <returns></returns>
+        public Vector2D GetCentralPoint()
+        {
+            Vector2D vecUL_UR = this.PositionUR - this.PositionUL;
+            Vector2D vecUL_DL = this.PositionDL - this.PositionUL;
+            return this.PositionUL + vecUL_DL / 2 + vecUL_UR / 2;
+        }
+
+        /// <summary>
         /// Го ротира темето и враќа радиус вектор кон новата локација
         /// </summary>
         /// <param name="point"></param>
