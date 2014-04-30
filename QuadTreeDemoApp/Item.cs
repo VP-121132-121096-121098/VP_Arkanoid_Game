@@ -185,5 +185,20 @@ namespace QuadTreeDemoApp
         {
             get { throw new NotImplementedException(); }
         }
+
+        public ArkanoidGame.Geometry.Vector2D PositionUL
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public ArkanoidGame.Geometry.Vector2D PositionUR
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public ArkanoidGame.Geometry.Vector2D PositionDL
+        {
+            get { throw new NotImplementedException(); }
+        }
     }
 }

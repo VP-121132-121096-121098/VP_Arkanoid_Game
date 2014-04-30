@@ -225,5 +225,20 @@ namespace ArkanoidGame.Objects
         }
 
         public Vector2D PositionChange { get; private set; }
+
+        public Vector2D PositionUL
+        {
+            get { return this.Position; }
+        }
+
+        public Vector2D PositionUR
+        {
+            get { return this.Position + new Vector2D(ObjectWidth, 0); }
+        }
+
+        public Vector2D PositionDL
+        {
+            get { return this.Position + new Vector2D(0, ObjectHeight); }
+        }
     }
 }
