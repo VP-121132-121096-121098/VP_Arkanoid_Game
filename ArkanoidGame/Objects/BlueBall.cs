@@ -106,8 +106,8 @@ namespace ArkanoidGame.Objects
             textureRotator.PositionDL = ObjectTextures[0].PositionDL;
             textureRotator.PositionUR = ObjectTextures[0].PositionUR;
 
-            if (this.Velocity.Magnitude() > 0)
-            {
+            //if (this.Velocity.Magnitude() > 0)
+            //{
                 //ротација на текстурата (анимација дека се движи топчето и околу себе)
                 //ротација за +5 степени
                 textureRotator.RotateAroundPointDeg(this.Position, 5);
@@ -115,7 +115,7 @@ namespace ArkanoidGame.Objects
                 ObjectTextures[0].PositionUL = textureRotator.PositionUL;
                 ObjectTextures[0].PositionDL = textureRotator.PositionDL;
                 ObjectTextures[0].PositionUR = textureRotator.PositionUR;
-            }
+            //}
 
             if (this.Velocity.Magnitude() == 0 && playerPaddle != null)
             {

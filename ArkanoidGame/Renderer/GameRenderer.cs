@@ -201,7 +201,8 @@ namespace ArkanoidGame.Renderer
                     if (bitmap.IsSquare)
                     {
                         //ако е квадрат, тогаш прикажи го како квадрат
-                        height = width;
+                        double mid = (height + width) / 2;
+                        height = width = mid;
                     }
 
                     Vector2D positionUL = ToScreenCoordinates(bitmap.PositionUL);
