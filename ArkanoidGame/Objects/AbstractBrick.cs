@@ -106,5 +106,11 @@ namespace ArkanoidGame.Objects
         {
             //throw new NotImplementedException();
         }
+
+
+        public Vector2D PositionChange
+        {
+            get { throw new NotImplementedException(); }
+        }
     }
 }

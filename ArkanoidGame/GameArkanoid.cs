@@ -86,6 +86,7 @@ namespace ArkanoidGame
 
             VirtualGameWidth = 3840;
             VirtualGameHeight = 2160;
+
             this.Renderer = new OldGameRenderer(VirtualGameWidth, VirtualGameHeight);
             CursorIngameCoordinates = Cursor.Position;
             this.GameUpdatePeriod = 0;

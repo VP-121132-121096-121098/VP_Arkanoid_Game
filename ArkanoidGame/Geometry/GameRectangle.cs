@@ -20,11 +20,6 @@ namespace ArkanoidGame.Geometry
          * DL                         DR
          */
 
-        private Vector2D positionVectorUL;
-        private Vector2D positionVectorUR;
-        private Vector2D positionVectorDL;
-
-
         /// <summary>
         /// Должина на правоаголникот
         /// </summary>
@@ -32,7 +27,7 @@ namespace ArkanoidGame.Geometry
 
         private Vector2D GetPositionVectorDR()
         {
-            return (positionVectorDL + (positionVectorUR - positionVectorUL));
+            return (PositionDL + (PositionUR - PositionUL));
         }
 
         /// <summary>
@@ -148,9 +143,9 @@ namespace ArkanoidGame.Geometry
         /// <param name="height"></param>
         public GameRectangle(Vector2D positionUL, Vector2D positionUR, Vector2D positionDL)
         {
-            this.positionVectorUL = new Vector2D(positionUL);
-            this.positionVectorUR = new Vector2D(positionUR);
-            this.positionVectorDL = new Vector2D(positionDL);
+            this.PositionUL = new Vector2D(positionUL);
+            this.PositionUR = new Vector2D(positionUR);
+            this.PositionDL = new Vector2D(positionDL);
 
             this.Width = Math.Abs(PositionUL.X - positionUR.X);
             this.Height = Math.Abs(PositionUL.Y - positionDL.Y);
@@ -210,9 +205,9 @@ namespace ArkanoidGame.Geometry
             ISet<Vector2D> pointsSet = new HashSet<Vector2D>();
 
             //темиња на правоаголникот
-            Vector2D pointUL = positionVectorUL;
-            Vector2D pointUR = positionVectorUR;
-            Vector2D pointDL = positionVectorDL;
+            Vector2D pointUL = PositionUL;
+            Vector2D pointUR = PositionUR;
+            Vector2D pointDL = PositionDL;
             Vector2D pointDR = GetPositionVectorDR();
 
             //центар на кругот
@@ -288,16 +283,16 @@ namespace ArkanoidGame.Geometry
              */
 
             //темиња на првиот правоаголник
-            Vector2D pointUL = positionVectorUL;
-            Vector2D pointUR = positionVectorUR;
-            Vector2D pointDL = positionVectorDL;
+            Vector2D pointUL = PositionUL;
+            Vector2D pointUR = PositionUR;
+            Vector2D pointDL = PositionDL;
             Vector2D pointDR = GetPositionVectorDR();
 
 
             //темиња на вториот правоаголник
-            Vector2D pointUL2 = rect.positionVectorUL;
-            Vector2D pointUR2 = rect.positionVectorUR;
-            Vector2D pointDL2 = rect.positionVectorDL;
+            Vector2D pointUL2 = rect.PositionUL;
+            Vector2D pointUR2 = rect.PositionUR;
+            Vector2D pointDL2 = rect.PositionDL;
             Vector2D pointDR2 = rect.GetPositionVectorDR();
 
             //Провери вториот дали се содржи целосно во првиот. Врати ги темињата на внатрешниот во тој случај
@@ -354,30 +349,18 @@ namespace ArkanoidGame.Geometry
         /// Позиција на горното лево теме на правоаголникот
         /// (радиус вектор на темето во горниот лев агол).
         /// </summary>
-        public Vector2D PositionUL
-        {
-            get { return new Vector2D(positionVectorUL); }
-            private set { this.positionVectorUL = value; }
-        }
+        public Vector2D PositionUL { get; set; }
 
         /// <summary>
         /// Позиција на горното десно теме на правоаголникот
         /// (радиус вектор на темето во горниот десен агол).
         /// </summary>
-        public Vector2D PositionUR
-        {
-            get { return new Vector2D(positionVectorUR); }
-            private set { this.positionVectorUR = value; }
-        }
+        public Vector2D PositionUR { get; set; }
 
         /// <summary>
         /// Позиција на темето во долниот лев агол
         /// </summary>
-        public Vector2D PositionDL
-        {
-            get { return new Vector2D(positionVectorDL); }
-            private set { this.positionVectorDL = value; }
-        }
+        public Vector2D PositionDL { get; set; }
 
         /// <summary>
         /// Позиција на темето во долниот десен агол

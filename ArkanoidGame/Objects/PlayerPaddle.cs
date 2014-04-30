@@ -56,12 +56,16 @@ namespace ArkanoidGame.Objects
             }
 
 
+            Vector2D oldPosition = Position;
             Position += (Velocity + velocity_0) / 2;
 
             if (Position.X > GameWidth - 10 - ObjectWidth)
                 Position.X = GameWidth - 10 - ObjectWidth;
             else if (Position.X < 5)
                 Position.X = 5;
+
+            //за колку се променила позицијата (вектор на поместување)
+            this.PositionChange = Position - oldPosition;
 
             SetTexturePosition();
         }
@@ -219,5 +223,7 @@ namespace ArkanoidGame.Objects
         {
             //throw new NotImplementedException();
         }
+
+        public Vector2D PositionChange { get; private set; }
     }
 }

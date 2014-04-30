@@ -39,14 +39,14 @@
             this.gamePanel.GameFramework = null;
             this.gamePanel.Location = new System.Drawing.Point(0, 0);
             this.gamePanel.Name = "gamePanel";
-            this.gamePanel.Size = new System.Drawing.Size(1024, 768);
+            this.gamePanel.Size = new System.Drawing.Size(1024, 576);
             this.gamePanel.TabIndex = 0;
             // 
             // GameWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1024, 768);
+            this.ClientSize = new System.Drawing.Size(1024, 576);
             this.Controls.Add(this.gamePanel);
             this.MinimumSize = new System.Drawing.Size(200, 200);
             this.Name = "GameWindow";
