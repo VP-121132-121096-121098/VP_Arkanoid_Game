@@ -27,6 +27,8 @@ namespace ArkanoidGame
 
         private ISet<IGameObject> ballsInPlay;
 
+        private List<GameBitmap> background;
+
         public ArkanoidGamePlayState(IGame game)
         {
             lockCollisionDetection = new object();
@@ -36,10 +38,9 @@ namespace ArkanoidGame
             this.Game = game;
             BitmapsToRender = new List<IList<GameBitmap>>();
             bitmapsToRenderCopy = new List<IList<GameBitmap>>();
-            List<GameBitmap> background = new List<GameBitmap>();
+            background = new List<GameBitmap>();
             background.Add(new GameBitmap("\\Resources\\Images\\background.jpg", 0, 0, game.VirtualGameWidth,
                 game.VirtualGameHeight));
-            BitmapsToRender.Add(background);
 
             ballsInPlay = new HashSet<IGameObject>();
 
@@ -196,12 +197,12 @@ namespace ArkanoidGame
             }
 
             //Спреми ги текстурите
-            for (int i = 0; i < gameObjects.Count; i++)
+            BitmapsToRender = new List<IList<GameBitmap>>();
+            BitmapsToRender.Add(background);
+
+            foreach (IGameObject obj in gameObjects)
             {
-                if (i + 1 >= BitmapsToRender.Count)
-                    BitmapsToRender.Add(gameObjects[i].ObjectTextures);
-                else
-                    BitmapsToRender[i + 1] = gameObjects[i].ObjectTextures;
+                BitmapsToRender.Add(obj.ObjectTextures);
             }
 
             //Посебна readonly копија за рендерерот

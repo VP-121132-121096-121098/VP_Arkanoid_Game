@@ -28,8 +28,8 @@ namespace ArkanoidGame.Objects
         //од горното лево теме до горното десно при што поместувањето треба
         //да биде за вектор (должина, 0), затоа тука е 100, не 200.
         public SmallBrick(Vector2D positionVector, int virtualGameWidth, int virtualGameHeight, string p)
-            : base(new Vector2D(positionVector), positionVector + new Vector2D(100, 0), //+ висината
-            positionVector + new Vector2D(0, 80) /* + висината */, p)
+            : base(new Vector2D(positionVector), new Vector2D(positionVector.X + 100, positionVector.Y), //+ висината
+            new Vector2D(positionVector.X, positionVector.Y + 80) /* + висината */, p)
         {
             this.GameWidth = virtualGameWidth;
             this.GameHeight = virtualGameHeight;
