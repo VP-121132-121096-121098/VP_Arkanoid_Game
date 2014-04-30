@@ -138,7 +138,7 @@ namespace ArkanoidGame
         {
             double y = 100;
 
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < 7; i++)
             {
                 BigBrick grb = new BigBrick(new Vector2D(20, 100), Game.VirtualGameWidth,
                 Game.VirtualGameHeight, "element_red_rectangle.png");

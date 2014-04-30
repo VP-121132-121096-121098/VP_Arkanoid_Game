@@ -126,7 +126,7 @@ namespace ArkanoidGame.Objects
                 Vector2D velocityAngle = this.Position - middlePoint;
                 velocityAngle /= velocityAngle.Magnitude();
 
-                this.Velocity = velocityAngle * 25;
+                this.Velocity = velocityAngle * 18;
 
                 collisionDetectorSkipFrames = 3;
             }
