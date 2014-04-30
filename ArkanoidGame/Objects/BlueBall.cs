@@ -221,6 +221,8 @@ namespace ArkanoidGame.Objects
                     if (averageVector == args.Key.PositionUL && collisionWithSingleObject)
                     {
                         Vector2D newVelocity = argPositionDR - args.Key.PositionUL;
+
+                        //ми треба единечен вектор само за правецот и насоката, должината е брзината на топчето
                         newVelocity /= newVelocity.Magnitude();
                         this.Velocity = newVelocity * this.Velocity.Magnitude();
                         break;
