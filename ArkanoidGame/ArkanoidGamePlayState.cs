@@ -46,7 +46,7 @@ namespace ArkanoidGame
             BlueBall ball = new BlueBall(new Vector2D((player.Position.X * 2 + player.ObjectWidth) / 2,
                player.Position.Y - 45), 50);
             Game.GameObjects.Add(ball);
-            /*BigBrick grb = new BigBrick(new Vector2D(20, 100), Game.VirtualGameWidth,
+            BigBrick grb = new BigBrick(new Vector2D(20, 100), Game.VirtualGameWidth,
                 Game.VirtualGameHeight, "element_red_rectangle.png");
             Game.GameObjects.Add(grb);
             SmallBrick srb = new SmallBrick(new Vector2D(220, 100), Game.VirtualGameWidth,
