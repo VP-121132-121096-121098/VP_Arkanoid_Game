@@ -112,7 +112,7 @@ namespace ArkanoidGame.Objects
             {
                 if (obj.Key.ObjectType != GameObjectType.Brick)
                 {
-                    this.Health -= obj.Key.DamageEffect;
+                    Health -= obj.Key.DamageEffect;
                 }
             }
 

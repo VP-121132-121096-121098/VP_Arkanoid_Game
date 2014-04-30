@@ -135,15 +135,15 @@ namespace ArkanoidGame.Objects
             {
                 this.Velocity.Y = -this.Velocity.Y;
 
-                if (this.PositionUL.Y < playerPaddle.PositionDL.Y)
+                if (this.Position.Y > playerPaddle.PositionDL.Y)
                 {
                     this.Health = 0;
                 }
 
                 //ако е надвор од прозорецот врати го назад
-                if (this.Position.Y < 5)
+                if (this.Position.Y < this.Radius + 5)
                     this.Position.Y = Radius + 5;
-                else if (this.Position.Y > GameArkanoid.GetInstance().VirtualGameHeight - 5)
+                else if (this.Position.Y > GameArkanoid.GetInstance().VirtualGameHeight - Radius - 5)
                     this.Position.Y = GameArkanoid.GetInstance().VirtualGameHeight - Radius - 5;
             }
             else if (this.Position.X < this.Radius + 5 || this.Position.X > GameArkanoid.GetInstance().VirtualGameWidth - Radius - 5)
