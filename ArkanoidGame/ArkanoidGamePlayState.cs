@@ -82,7 +82,7 @@ namespace ArkanoidGame
         private static void RotateSingleBrick(Vector2D center, IGameObject obj)
         {
             GameRectangle rotator = new GameRectangle(obj.PositionUL, obj.PositionUR, obj.PositionDL);
-            rotator.RotateAroundPointDeg(center, 5);
+            rotator.RotateAroundPointDeg(center, 1);
             obj.PositionUL.X = rotator.PositionUL.X;
             obj.PositionUL.Y = rotator.PositionUL.Y;
             obj.PositionUR.X = rotator.PositionUR.X;
