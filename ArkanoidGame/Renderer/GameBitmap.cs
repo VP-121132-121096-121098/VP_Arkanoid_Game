@@ -24,8 +24,6 @@ namespace ArkanoidGame.Renderer
             this.uniqueKey = uniqueName;
         }
 
-
-
         public override int GetHashCode()
         {
             Vector2D HU = positionUR - positionUL; //горна хоризонтала
@@ -48,6 +46,11 @@ namespace ArkanoidGame.Renderer
             lockObject = new object();
             IDCounter = long.MinValue;
         }
+
+        /// <summary>
+        /// Дали сликата да се прикаже како квадрат на било која резолуција
+        /// </summary>
+        public bool IsSquare { get; set; }
 
         /// <summary>
         /// Ширина на сликата во единици од играта

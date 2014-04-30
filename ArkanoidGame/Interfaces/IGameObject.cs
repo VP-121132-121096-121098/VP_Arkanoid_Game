@@ -14,7 +14,7 @@ namespace ArkanoidGame.Interfaces
         PlayerPaddle,
         Ball,
         Brick
-        
+
     }
 
     public interface IGameObject
@@ -49,6 +49,11 @@ namespace ArkanoidGame.Interfaces
         /// </summary>
         /// <param name="gameElapsedTime"></param>
         void OnUpdate(long gameElapsedTime);
+
+        /// <summary>
+        /// За колку објектот се поместил од последниот update
+        /// </summary>
+        Vector2D PositionChange { get; }
 
         /// <summary>
         /// Со кој објект настанало судир и во кои точки.

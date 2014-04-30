@@ -113,5 +113,77 @@ namespace QuadTreeDemoApp
         {
             throw new NotImplementedException();
         }
+
+        double IGameObject.Health
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        double IGameObject.DamageEffect
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        RectangleF IGameObject.Rectangle
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        IGeometricShape IGameObject.GetGeometricShape()
+        {
+            throw new NotImplementedException();
+        }
+
+        void IGameObject.OnUpdate(long gameElapsedTime)
+        {
+            throw new NotImplementedException();
+        }
+
+        ArkanoidGame.Geometry.Vector2D IGameObject.PositionChange
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        void IGameObject.OnCollisionDetected(System.Collections.Generic.IDictionary<IGameObject, System.Collections.Generic.IList<ArkanoidGame.Geometry.Vector2D>> collisionArguments)
+        {
+            throw new NotImplementedException();
+        }
+
+        ArkanoidGame.Geometry.Vector2D IGameObject.Position
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        double IGameObject.ObjectWidth
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        double IGameObject.ObjectHeight
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        System.Collections.Generic.IList<ArkanoidGame.Renderer.GameBitmap> IGameObject.ObjectTextures
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        ArkanoidGame.Geometry.Vector2D IGameObject.Velocity
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        GameObjectType IGameObject.ObjectType
+        {
+            get { throw new NotImplementedException(); }
+        }
     }
 }

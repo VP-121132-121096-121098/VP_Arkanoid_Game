@@ -56,12 +56,16 @@ namespace ArkanoidGame.Objects
             }
 
 
+            Vector2D oldPosition = Position;
             Position += (Velocity + velocity_0) / 2;
 
             if (Position.X > GameWidth - 10 - ObjectWidth)
                 Position.X = GameWidth - 10 - ObjectWidth;
             else if (Position.X < 5)
                 Position.X = 5;
+
+            //за колку се променила позицијата (вектор на поместување)
+            this.PositionChange = Position - oldPosition;
 
             SetTexturePosition();
         }
@@ -74,7 +78,7 @@ namespace ArkanoidGame.Objects
             
             /*GameRectangle proba = new GameRectangle(ObjectTextures[0].PositionUL, ObjectTextures[0].PositionUR,
                 ObjectTextures[0].PositionDL);
-            //proba.RotateAroundPointDeg(new Vector2D((1750.0 * 2 + ObjectWidth) / 2, (2010.0 * 2 + ObjectHeight) / 2), 10);
+            proba.RotateAroundPointDeg(new Vector2D((1750.0 * 2 + ObjectWidth) / 2, (2010.0 * 2 + ObjectHeight) / 2), 10);
             proba.RotateAroundPointDeg(new Vector2D(1750, 1005), 1);
             ObjectTextures[0].PositionUL = proba.PositionUL;
             ObjectTextures[0].PositionUR = proba.PositionUR;
@@ -219,5 +223,7 @@ namespace ArkanoidGame.Objects
         {
             //throw new NotImplementedException();
         }
+
+        public Vector2D PositionChange { get; private set; }
     }
 }
