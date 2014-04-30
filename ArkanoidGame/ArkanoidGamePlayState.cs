@@ -29,6 +29,68 @@ namespace ArkanoidGame
 
         private List<GameBitmap> background;
 
+        private void RotateBricks()
+        {
+            QuadTree<IGameObject> quadTree = this.quadtree;
+            List<IGameObject> area = quadtree.Query(new RectangleF(1000, 650, 1000, 600));
+            Vector2D center = new Vector2D(1500, 950);
+
+            if (!Game.IsMultithreadingEnabled)
+            {
+                foreach (IGameObject obj in area)
+                {
+                    if (obj.ObjectType != GameObjectType.Brick)
+                        continue;
+
+
+                    RotateSingleBrick(center, obj);
+                }
+            }
+            else
+            {
+                //паралелен дел
+                using (CountdownEvent e = new CountdownEvent(1))
+                {
+                    // fork work: 
+                    foreach (IGameObject obj in area)
+                    {
+                        // Dynamically increment signal count.
+                        e.AddCount();
+                        ThreadPool.QueueUserWorkItem(delegate(object gameObject)
+                        {
+                            try
+                            {
+                                RotateSingleBrick(center, obj);
+                            }
+                            finally
+                            {
+                                e.Signal();
+                            }
+                        },
+                         obj);
+                    }
+                    e.Signal();
+
+                    // The first element could be run on this thread. 
+
+                    // Join with work.
+                    e.Wait();
+                }
+            }
+        }
+
+        private static void RotateSingleBrick(Vector2D center, IGameObject obj)
+        {
+            GameRectangle rotator = new GameRectangle(obj.PositionUL, obj.PositionUR, obj.PositionDL);
+            rotator.RotateAroundPointDeg(center, 5);
+            obj.PositionUL.X = rotator.PositionUL.X;
+            obj.PositionUL.Y = rotator.PositionUL.Y;
+            obj.PositionUR.X = rotator.PositionUR.X;
+            obj.PositionUR.Y = rotator.PositionUR.Y;
+            obj.PositionDL.X = rotator.PositionDL.X;
+            obj.PositionDL.Y = rotator.PositionDL.Y;
+        }
+
         public ArkanoidGamePlayState(IGame game)
         {
             lockCollisionDetection = new object();
@@ -40,7 +102,7 @@ namespace ArkanoidGame
             bitmapsToRenderCopy = new List<IList<GameBitmap>>();
             background = new List<GameBitmap>();
             background.Add(new GameBitmap("\\Resources\\Images\\background.jpg", 0, 0, game.VirtualGameWidth,
-                game.VirtualGameHeight));
+              game.VirtualGameHeight));
 
             ballsInPlay = new HashSet<IGameObject>();
 
@@ -85,10 +147,10 @@ namespace ArkanoidGame
                 {
                     Game.GameObjects.Add(new BigBrick(new Vector2D(offset, y), Game.VirtualGameWidth,
                 Game.VirtualGameHeight, "element_red_rectangle.png"));
-                    offset += grb.ObjectWidth + 20;
+                    offset += grb.ObjectWidth + 80;
                 }
 
-                y += grb.ObjectHeight + 10;
+                y += grb.ObjectHeight + 80;
             }
 
             /*BigBrick grb = new BigBrick(new Vector2D(20, 100), Game.VirtualGameWidth,
@@ -219,6 +281,8 @@ namespace ArkanoidGame
             {
                 UpdateObjectsST(gameObjects);
             }
+
+            RotateBricks();
 
             //Спреми ги текстурите
             BitmapsToRender = new List<IList<GameBitmap>>();
