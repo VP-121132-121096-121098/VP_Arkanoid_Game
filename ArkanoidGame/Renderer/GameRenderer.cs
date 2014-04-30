@@ -177,6 +177,9 @@ namespace ArkanoidGame.Renderer
         /// <param name="height"></param>
         public void Render(IList<IList<GameBitmap>> bitmaps, Graphics g, int frameWidth, int frameHeight)
         {
+            //Не знам како да го најдам аголот на ротација на објектите во играта
+            //за истиот да го исцртам на екран??? Функционира само ако резолуцијата на екранот е 16:9 вака
+
             this.FrameWidth = frameWidth;
             this.FrameHeight = frameHeight;
 
