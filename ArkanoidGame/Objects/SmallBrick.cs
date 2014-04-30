@@ -20,8 +20,15 @@ namespace ArkanoidGame.Objects
                 Position.Y, ObjectWidth, ObjectHeight));
         }
 
+
+        //дечки, тоа што сте го пратиле на конструкторот 
+        //: base(new Vector2D(positionVector), positionVector + new Vector2D(200, 0), //+ висината
+        //positionVector + new Vector2D(0, 80) /* + висината */, p)
+        //тука треба да биде како што го поправив, овој + new Vector2D(100, 0) поместува
+        //од горното лево теме до горното десно при што поместувањето треба
+        //да биде за вектор (должина, 0), затоа тука е 100, не 200.
         public SmallBrick(Vector2D positionVector, int virtualGameWidth, int virtualGameHeight, string p)
-            : base(new Vector2D(positionVector), positionVector + new Vector2D(200, 0), //+ висината
+            : base(new Vector2D(positionVector), positionVector + new Vector2D(100, 0), //+ висината
             positionVector + new Vector2D(0, 80) /* + висината */, p)
         {
             this.GameWidth = virtualGameWidth;

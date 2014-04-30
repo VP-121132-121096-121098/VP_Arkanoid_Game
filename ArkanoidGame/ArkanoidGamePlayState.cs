@@ -25,6 +25,8 @@ namespace ArkanoidGame
 
         private readonly object lockCollisionDetection;
 
+        private ISet<IGameObject> ballsInPlay;
+
         public ArkanoidGamePlayState(IGame game)
         {
             lockCollisionDetection = new object();
@@ -39,13 +41,20 @@ namespace ArkanoidGame
                 game.VirtualGameHeight));
             BitmapsToRender.Add(background);
 
+            ballsInPlay = new HashSet<IGameObject>();
+
             //додади го играчот на позиција (1750, 2010).
             PlayerPaddle player = new PlayerPaddle(new Vector2D(1750, 2010), Game.VirtualGameWidth,
                 Game.VirtualGameHeight);
             Game.GameObjects.Add(player);
+
+            //додади ја топката
             BlueBall ball = new BlueBall(new Vector2D((player.Position.X * 2 + player.ObjectWidth) / 2,
                player.Position.Y - 45), 50);
             Game.GameObjects.Add(ball);
+            ballsInPlay.Add(ball);
+
+
             BigBrick grb = new BigBrick(new Vector2D(20, 100), Game.VirtualGameWidth,
                 Game.VirtualGameHeight, "element_red_rectangle.png");
             Game.GameObjects.Add(grb);
@@ -175,6 +184,8 @@ namespace ArkanoidGame
             EnableOrDisableDebugMode();
 #endif
 
+            RemoveDeadObjects(gameObjects);
+
             if (Game.IsMultithreadingEnabled)
             {
                 UpdateObjectsMT(gameObjects);
@@ -204,6 +215,24 @@ namespace ArkanoidGame
             }
 
             return 100;
+        }
+
+        private void RemoveDeadObjects(IList<IGameObject> objects)
+        {
+            for (int i = 0; i < objects.Count; i++)
+            {
+                IGameObject obj = objects[i];
+                if (obj.Health == 0)
+                {
+                    if (obj.ObjectType == GameObjectType.Ball)
+                    {
+                        ballsInPlay.Remove(obj);
+                    }
+
+                    objects.RemoveAt(i);
+                }
+
+            }
         }
 
         private int ButtonDWaitNFrames;

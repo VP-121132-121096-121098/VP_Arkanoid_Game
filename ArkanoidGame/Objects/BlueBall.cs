@@ -13,6 +13,17 @@ namespace ArkanoidGame.Objects
 {
     public class BlueBall : IGameObject
     {
+        private static long IDCounter;
+        private static readonly object lockCounter;
+
+        static BlueBall()
+        {
+            IDCounter = long.MinValue;
+            lockCounter = new object();
+        }
+
+        private long ballID;
+
         /// <summary>
         /// Најди го центарот на сликата (местото каде што се сечат двете дијагонали на сликата)
         /// </summary>
@@ -50,6 +61,11 @@ namespace ArkanoidGame.Objects
 
         public BlueBall(Vector2D position, double radius)
         {
+            lock (lockCounter)
+            {
+                ballID = IDCounter++;
+            }
+
             this.Velocity = new Vector2D(0, 0);
             ObjectTextures = new List<GameBitmap>();
             this.Position = position;
@@ -65,10 +81,11 @@ namespace ArkanoidGame.Objects
             textureRotator = new GameRectangle(ObjectTextures[0].PositionUL,
                 ObjectTextures[0].PositionUR, ObjectTextures[0].PositionDL);
 
-            collidingObject = null;
+            playerPaddle = null;
+            Health = 1000;
         }
 
-        public double Health { get { return 1000; } }
+        public double Health { get; private set; }
 
         public double DamageEffect { get { return 100; } }
 
@@ -91,19 +108,19 @@ namespace ArkanoidGame.Objects
 
             //ако брзината е 0, тогаш топчето се наоѓа врз paddle и 
             //мора да се помести за да остане врз него
-            if (this.Velocity.Magnitude() == 0 && collidingObject != null)
+            if (this.Velocity.Magnitude() == 0 && playerPaddle != null)
             {
-                this.Position += collidingObject.PositionChange;
+                this.Position += playerPaddle.PositionChange;
             }
 
             this.Position += Velocity;
 
             IKeyState leftMouseKey = KeyStateInfo.GetAsyncKeyState(Keys.LButton);
-            if (this.Velocity.Magnitude() < 0.001 && collidingObject != null && leftMouseKey.IsPressed)
+            if (this.Velocity.Magnitude() < 0.001 && playerPaddle != null && leftMouseKey.IsPressed)
             {
                 //најди ја средната точка на paddle
-                Vector2D middlePoint = collidingObject.Position + new Vector2D(collidingObject.ObjectWidth / 2, 0)
-                    + new Vector2D(0, collidingObject.ObjectHeight / 2);
+                Vector2D middlePoint = playerPaddle.Position + new Vector2D(playerPaddle.ObjectWidth / 2, 0)
+                    + new Vector2D(0, playerPaddle.ObjectHeight / 2);
 
                 //стартувај под агол кој ќе зависи од средната точка на paddle
                 Vector2D velocityAngle = this.Position - middlePoint;
@@ -117,6 +134,11 @@ namespace ArkanoidGame.Objects
             if (this.Position.Y < this.Radius + 5 || this.Position.Y > GameArkanoid.GetInstance().VirtualGameHeight - Radius - 5)
             {
                 this.Velocity.Y = -this.Velocity.Y;
+
+                if (this.PositionUL.Y < playerPaddle.PositionDL.Y)
+                {
+                    this.Health = 0;
+                }
 
                 //ако е надвор од прозорецот врати го назад
                 if (this.Position.Y < 5)
@@ -158,7 +180,7 @@ namespace ArkanoidGame.Objects
             collisionDetectorSkipFrames = Math.Max(collisionDetectorSkipFrames - 1, 0);
         }
 
-        private IGameObject collidingObject;
+        private IGameObject playerPaddle;
 
         private int collisionDetectorSkipFrames;
 
@@ -167,11 +189,12 @@ namespace ArkanoidGame.Objects
 
             foreach (KeyValuePair<IGameObject, IList<Vector2D>> args in collisionArguments)
             {
+                IGameObject collidingObject = args.Key;
 
                 //Земи ја референцата од PlayerPaddle објектот
                 if (args.Key.ObjectType == GameObjectType.PlayerPaddle)
                 {
-                    collidingObject = args.Key;
+                    playerPaddle = args.Key;
                 }
 
                 bool collisionWithSingleObject = collisionArguments.Count == 1;
@@ -224,7 +247,7 @@ namespace ArkanoidGame.Objects
 
                         //ми треба единечен вектор само за правецот и насоката, должината е брзината на топчето
                         newVelocity /= newVelocity.Magnitude();
-                        this.Velocity = newVelocity * this.Velocity.Magnitude();
+                        this.Velocity = -newVelocity * this.Velocity.Magnitude();
                         break;
                     }
 
@@ -232,7 +255,7 @@ namespace ArkanoidGame.Objects
                     {
                         Vector2D newVelocity = args.Key.PositionUR - args.Key.PositionDL;
                         newVelocity /= newVelocity.Magnitude();
-                        this.Velocity = newVelocity * this.Velocity.Magnitude();
+                        this.Velocity = -newVelocity * this.Velocity.Magnitude();
                         break;
                     }
 
@@ -240,7 +263,7 @@ namespace ArkanoidGame.Objects
                     {
                         Vector2D newVelocity = args.Key.PositionUR - args.Key.PositionDL;
                         newVelocity /= newVelocity.Magnitude();
-                        this.Velocity = -newVelocity * this.Velocity.Magnitude();
+                        this.Velocity = newVelocity * this.Velocity.Magnitude();
                         break;
                     }
 
@@ -248,7 +271,7 @@ namespace ArkanoidGame.Objects
                     {
                         Vector2D newVelocity = argPositionDR - args.Key.PositionUL;
                         newVelocity /= newVelocity.Magnitude();
-                        this.Velocity = -newVelocity * this.Velocity.Magnitude();
+                        this.Velocity = newVelocity * this.Velocity.Magnitude();
                         break;
                     }
 
@@ -373,7 +396,22 @@ namespace ArkanoidGame.Objects
 
         public Vector2D PositionDL
         {
-            get { return Position + new Vector2D(-Radius, Radius); }
+            get { return Position + new Vector2D(-Radius, -Radius); }
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return ((BlueBall)obj).ballID == this.ballID;
+        }
+
+        public override int GetHashCode()
+        {
+            return ballID.GetHashCode();
         }
     }
 }
