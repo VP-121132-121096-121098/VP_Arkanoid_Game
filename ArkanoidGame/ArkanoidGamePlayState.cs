@@ -97,8 +97,8 @@ namespace ArkanoidGame
             SmallBrick ypp = new SmallBrick(new Vector2D(Game.VirtualGameWidth - 580, 100), Game.VirtualGameWidth,
                  Game.VirtualGameHeight, "element_green_rectangle.png");
             Game.GameObjects.Add(ypp);
-           BigBrick gbb = new BigBrick(new Vector2D(Game.VirtualGameWidth - 790, 100), Game.VirtualGameWidth,
-               Game.VirtualGameHeight, "element_yellow_rectangle.png");
+            BigBrick gbb = new BigBrick(new Vector2D(Game.VirtualGameWidth - 790, 100), Game.VirtualGameWidth,
+                Game.VirtualGameHeight, "element_yellow_rectangle.png");
             Game.GameObjects.Add(gbb);
             BigBrick bbb = new BigBrick(new Vector2D(Game.VirtualGameWidth - 1000, 100), Game.VirtualGameWidth,
              Game.VirtualGameHeight, "element_purple_rectangle.png");
@@ -123,14 +123,14 @@ namespace ArkanoidGame
             Game.GameObjects.Add(nivo2cigla7);
             SmallBrick nivo2cigla8 = new SmallBrick(new Vector2D(Game.VirtualGameWidth - 1330, 300), Game.VirtualGameWidth, Game.VirtualGameHeight, "element_grey_square.png");
             Game.GameObjects.Add(nivo2cigla8);
-           /* //proba da dodadam golema crvena cigla
-            BigRedBrick grb = new BigRedBrick(new Vector2D(20, 100), Game.VirtualGameWidth,
-                Game.VirtualGameHeight);
+            /* //proba da dodadam golema crvena cigla
+             BigRedBrick grb = new BigRedBrick(new Vector2D(20, 100), Game.VirtualGameWidth,
+                 Game.VirtualGameHeight);
            
-            //proba da dodadam mala crvena cigla
+             //proba da dodadam mala crvena cigla
             
-            //proba da dodadam golema zolta cigla
-            */
+             //proba da dodadam golema zolta cigla
+             */
 
 
             ElapsedTime = 0;
@@ -222,7 +222,7 @@ namespace ArkanoidGame
             for (int i = 0; i < objects.Count; i++)
             {
                 IGameObject obj = objects[i];
-                if (obj.Health == 0)
+                if (obj.Health <= 0)
                 {
                     if (obj.ObjectType == GameObjectType.Ball)
                     {
@@ -321,6 +321,36 @@ namespace ArkanoidGame
             /* http://msdn.microsoft.com/en-us/library/dd997365.aspx */
 
             //не може паралелно да се одвива оваа операција
+
+            //паралелен дел
+            using (CountdownEvent e = new CountdownEvent(1))
+            {
+                // fork work: 
+                foreach (IGameObject obj in gameObjects)
+                {
+                    // Dynamically increment signal count.
+                    e.AddCount();
+                    ThreadPool.QueueUserWorkItem(delegate(object gameObject)
+                    {
+                        try
+                        {
+                            UpdateObject((IGameObject)gameObject);
+                        }
+                        finally
+                        {
+                            e.Signal();
+                        }
+                    },
+                     obj);
+                }
+                e.Signal();
+
+                // The first element could be run on this thread. 
+
+                // Join with work.
+                e.Wait();
+            }
+
             InitQuadTree(gameObjects);
             InitCollisionArguments(gameObjects);
 
@@ -337,8 +367,35 @@ namespace ArkanoidGame
                         try
                         {
                             CheckForCollisions((IGameObject)gameObject);
+                        }
+                        finally
+                        {
+                            e.Signal();
+                        }
+                    },
+                     obj);
+                }
+                e.Signal();
+
+                // The first element could be run on this thread. 
+
+                // Join with work.
+                e.Wait();
+            }
+
+            //паралелен дел
+            using (CountdownEvent e = new CountdownEvent(1))
+            {
+                // fork work: 
+                foreach (IGameObject obj in gameObjects)
+                {
+                    // Dynamically increment signal count.
+                    e.AddCount();
+                    ThreadPool.QueueUserWorkItem(delegate(object gameObject)
+                    {
+                        try
+                        {
                             PassCollisionArgumentsToObject((IGameObject)gameObject);
-                            UpdateObject((IGameObject)gameObject);
                         }
                         finally
                         {
