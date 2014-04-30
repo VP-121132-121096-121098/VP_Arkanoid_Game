@@ -160,13 +160,6 @@ namespace ArkanoidGame.Renderer
             return new Vector2D(x, y);
         }
 
-        // -Pi <= x <= Pi
-        private double FindRotationAngle(Vector2D pointInGame)
-        {
-            Vector2D pointToScreen = ToScreenCoordinates(pointInGame);
-            return Math.Acos(pointInGame * pointToScreen / (pointInGame.Magnitude() * pointToScreen.Magnitude()));
-        }
-
         /// <summary>
         /// Исцртување на сите bitmaps редоследно според индексот во листата.
         /// Се исцртува користејќи го Graphics објектот. frameWidth и frameHeight 
@@ -177,60 +170,35 @@ namespace ArkanoidGame.Renderer
         /// <param name="height"></param>
         public void Render(IList<IList<GameBitmap>> bitmaps, Graphics g, int frameWidth, int frameHeight)
         {
-            //Не знам како да го најдам аголот на ротација на објектите во играта
-            //за истиот да го исцртам на екран??? Функционира само ако резолуцијата на екранот е 16:9 вака
-
             this.FrameWidth = frameWidth;
             this.FrameHeight = frameHeight;
 
             foreach (IList<GameBitmap> bitmapList in bitmaps)
             {
-                if (bitmapList == null)
-                    continue;
-
                 foreach (GameBitmap bitmap in bitmapList)
                 {
-                    //најди го центарот на сликата
-                    List<Vector2D> centerGamePosition = GeometricAlgorithms.IntersectLineSegments(
-                        bitmap.PositionUL, bitmap.PositionDR,
-                        bitmap.PositionDL, bitmap.PositionUR);
-                    Vector2D center = ToScreenCoordinates(centerGamePosition[0]);
-
-                    double width = new Vector2D(0 + bitmap.WidthInGameUnits, 0).Magnitude() 
-                        * frameWidth / VirtualGameWidth;
-                    double height = new Vector2D(0, 0 + bitmap.HeightInGameUnits).Magnitude() 
-                        * frameHeight / VirtualGameHeight;
-
-                    if (bitmap.IsSquare)
-                    {
-                        //ако е квадрат, тогаш прикажи го како квадрат
-                        double mid = (height + width) / 2;
-                        height = width = mid;
-                    }
-
                     Vector2D positionUL = ToScreenCoordinates(bitmap.PositionUL);
-                    Vector2D diagonal = positionUL - center;
-                    diagonal = diagonal / diagonal.Magnitude() * Math.Sqrt(width * width / 4 + height * height / 4);
-                    positionUL = center + diagonal;
-
-                    Vector2D positionUR = ToScreenCoordinates(bitmap.PositionUR);
-                    diagonal = positionUR - center;
-                    diagonal = diagonal / diagonal.Magnitude() * Math.Sqrt(width * width / 4 + height * height / 4);
-                    positionUR = center + diagonal;
-
-                    Vector2D positionDL = ToScreenCoordinates(bitmap.PositionDL);
-                    diagonal = positionDL - center;
-                    diagonal = diagonal / diagonal.Magnitude() * Math.Sqrt(width * width / 4 + height * height / 4);
-                    positionDL = center + diagonal;
-
-                    Point[] vertices = new Point[] { positionUL, positionUR, positionDL };
+                    double width = ToScreenLength(new Vector2D(positionUL.X + bitmap.WidthInGameUnits, positionUL.Y)
+                         - positionUL);
+                    double height = ToScreenLength(new Vector2D(positionUL.X, positionUL.Y + bitmap.HeightInGameUnits)
+                         - positionUL);
 
                     Bitmap temp = RendererCache.GetBitmapFromMainMemory(bitmap.UniqueKey,
-                        (int)width, (int)height);
+                        (int)Math.Round(width), (int)Math.Round(height));
 
                     if (temp == null)
                         continue;
 
+                    Vector2D positionUR = ToScreenCoordinates(bitmap.PositionUR);
+                    Vector2D vecUL_UR = positionUR - positionUL;
+                    vecUL_UR = vecUL_UR / vecUL_UR.Magnitude() * width;
+                    positionUR = positionUL + vecUL_UR;
+                    Vector2D positionDL = ToScreenCoordinates(bitmap.PositionDL);
+                    Vector2D vecUL_DL = positionDL - positionUL;
+                    vecUL_DL = vecUL_DL / vecUL_DL.Magnitude() * height;
+                    positionDL = positionUL + vecUL_DL;
+
+                    Point[] vertices = new Point[] { positionUL, positionUR, positionDL };
                     g.DrawImage(temp, vertices);
                 }
             }
