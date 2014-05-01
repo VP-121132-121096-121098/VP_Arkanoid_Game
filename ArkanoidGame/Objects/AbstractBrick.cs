@@ -136,12 +136,6 @@ namespace ArkanoidGame.Objects
         }
 
 
-        public void DrawLowSpec(Graphics g,int width, int height)
-        {   
-            
-            SolidBrush br = new SolidBrush(Color.Red);
-            //g.FillRectangle(br,new Rectangle(,width,height)
-
-        }
+        
     }
 }
