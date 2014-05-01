@@ -204,13 +204,13 @@ namespace ArkanoidGame.Renderer
         public static Bitmap GetBitmapFromMainMemory(long uniqueKey)
         {
             Bitmap temp = null;
-            lock (objectLock)
+            //lock (objectLock)
+            //{
+            if (bitmapsInMemory.TryGetValue(uniqueKey, out temp))
             {
-                if (bitmapsInMemory.TryGetValue(uniqueKey, out temp))
-                {
-                    return temp;
-                }
+                return temp;
             }
+            //}
 
             return null;
         }
