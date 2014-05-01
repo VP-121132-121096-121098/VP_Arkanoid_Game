@@ -256,7 +256,7 @@ namespace ArkanoidGame.Objects
                     {
                         foreach (Vector2D vec in pair.Value)
                         {
-                            if(lastPoint != null)
+                            if (lastPoint != null)
                             {
                                 temp += (vec - lastPoint);
                             }
@@ -276,12 +276,29 @@ namespace ArkanoidGame.Objects
                         normal = new Vector2D(0, 0);
 
                     //новата брзина е
-                    if(normal.Magnitude() > 0)
-                    this.Velocity = -2 * (Velocity * normal) * normal + Velocity;
+                    if (normal.Magnitude() > 0)
+                        this.Velocity = -2 * (Velocity * normal) * normal + Velocity;
                     else
                     {
                         //топчето удрило во една точка
-                        this.Velocity.Rotate(Math.PI / 2);
+
+                        //векторот помеѓу позицијата и точката на судир
+                        Vector2D u = args.Value[0] - this.Position;
+
+                        if (u.Magnitude() == 0 || Velocity.Magnitude() == 0)
+                        {
+                            this.Velocity = -this.Velocity;
+                            return;
+                        }
+
+                        this.Velocity = -this.Velocity;
+
+                        //косинусот на аголот помеѓу векторите
+                        double cosineA = u * Velocity / (u.Magnitude() * Velocity.Magnitude());
+                        double sineA = ((Vector3D)u).CrossProduct(Velocity).Magnitude()
+                            / (u.Magnitude() * Velocity.Magnitude());
+
+                        Velocity.Rotate(sineA, cosineA);
                     }
 
                     //овозможи играчот да ја менува насоката на топчето со тоа што ќе го удри

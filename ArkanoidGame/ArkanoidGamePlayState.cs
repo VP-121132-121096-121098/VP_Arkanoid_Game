@@ -32,8 +32,8 @@ namespace ArkanoidGame
         private void RotateBricks()
         {
             QuadTree<IGameObject> quadTree = this.quadtree;
-            List<IGameObject> area = quadtree.Query(new RectangleF(1000, 650, 1000, 600));
-            Vector2D center = new Vector2D(1500, 950);
+            List<IGameObject> area = quadtree.Query(new RectangleF(1000, 600, 1000, 600));
+            Vector2D center = new Vector2D(1500, 900);
 
             if (!Game.IsMultithreadingEnabled)
             {

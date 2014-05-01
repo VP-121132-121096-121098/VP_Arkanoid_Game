@@ -152,6 +152,22 @@ namespace ArkanoidGame.Geometry
             this.Y = newVector.GetElement(1, 0);
         }
 
+        public void Rotate(double sineAngle, double cosineAngle)
+        {
+            double[][] temp = new double[2][];
+            temp[0] = new double[2];
+            temp[1] = new double[2];
+            temp[0][0] = cosineAngle;
+            temp[0][1] = -sineAngle;
+            temp[1][0] = sineAngle;
+            temp[1][1] = cosineAngle;
+
+            GeneralMatrix rotationMatrix = new GeneralMatrix(temp);
+            GeneralMatrix newVector = rotationMatrix.Multiply(this.ToMatrix());
+            this.X = newVector.GetElement(0, 0);
+            this.Y = newVector.GetElement(1, 0);
+        }
+
         public void RotateDeg(double degrees)
         {
             this.Rotate(degrees * Math.PI / 180.0);
