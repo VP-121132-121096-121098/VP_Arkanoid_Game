@@ -16,9 +16,9 @@ namespace ArkanoidGame.Objects
         public override void InitTextures()
         {
             ObjectTextures = new List<GameBitmap>();
-            ObjectTextures.Add(new GameBitmap("\\Resources\\Images\\" + picture, Position.X,
-                Position.Y, ObjectWidth, ObjectHeight));
-            
+           // ObjectTextures.Add(new GameBitmap("\\Resources\\Images\\" + picture, Position.X,
+                //Position.Y, ObjectWidth, ObjectHeight));
+            ObjectTextures.Add(bmp);
         }
 
 
@@ -45,10 +45,10 @@ namespace ArkanoidGame.Objects
             this.InitTextures();
         }
 
-        public SmallBrick(Vector2D positionVector, int virtualGameWidth, int virtualGameHeight, string p)
+       /* public SmallBrick(Vector2D positionVector, int virtualGameWidth, int virtualGameHeight, string p)
             : base(new Vector2D(positionVector), new Vector2D(positionVector.X + 100, positionVector.Y), //+ висината
-            new Vector2D(positionVector.X, positionVector.Y + 80) /* + висината */, p)
-        {
+            new Vector2D(positionVector.X, positionVector.Y + 80) /* + висината *///, p)
+       /* {
             this.GameWidth = virtualGameWidth;
             this.GameHeight = virtualGameHeight;
             this.Position = new Vector2D(positionVector);
@@ -60,7 +60,7 @@ namespace ArkanoidGame.Objects
             this.Health = 100;
             this.DamageEffect = 200;
             this.InitTextures();
-        }
+        }*/
 
     }
 }
