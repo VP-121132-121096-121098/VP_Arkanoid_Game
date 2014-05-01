@@ -11,6 +11,11 @@ namespace ArkanoidGame.Interfaces
     public interface IGame
     {
         /// <summary>
+        /// Ако претходно биле избришани ресурсите од меморија, со повик на овој метод истите одново ќе се вчитаат
+        /// </summary>
+        void ReloadResources();
+
+        /// <summary>
         /// Дали update ќе се извршува на една или повеќе нишки
         /// </summary>
         bool IsMultithreadingEnabled { get; }
