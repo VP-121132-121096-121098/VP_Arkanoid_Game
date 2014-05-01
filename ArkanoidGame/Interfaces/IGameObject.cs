@@ -95,5 +95,13 @@ namespace ArkanoidGame.Interfaces
         /// Тип на објектот
         /// </summary>
         GameObjectType ObjectType { get; }
+
+        /// <summary>
+        /// Во случај на послаб компјутер на Draw се исцртува објектот. Исцртаниот 
+        /// објект ќе има висина и ширина (width и height) во единици од екранот, не играта!!! 
+        /// </summary>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        void DrawLowSpec(int width, int height);
     }
 }
