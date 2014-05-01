@@ -140,10 +140,10 @@ namespace ArkanoidGame
 
         private void CreateBricks()
         {   
-           Random r=new Random();
-           int opcija=r.Next(1);
-            double y = 100;
-            if(opcija==1){
+           //Random r=new Random();
+           //int opcija=r.Next(1);
+           double y = 100;
+           // if(opcija==1){
             GameBitmap redBrickTexture = new GameBitmap(RendererCache.GetBitmapFromFile(
                 "\\Resources\\Images\\element_red_rectangle.png"), new Vector2D(0, 0),
                 new Vector2D(200, 0), new Vector2D(0, 100));
@@ -167,8 +167,8 @@ namespace ArkanoidGame
 
                 y += grb.ObjectHeight + 80;
             }
-            }
-            else{ GameBitmap greyBrickTexture = new GameBitmap(RendererCache.GetBitmapFromFile(
+           // }
+            /*else{ GameBitmap greyBrickTexture = new GameBitmap(RendererCache.GetBitmapFromFile(
                 "\\Resources\\Images\\element_grey_square.png"), new Vector2D(0, 0),
                 new Vector2D(200, 0), new Vector2D(0, 200));
 
@@ -190,13 +190,13 @@ namespace ArkanoidGame
                 }
 
                 y += grb.ObjectHeight + 50;
-            }
+            }*/
 
 
 
 
 
-            }
+            //}
             /*BigBrick grb = new BigBrick(new Vector2D(20, 100), Game.VirtualGameWidth,
                 Game.VirtualGameHeight, "element_red_rectangle.png");
             Game.GameObjects.Add(grb);
