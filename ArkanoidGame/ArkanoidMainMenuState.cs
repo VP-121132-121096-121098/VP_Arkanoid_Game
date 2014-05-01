@@ -58,13 +58,6 @@ namespace ArkanoidGame
                     //Ако се притисне глушецот на quit game тогаш излези нормално
                     Game.GameState = new ArkanoidGamePlayState(Game);
 
-
-
-                    foreach (KeyValuePair<string, GameBitmap> bitmap in readyStrings)
-                    {
-                        RendererCache.RemoveBitmapFromMainMemory(bitmap.Value.UniqueKey);
-                    }
-
                     return 100;
                 }
             }

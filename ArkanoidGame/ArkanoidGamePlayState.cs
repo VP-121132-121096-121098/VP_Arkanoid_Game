@@ -98,6 +98,10 @@ namespace ArkanoidGame
             quadtree = null;
             ButtonDWaitNFrames = 0;
             this.Game = game;
+            this.Game.GameObjects.Clear(); //бриши ги сите објекти (ако има такви)
+            RendererCache.RemoveAllBitmapsFromMainMemory(); //исчисти го баферот од претходната состојба
+
+
             BitmapsToRender = new List<IList<GameBitmap>>();
             bitmapsToRenderCopy = new List<IList<GameBitmap>>();
             background = new List<GameBitmap>();
