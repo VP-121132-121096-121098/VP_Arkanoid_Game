@@ -163,11 +163,32 @@ namespace ArkanoidGame
             GameBitmap BrickTextureGreenRectangle = new GameBitmap(RendererCache.GetBitmapFromFile(
                       "\\Resources\\Images\\element_green_rectangle.png"), new Vector2D(0, 0),
                           new Vector2D(200, 0), new Vector2D(0, 100));
-            
-               
+            GameBitmap BrickTextureRedRectangle1 = new GameBitmap(RendererCache.GetBitmapFromFile(
+                       "\\Resources\\Images\\element_red_square.png"), new Vector2D(0, 0),
+                          new Vector2D(200, 0), new Vector2D(0, 100));
+            GameBitmap BrickTextureBlueRectangle1 = new GameBitmap(RendererCache.GetBitmapFromFile(
+                       "\\Resources\\Images\\element_blue_square.png"), new Vector2D(0, 0),
+                          new Vector2D(200, 0), new Vector2D(0, 100));
+            GameBitmap BrickTexturePurpleRectangle1 = new GameBitmap(RendererCache.GetBitmapFromFile(
+                       "\\Resources\\Images\\element_purple_square.png"), new Vector2D(0, 0),
+                          new Vector2D(200, 0), new Vector2D(0, 100));
+            GameBitmap BrickTextureYellowRectangle1 = new GameBitmap(RendererCache.GetBitmapFromFile(
+                       "\\Resources\\Images\\element_yellow_square.png"), new Vector2D(0, 0),
+                          new Vector2D(200, 0), new Vector2D(0, 100));
+            GameBitmap BrickTextureGreyRectangle1 = new GameBitmap(RendererCache.GetBitmapFromFile(
+                       "\\Resources\\Images\\element_grey_square.png"), new Vector2D(0, 0),
+                          new Vector2D(200, 0), new Vector2D(0, 100));
+            GameBitmap BrickTextureGreenRectangle1 = new GameBitmap(RendererCache.GetBitmapFromFile(
+                      "\\Resources\\Images\\element_green_square.png"), new Vector2D(0, 0),
+                          new Vector2D(200, 0), new Vector2D(0, 100));
+
+
             for (int i = 0; i < 6; i++)
+            {
+                //int d = r.Next(3);
+                int opcija = r.Next(6);
+                if ((i%2)==0)
                 {
-                    int opcija = r.Next(6);
                     if (opcija == 0)
                     {
                         BrickTexture = new GameBitmap(BrickTextureRedRectangle.UniqueKey, new Vector2D(0, 0),
@@ -199,29 +220,145 @@ namespace ArkanoidGame
                             new Vector2D(200, 0), new Vector2D(0, 100));
                     }
 
-                
+
                     BigBrick grb = new BigBrick(new Vector2D(20, 100), Game.VirtualGameWidth,
                     Game.VirtualGameHeight, BrickTexture);
-                   
+
                     double offset = 250;
                     while (offset + grb.ObjectWidth < Game.VirtualGameWidth - 50)
                     {
 
                         GameBitmap temp = new GameBitmap(BrickTexture.UniqueKey, offset, y, 200,
                         80);
-                        
+
                         Game.GameObjects.Add(new BigBrick(new Vector2D(offset, y), Game.VirtualGameWidth,
                     Game.VirtualGameHeight, temp));
-                      
+
                         offset += grb.ObjectWidth + 250;
                     }
 
                     y += grb.ObjectHeight + 100;
                 }
+            
+            else{
+                 if (opcija == 0)
+                    {
+                        BrickTexture = new GameBitmap(BrickTextureRedRectangle1.UniqueKey, new Vector2D(0, 0),
+                            new Vector2D(200, 0), new Vector2D(0, 100));
+                    }
+                    else if (opcija == 1)
+                    {
+                        BrickTexture = new GameBitmap(BrickTextureBlueRectangle1.UniqueKey, new Vector2D(0, 0),
+                            new Vector2D(200, 0), new Vector2D(0, 100));
+                    }
+                    else if (opcija == 2)
+                    {
+                        BrickTexture = new GameBitmap(BrickTexturePurpleRectangle1.UniqueKey, new Vector2D(0, 0),
+                            new Vector2D(200, 0), new Vector2D(0, 100));
+                    }
+                    else if (opcija == 3)
+                    {
+                        BrickTexture = new GameBitmap(BrickTextureYellowRectangle1.UniqueKey, new Vector2D(0, 0),
+                            new Vector2D(200, 0), new Vector2D(0, 100));
+                    }
+                    else if (opcija == 4)
+                    {
+                        BrickTexture = new GameBitmap(BrickTextureGreyRectangle1.UniqueKey, new Vector2D(0, 0),
+                            new Vector2D(200, 0), new Vector2D(0, 100));
+                    }
+                    else
+                    {
+                        BrickTexture = new GameBitmap(BrickTextureGreenRectangle1.UniqueKey, new Vector2D(0, 0),
+                            new Vector2D(200, 0), new Vector2D(0, 100));
+                    }
+
+
+                    SmallBrick grb = new SmallBrick(new Vector2D(20, 100), Game.VirtualGameWidth,
+                    Game.VirtualGameHeight, BrickTexture);
+
+                    double offset = 250;
+                    while (offset + grb.ObjectWidth < Game.VirtualGameWidth - 50)
+                    {
+
+                        GameBitmap temp = new GameBitmap(BrickTexture.UniqueKey, offset, y, 150,
+                        130);
+
+                        Game.GameObjects.Add(new BigBrick(new Vector2D(offset, y), Game.VirtualGameWidth,
+                    Game.VirtualGameHeight, temp));
+
+                        offset += grb.ObjectWidth + 305;
+                    }
+
+                    y += grb.ObjectHeight + 140;
+                }
+
+
+
+
+
+            }
             }
            
             
+        
+        /*private void CreateBricks()
+        {
+            Random r = new Random();
+            int opcija = r.Next(2);
+            double y = 100;
+            if (opcija == 1)
+            {
+                GameBitmap redBrickTexture = new GameBitmap(RendererCache.GetBitmapFromFile(
+                    "\\Resources\\Images\\element_red_rectangle.png"), new Vector2D(0, 0),
+                    new Vector2D(200, 0), new Vector2D(0, 100));
 
+                for (int i = 0; i < 5; i++)
+                {
+
+                    BigBrick grb = new BigBrick(new Vector2D(20, 100), Game.VirtualGameWidth,
+                    Game.VirtualGameHeight, redBrickTexture);
+                    double offset = 250;
+                    while (offset + grb.ObjectWidth < Game.VirtualGameWidth - 50)
+                    {
+
+                        GameBitmap temp = new GameBitmap(redBrickTexture.UniqueKey, offset, y, 200,
+                        80);
+
+                        Game.GameObjects.Add(new BigBrick(new Vector2D(offset, y), Game.VirtualGameWidth,
+                    Game.VirtualGameHeight, temp));
+                        offset += grb.ObjectWidth + 320;
+                    }
+
+                    y += grb.ObjectHeight + 100;
+                }
+            }
+            else
+            {
+                GameBitmap greyBrickTexture = new GameBitmap(RendererCache.GetBitmapFromFile(
+                    "\\Resources\\Images\\element_grey_square.png"), new Vector2D(0, 0),
+                    new Vector2D(200, 0), new Vector2D(0, 200));
+
+                for (int i = 0; i < 5; i++)
+                {
+
+                    SmallBrick grb = new SmallBrick(new Vector2D(20, 100), Game.VirtualGameWidth,
+                    Game.VirtualGameHeight, greyBrickTexture);
+                    double offset = 250;
+                    while (offset + grb.ObjectWidth < Game.VirtualGameWidth - 50)
+                    {
+
+                        GameBitmap temp = new GameBitmap(greyBrickTexture.UniqueKey, offset, y, 150,
+                        130);
+
+                        Game.GameObjects.Add(new BigBrick(new Vector2D(offset, y), Game.VirtualGameWidth,
+                    Game.VirtualGameHeight, temp));
+                        offset += grb.ObjectWidth + 320;
+                    }
+
+                    y += grb.ObjectHeight + 250;
+                }
+            }
+        }*/
 
 
 
