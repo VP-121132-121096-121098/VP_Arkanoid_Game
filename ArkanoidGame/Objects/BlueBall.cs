@@ -202,46 +202,17 @@ namespace ArkanoidGame.Objects
                 if (collisionDetectorSkipFrames > 0)
                     return;
 
-
-                //најди средна точка на судир
-                double avgX = 0;
-                double avgY = 0;
-
-                foreach (Vector2D vec in args.Value)
-                {
-                    avgX += vec.X;
-                    avgY += vec.Y;
-                }
-
-                avgX /= args.Value.Count;
-                avgY /= args.Value.Count;
-
-                Vector2D averageVector = new Vector2D(avgX, avgY);
-
-                if (this.Velocity.Magnitude() > 0 && args.Key.ObjectType == GameObjectType.Brick || GameObjectType.PlayerPaddle
-                    == args.Key.ObjectType)
+                if (this.Velocity.Magnitude() > 0 && (args.Key.ObjectType == GameObjectType.Brick || GameObjectType.PlayerPaddle
+                    == args.Key.ObjectType))
                 {
                     collidingObject = args.Key;
 
-                    //најди го аголот на судир
-                    //има три можни начини на судир: од левата страна, од горе или од десно
-                    //темињата се специјален случај                    
+                    //темињата се специјален случај    
 
-                    //дали судирот е со хоризонталните или со вертикалните страни од правоаголникот
-                    //ако се еднакви ќе сметаме дека судирот е со некое теме
-                    int numXEquals = 0, numYEquals = 0;
-                    foreach(Vector2D point in args.Value) {
-                        if(point.Y == args.Key.PositionDL.Y || point.Y == args.Key.PositionUL.Y) {
-                            numYEquals++;
-                        } else {
-                            numXEquals++;
-                        }
-                    }
-
-                    Vector2D argPositionDR = args.Key.PositionDL + (args.Key.PositionUR - args.Key.PositionUL);
+                    /*Vector2D argPositionDR = args.Key.PositionDL + (args.Key.PositionUR - args.Key.PositionUL);
 
                     //одбиј се во спротивна насока од дијагоналата
-                    if (averageVector == args.Key.PositionUL && collisionWithSingleObject)
+                    if (args.Value.Count == 1 && args.Value[0] == args.Key.PositionUL && collisionWithSingleObject)
                     {
                         Vector2D newVelocity = argPositionDR - args.Key.PositionUL;
 
@@ -251,7 +222,7 @@ namespace ArkanoidGame.Objects
                         break;
                     }
 
-                    if (averageVector == args.Key.PositionDL && collisionWithSingleObject)
+                    if (args.Value.Count == 1 && args.Value[0] == args.Key.PositionDL && collisionWithSingleObject)
                     {
                         Vector2D newVelocity = args.Key.PositionUR - args.Key.PositionDL;
                         newVelocity /= newVelocity.Magnitude();
@@ -259,7 +230,7 @@ namespace ArkanoidGame.Objects
                         break;
                     }
 
-                    if (averageVector == args.Key.PositionUR && collisionWithSingleObject)
+                    if (args.Value.Count == 1 && args.Value[0] == args.Key.PositionUR && collisionWithSingleObject)
                     {
                         Vector2D newVelocity = args.Key.PositionUR - args.Key.PositionDL;
                         newVelocity /= newVelocity.Magnitude();
@@ -267,98 +238,78 @@ namespace ArkanoidGame.Objects
                         break;
                     }
 
-                    if (averageVector == argPositionDR && collisionWithSingleObject)
+                    if (args.Value.Count == 1 && args.Value[0] == argPositionDR && collisionWithSingleObject)
                     {
                         Vector2D newVelocity = argPositionDR - args.Key.PositionUL;
                         newVelocity /= newVelocity.Magnitude();
                         this.Velocity = newVelocity * this.Velocity.Magnitude();
                         break;
+                    }*/
+
+                    /* http://www.3dkingdoms.com/weekly/weekly.php?a=2 */
+
+                    //најди вектор што ги поврзува првата и последната точка од судирот
+                    Vector2D temp = new Vector2D(0, 0);
+                    Vector2D lastPoint = null;
+
+                    foreach (KeyValuePair<IGameObject, IList<Vector2D>> pair in collisionArguments)
+                    {
+                        foreach (Vector2D vec in pair.Value)
+                        {
+                            if(lastPoint != null)
+                            {
+                                temp += (vec - lastPoint);
+                            }
+
+                            lastPoint = vec;
+                        }
                     }
 
-                    //ако топчето удрило во теме векторот на брзината е спротивниот
-                    if (numXEquals == numYEquals && numXEquals != 0)
+                    Console.WriteLine(temp);
+
+                    //најди го нормалниот вектор на temp
+                    //нормалите се (-dy, dx) и (dy, -dx)
+                    Vector2D normal = new Vector2D(-temp.Y, temp.X);
+
+                    //единечен вектор на normal
+                    if (normal.Magnitude() != 0)
+                        normal /= normal.Magnitude();
+                    else
+                        normal = new Vector2D(0, 0);
+
+                    //новата брзина е
+                    if(normal.Magnitude() > 0)
+                    this.Velocity = -2 * (Velocity * normal) * normal + Velocity;
+                    else
                     {
-                        this.Velocity = -this.Velocity;
-                        break;
+                        //топчето удрило во една точка
+                        this.Velocity.Rotate(Math.PI / 2);
                     }
 
-                    if (this.Velocity.Magnitude() > 0 && numYEquals > numXEquals) 
+                    //овозможи играчот да ја менува насоката на топчето со тоа што ќе го удри
+                    //во моментот кога paddle се движи
+                    if (args.Key.ObjectType == GameObjectType.PlayerPaddle)
                     {
-                        if (Math.Abs(collidingObject.Velocity.X) > 0)
-                        {
-                            double velocityMagnitude = this.Velocity.Magnitude();
-                            double x = this.Velocity.X;
-                            double y = this.Velocity.Y;
+                        double velocityMagnitude = this.Velocity.Magnitude();
+                        double x = this.Velocity.X;
+                        double y = this.Velocity.Y;
 
-                            if (velocityMagnitude == 0)
-                                velocityMagnitude = 1;
-                            double factorSpeedX = Math.Max(0.5, Math.Abs(collidingObject.Velocity.X) / velocityMagnitude);
-                            factorSpeedX *= Math.Sign(collidingObject.Velocity.X); //знакот заради насоката на брзината
-                            x += velocityMagnitude * factorSpeedX;
+                        //Единечен вектор на брзината
+                        this.Velocity /= this.Velocity.Magnitude();
 
-                            //Максимална брзина по x оската да не биде поголема од 90% од вкупната брзина
-                            if (Math.Abs(x) > velocityMagnitude * 0.9)
-                                x = Math.Sign(x) * velocityMagnitude * 0.9;
+                        double factorSpeedX = Math.Max(0.35, Math.Abs(collidingObject.Velocity.X) / velocityMagnitude);
+                        factorSpeedX *= Math.Sign(collidingObject.Velocity.X); //знакот заради насоката на брзината
+                        x += velocityMagnitude * factorSpeedX;
 
-                            //одбиј се по y нагоре
-                            y = -Math.Sqrt(velocityMagnitude * velocityMagnitude - x * x);
+                        //Максимална брзина по x оската да не биде поголема од 90% од вкупната брзина
+                        if (Math.Abs(x) > velocityMagnitude * 0.9)
+                            x = Math.Sign(x) * velocityMagnitude * 0.9;
 
-                            this.Velocity.X = x;
-                            this.Velocity.Y = y;
-                        }
-                        else
-                        {
-                            this.Velocity.Y = -this.Velocity.Y;
-                        }
+                        y = Math.Sign(Velocity.Y) * Math.Sqrt(velocityMagnitude * velocityMagnitude - x * x);
+                        Velocity.X = x;
+                        Velocity.Y = y;
 
                         this.collisionDetectorSkipFrames = 2;
-                        break;
-                    } else if(this.Velocity.Magnitude() > 0 && numYEquals < numXEquals) {
-                        
-                        //истата логика само по y
-                        if (Math.Abs(collidingObject.Velocity.Y) > 0)
-                        {
-                            double velocityMagnitude = this.Velocity.Magnitude();
-                            double x = this.Velocity.X;
-                            double y = this.Velocity.Y;
-
-                            if (velocityMagnitude == 0)
-                                velocityMagnitude = 1;
-                            double factorSpeedY = Math.Max(0.5, Math.Abs(collidingObject.Velocity.Y) / velocityMagnitude);
-                            factorSpeedY *= Math.Sign(collidingObject.Velocity.Y); //знакот заради насоката на брзината
-                            y += velocityMagnitude * factorSpeedY;
-
-                            //Максимална брзина по y оската да не биде поголема од 90% од вкупната брзина
-                            if (Math.Abs(y) > velocityMagnitude * 0.9)
-                                y = Math.Sign(y) * velocityMagnitude * 0.9;
-
-                            //одбиј се по y нагоре
-                            x = -Math.Sqrt(velocityMagnitude * velocityMagnitude - y * y);
-
-                            this.Velocity.X = x;
-                            this.Velocity.Y = y;
-                        }
-                        else
-                        {
-                            this.Velocity.X = -this.Velocity.X;
-                        }
-                        this.collisionDetectorSkipFrames = 2;
-                        break;
-                    }
-                    else if(this.Velocity.Magnitude() > 0)
-                    {
-                        //најверојатно се заглавил објектот
-                        if (this.Velocity.Y > this.Velocity.X)
-                            this.Velocity.Y = -this.Velocity.Y;
-                        else
-                            this.Velocity.X = -this.Velocity.X;
-
-                        /* да се одбие по поголемата брзина за побрзо да излезе
-                         * од објектот и да се прескокне детекција во наредните 2 фрејма за секој случај
-                         */
-
-                        this.collisionDetectorSkipFrames = 2; //оваа + 1
-                        break;
                     }
                 }
             }

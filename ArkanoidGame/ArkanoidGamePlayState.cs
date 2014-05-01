@@ -138,16 +138,16 @@ namespace ArkanoidGame
         {
             double y = 100;
 
-            for (int i = 0; i < 7; i++)
+            for (int i = 0; i < 6; i++)
             {
                 BigBrick grb = new BigBrick(new Vector2D(20, 100), Game.VirtualGameWidth,
                 Game.VirtualGameHeight, "element_red_rectangle.png");
-                double offset = 20;
+                double offset = 100;
                 while (offset + grb.ObjectWidth < Game.VirtualGameWidth - 20)
                 {
                     Game.GameObjects.Add(new BigBrick(new Vector2D(offset, y), Game.VirtualGameWidth,
                 Game.VirtualGameHeight, "element_red_rectangle.png"));
-                    offset += grb.ObjectWidth + 80;
+                    offset += grb.ObjectWidth + 120;
                 }
 
                 y += grb.ObjectHeight + 80;

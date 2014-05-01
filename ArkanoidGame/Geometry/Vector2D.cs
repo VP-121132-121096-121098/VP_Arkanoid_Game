@@ -99,6 +99,9 @@ namespace ArkanoidGame.Geometry
 
         public static bool operator ==(Vector2D vec1, Vector2D vec2)
         {
+            if (ReferenceEquals(vec1, vec2))
+                return true;
+
             return vec1.Equals(vec2);
         }
 

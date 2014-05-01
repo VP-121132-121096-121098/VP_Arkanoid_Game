@@ -80,10 +80,8 @@ namespace ArkanoidGame.Objects
 
         public Interfaces.IGeometricShape GetGeometricShape()
         {
-            return new GameRectangle(this.Position, this.Position + new Vector2D(this.ObjectWidth, 0),
-               this.Position + new Vector2D(0, this.ObjectHeight));
+            return new GameRectangle(this.PositionUL, this.PositionUR, this.PositionDL);
         }
-
 
 
         public GameObjectType ObjectType { get { return GameObjectType.Brick; } }
