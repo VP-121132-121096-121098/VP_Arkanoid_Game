@@ -135,7 +135,7 @@ namespace ArkanoidGame.Objects
             {
                 this.Velocity.Y = -this.Velocity.Y;
 
-                if (this.Position.Y > playerPaddle.PositionDL.Y)
+                if (playerPaddle != null && this.Position.Y > playerPaddle.PositionDL.Y)
                 {
                     this.Health = 0;
                 }
