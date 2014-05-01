@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace ArkanoidGame
 {
-    
+
 
     public class GameArkanoid : IGame
     {
@@ -75,6 +75,13 @@ namespace ArkanoidGame
 
         private GameBitmap textMultithreading;
 
+        public void ReloadResources()
+        {
+            Bitmap textMT = StaticStringFactory.CreateOrangeString("Multithreading");
+            textMultithreading = new GameBitmap(textMT, VirtualGameWidth - 400 - 10, 5, 400,
+                60);
+        }
+
         /// <summary>
         /// Креира нова игра и ја поставува во почетна состојба ArkanoidStateMainMenu.
         /// </summary>
@@ -94,9 +101,7 @@ namespace ArkanoidGame
             Name = "Arkanoid";
             GameObjects = new List<IGameObject>();
 
-            Bitmap textMT = StaticStringFactory.CreateOrangeString("Multithreading");
-            textMultithreading = new GameBitmap(textMT, VirtualGameWidth - 400 - 10, 5, 400,
-                60);            
+            ReloadResources();
 
             IsRendererEnabled = true;
         }
