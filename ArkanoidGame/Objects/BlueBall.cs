@@ -302,6 +302,10 @@ namespace ArkanoidGame.Objects
                         double cosine2A = cosineA * cosineA - sineA * sineA;
                         double sine2A = 2 * sineA * cosineA;
 
+                        if (-this.Velocity.X > 0 && -this.Velocity.Y > 0 ||
+                            -this.Velocity.X < 0 && -this.Velocity.Y > 0)
+                            cosine2A *= -1;
+
                         Velocity.Rotate(sine2A, cosine2A);
 
                         this.collisionDetectorSkipFrames = 2;
