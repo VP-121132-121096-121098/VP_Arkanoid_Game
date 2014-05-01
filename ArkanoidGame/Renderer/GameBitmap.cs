@@ -180,5 +180,26 @@ namespace ArkanoidGame.Renderer
             this.SetDimensions();
             this.UniqueKey = uniqueKey;
         }
+
+        public GameBitmap(long UniqueKey, double x,
+            double y, double widthInGameUnits, double heightInGameUnits)
+        {
+            this.WidthInGameUnits = widthInGameUnits;
+            this.HeightInGameUnits = heightInGameUnits;
+            this.PositionUL = new Vector2D(x, y);
+            this.PositionUR = this.PositionUL + new Vector2D(widthInGameUnits, 0);
+            this.PositionDL = this.PositionUL + new Vector2D(0, heightInGameUnits);
+            this.UniqueKey = UniqueKey;
+        }
+
+        public GameBitmap(long uniqueKey, Vector2D positionUL, Vector2D positionUR, Vector2D positionDL)
+        {
+            this.UniqueKey = uniqueKey;
+            this.PositionUL = positionUL;
+            this.PositionUR = positionUR;
+            this.PositionDL = positionDL;
+            this.SetDimensions();
+            this.UniqueKey = uniqueKey;
+        }
     }
 }
