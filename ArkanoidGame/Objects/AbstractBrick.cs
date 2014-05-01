@@ -3,6 +3,7 @@ using ArkanoidGame.Interfaces;
 using ArkanoidGame.Renderer;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -46,6 +47,7 @@ namespace ArkanoidGame.Objects
             this.PositionUR = positionUR;
             this.PositionDL = positionDL;
             this.bmp = bmp;
+            this.ObjectTextures = null;
         }
 
         public Vector2D PositionUL { get; set; }
@@ -131,6 +133,15 @@ namespace ArkanoidGame.Objects
         public Vector2D PositionChange
         {
             get { throw new NotImplementedException(); }
+        }
+
+
+        public void DrawLowSpec(Graphics g,int width, int height)
+        {   
+            
+            SolidBrush br = new SolidBrush(Color.Red);
+            //g.FillRectangle(br,new Rectangle(,width,height)
+
         }
     }
 }
