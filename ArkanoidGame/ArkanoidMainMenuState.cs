@@ -35,6 +35,7 @@ namespace ArkanoidGame
         public IList<IList<GameBitmap>> BitmapsToRender { get; private set; } //слики од позадината и сите опции заедно
         private IList<IList<GameBitmap>> bitmapsToRenderCopy; /* на Draw се праќа копија од листа
                                                                * за да се избегнат проблемите со нејзино модифицирање
+                                                               * бидејќи Draw е на посебен Thread.
                                                                */
 
         public void OnDraw(Graphics graphics, int frameWidth, int frameHeight)
