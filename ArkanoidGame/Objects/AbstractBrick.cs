@@ -2,6 +2,7 @@
 using ArkanoidGame.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -121,6 +122,11 @@ namespace ArkanoidGame.Objects
         public Vector2D PositionChange
         {
             get { throw new NotImplementedException(); }
+        }
+
+
+        public void DrawLowSpec(Graphics g, int width, int height)
+        {
         }
     }
 }
