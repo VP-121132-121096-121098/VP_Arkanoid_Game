@@ -1,5 +1,6 @@
 ﻿using ArkanoidGame.Geometry;
 using ArkanoidGame.Interfaces;
+using ArkanoidGame.Renderer;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -12,7 +13,8 @@ namespace ArkanoidGame.Objects
     public abstract class AbstractBrick : IGameObject
 
     {
-        public string picture { get; set; }
+       public string picture { get; set; }
+        public GameBitmap bmp { get; set; }
         public void OnUpdate(long gameElapsedTime)
         {
             Position += (Velocity) / 2;
@@ -37,6 +39,15 @@ namespace ArkanoidGame.Objects
             this.PositionUR = positionUR;
             this.PositionDL = positionDL;
             this.picture = p;
+        }
+
+        public AbstractBrick(Vector2D positionUL, Vector2D positionUR, Vector2D positionDL, GameBitmap bmp)
+        {
+            this.PositionUL = positionUL;
+            this.PositionUR = positionUR;
+            this.PositionDL = positionDL;
+            this.bmp = bmp;
+            this.ObjectTextures = null;
         }
 
         public Vector2D PositionUL { get; set; }
@@ -125,8 +136,12 @@ namespace ArkanoidGame.Objects
         }
 
 
-        public void DrawLowSpec(Graphics g, int width, int height)
-        {
+        public void DrawLowSpec(Graphics g,int width, int height)
+        {   
+            
+            SolidBrush br = new SolidBrush(Color.Red);
+            //g.FillRectangle(br,new Rectangle(,width,height)
+
         }
     }
 }
