@@ -28,7 +28,7 @@ namespace ArkanoidGame.Objects
             this.GameHeight = virtualGameHeight;
             this.Position = new Vector2D(positionVector);
 
-            ObjectWidth = 200;
+            ObjectWidth = 220;
             ObjectHeight = 100;
             Velocity = new Vector2D(0, 0);
 
