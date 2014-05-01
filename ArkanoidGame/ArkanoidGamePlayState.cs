@@ -146,23 +146,23 @@ namespace ArkanoidGame
             GameBitmap BrickTexture=null;
 
             GameBitmap BrickTextureRedRectangle = new GameBitmap(RendererCache.GetBitmapFromFile(
-                            "\\Resources\\Images\\element_red_rectangle.png"), new Vector2D(0, 0),
-                            new Vector2D(200, 0), new Vector2D(0, 100));
+                       "\\Resources\\Images\\element_red_rectangle.png"), new Vector2D(0, 0),
+                          new Vector2D(200, 0), new Vector2D(0, 100));
             GameBitmap BrickTextureBlueRectangle = new GameBitmap(RendererCache.GetBitmapFromFile(
-                          "\\Resources\\Images\\element_blue_rectangle.png"), new Vector2D(0, 0),
+                       "\\Resources\\Images\\element_blue_rectangle.png"), new Vector2D(0, 0),
                           new Vector2D(200, 0), new Vector2D(0, 100));
             GameBitmap BrickTexturePurpleRectangle = new GameBitmap(RendererCache.GetBitmapFromFile(
-                          "\\Resources\\Images\\element_purple_rectangle.png"), new Vector2D(0, 0),
+                       "\\Resources\\Images\\element_purple_rectangle.png"), new Vector2D(0, 0),
                           new Vector2D(200, 0), new Vector2D(0, 100));
             GameBitmap BrickTextureYellowRectangle = new GameBitmap(RendererCache.GetBitmapFromFile(
-                          "\\Resources\\Images\\element_yellow_rectangle.png"), new Vector2D(0, 0),
+                       "\\Resources\\Images\\element_yellow_rectangle.png"), new Vector2D(0, 0),
                           new Vector2D(200, 0), new Vector2D(0, 100));
             GameBitmap BrickTextureGreyRectangle = new GameBitmap(RendererCache.GetBitmapFromFile(
-                          "\\Resources\\Images\\element_grey_rectangle.png"), new Vector2D(0, 0),
+                       "\\Resources\\Images\\element_grey_rectangle.png"), new Vector2D(0, 0),
                           new Vector2D(200, 0), new Vector2D(0, 100));
             GameBitmap BrickTextureGreenRectangle = new GameBitmap(RendererCache.GetBitmapFromFile(
                       "\\Resources\\Images\\element_green_rectangle.png"), new Vector2D(0, 0),
-                      new Vector2D(200, 0), new Vector2D(0, 100));
+                          new Vector2D(200, 0), new Vector2D(0, 100));
             
                
             for (int i = 0; i < 6; i++)
@@ -199,17 +199,20 @@ namespace ArkanoidGame
                             new Vector2D(200, 0), new Vector2D(0, 100));
                     }
 
+                
                     BigBrick grb = new BigBrick(new Vector2D(20, 100), Game.VirtualGameWidth,
                     Game.VirtualGameHeight, BrickTexture);
+                   
                     double offset = 250;
                     while (offset + grb.ObjectWidth < Game.VirtualGameWidth - 50)
                     {
 
                         GameBitmap temp = new GameBitmap(BrickTexture.UniqueKey, offset, y, 200,
                         80);
-
+                        
                         Game.GameObjects.Add(new BigBrick(new Vector2D(offset, y), Game.VirtualGameWidth,
                     Game.VirtualGameHeight, temp));
+                      
                         offset += grb.ObjectWidth + 250;
                     }
 
