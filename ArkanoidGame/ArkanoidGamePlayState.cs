@@ -140,7 +140,7 @@ namespace ArkanoidGame
 
         private void CreateBricks()
         {
-            Random r = new Random();
+            Random r = new Random((int)DateTime.Now.Ticks);
             
             double y = 100;
             GameBitmap BrickTexture=null;
