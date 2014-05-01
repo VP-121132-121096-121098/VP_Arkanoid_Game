@@ -32,8 +32,8 @@ namespace ArkanoidGame
         private void RotateBricks()
         {
             QuadTree<IGameObject> quadTree = this.quadtree;
-            List<IGameObject> area = quadtree.Query(new RectangleF(1000, 600, 1000, 600));
-            Vector2D center = new Vector2D(1500, 900);
+            List<IGameObject> area = quadtree.Query(new RectangleF(Game.VirtualGameWidth / 2 - 300, 600, 600, 600));
+            Vector2D center = new Vector2D(Game.VirtualGameWidth / 2, 900);
 
             if (!Game.IsMultithreadingEnabled)
             {
@@ -91,8 +91,11 @@ namespace ArkanoidGame
             obj.PositionDL.Y = rotator.PositionDL.Y;
         }
 
+        private bool experimentalMultiBall;
+
         public ArkanoidGamePlayState(IGame game)
         {
+            experimentalMultiBall = false;
             lockCollisionDetection = new object();
             debugMode = false;
             quadtree = null;
@@ -141,9 +144,9 @@ namespace ArkanoidGame
         private void CreateBricks()
         {
             Random r = new Random((int)DateTime.Now.Ticks);
-            
+
             double y = 100;
-            GameBitmap BrickTexture=null;
+            GameBitmap BrickTexture = null;
 
             GameBitmap BrickTextureRedRectangle = new GameBitmap(RendererCache.GetBitmapFromFile(
                        "\\Resources\\Images\\element_red_rectangle.png"), new Vector2D(0, 0),
@@ -187,7 +190,7 @@ namespace ArkanoidGame
             {
                 //int d = r.Next(3);
                 int opcija = r.Next(6);
-                if ((i%2)==0)
+                if ((i % 2) == 0)
                 {
                     if (opcija == 0)
                     {
@@ -239,9 +242,10 @@ namespace ArkanoidGame
 
                     y += grb.ObjectHeight + 100;
                 }
-            
-            else{
-                 if (opcija == 0)
+
+                else
+                {
+                    if (opcija == 0)
                     {
                         BrickTexture = new GameBitmap(BrickTextureRedRectangle1.UniqueKey, new Vector2D(0, 0),
                             new Vector2D(200, 0), new Vector2D(0, 100));
@@ -297,10 +301,10 @@ namespace ArkanoidGame
 
 
             }
-            }
-           
-            
-        
+        }
+
+
+
         /*private void CreateBricks()
         {
             Random r = new Random();
@@ -362,77 +366,77 @@ namespace ArkanoidGame
 
 
 
-                //}
-                /*BigBrick grb = new BigBrick(new Vector2D(20, 100), Game.VirtualGameWidth,
-                    Game.VirtualGameHeight, "element_red_rectangle.png");
-                Game.GameObjects.Add(grb);
-                SmallBrick srb = new SmallBrick(new Vector2D(220, 100), Game.VirtualGameWidth,
-                    Game.VirtualGameHeight, "element_red_square.png");
-                Game.GameObjects.Add(srb);
-                SmallBrick smbb = new SmallBrick(new Vector2D(Game.VirtualGameWidth - 1110, 100), Game.VirtualGameWidth,
-                  Game.VirtualGameHeight, "element_purple_square.png");
-                Game.GameObjects.Add(smbb);
-                SmallBrick smgb = new SmallBrick(new Vector2D(Game.VirtualGameWidth - 1220, 100), Game.VirtualGameWidth,
-                 Game.VirtualGameHeight, "element_green_square.png");
-                Game.GameObjects.Add(smgb);
-                BigBrick gyb = new BigBrick(new Vector2D(325, 100), Game.VirtualGameWidth,
-                    Game.VirtualGameHeight, "element_yellow_rectangle.png");
-                Game.GameObjects.Add(gyb);
-                //proba da dodadam mala zolta cigla
-                SmallBrick syb = new SmallBrick(new Vector2D(530, 100), Game.VirtualGameWidth,
-                     Game.VirtualGameHeight, "element_yellow_square.png");
-                Game.GameObjects.Add(syb);
-                //proba da dodadam golema violetova cigla
-                BigBrick gpb = new BigBrick(new Vector2D(640, 100), Game.VirtualGameWidth,
-                    Game.VirtualGameHeight, "element_purple_rectangle.png");
-                Game.GameObjects.Add(gpb);
-                //proba da dodadam mala zolta cigla
-                SmallBrick spb = new SmallBrick(new Vector2D(850, 100), Game.VirtualGameWidth,
-                     Game.VirtualGameHeight, "element_purple_square.png");
-                Game.GameObjects.Add(spb);
-                //golema zelena cigla
-                BigBrick bgb = new BigBrick(new Vector2D(960, 100), Game.VirtualGameWidth, Game.VirtualGameHeight, "element_green_rectangle.png");
-                Game.GameObjects.Add(bgb);
-                // mala zelena cigla
-                SmallBrick sgb = new SmallBrick(new Vector2D(1165, 100), Game.VirtualGameWidth, Game.VirtualGameHeight, "element_green_square.png");
-                Game.GameObjects.Add(sgb);
-                // golema siva
-                BigBrick bgr = new BigBrick(new Vector2D(Game.VirtualGameWidth - 360, 100), Game.VirtualGameWidth, Game.VirtualGameHeight, "element_grey_rectangle.png");
-                Game.GameObjects.Add(bgr);
-                //mala siva
-                SmallBrick sgg = new SmallBrick(new Vector2D(Game.VirtualGameWidth - 470, 100), Game.VirtualGameWidth, Game.VirtualGameHeight, "element_grey_square.png");
-                Game.GameObjects.Add(sgg);
-                SmallBrick ypp = new SmallBrick(new Vector2D(Game.VirtualGameWidth - 580, 100), Game.VirtualGameWidth,
-                     Game.VirtualGameHeight, "element_green_square.png");
-                Game.GameObjects.Add(ypp);
-                BigBrick gbb = new BigBrick(new Vector2D(Game.VirtualGameWidth - 790, 100), Game.VirtualGameWidth,
-                    Game.VirtualGameHeight, "element_yellow_rectangle.png");
-                Game.GameObjects.Add(gbb);
-                BigBrick bbb = new BigBrick(new Vector2D(Game.VirtualGameWidth - 1000, 100), Game.VirtualGameWidth,
-                 Game.VirtualGameHeight, "element_purple_rectangle.png");
-                Game.GameObjects.Add(bbb);
+        //}
+        /*BigBrick grb = new BigBrick(new Vector2D(20, 100), Game.VirtualGameWidth,
+            Game.VirtualGameHeight, "element_red_rectangle.png");
+        Game.GameObjects.Add(grb);
+        SmallBrick srb = new SmallBrick(new Vector2D(220, 100), Game.VirtualGameWidth,
+            Game.VirtualGameHeight, "element_red_square.png");
+        Game.GameObjects.Add(srb);
+        SmallBrick smbb = new SmallBrick(new Vector2D(Game.VirtualGameWidth - 1110, 100), Game.VirtualGameWidth,
+          Game.VirtualGameHeight, "element_purple_square.png");
+        Game.GameObjects.Add(smbb);
+        SmallBrick smgb = new SmallBrick(new Vector2D(Game.VirtualGameWidth - 1220, 100), Game.VirtualGameWidth,
+         Game.VirtualGameHeight, "element_green_square.png");
+        Game.GameObjects.Add(smgb);
+        BigBrick gyb = new BigBrick(new Vector2D(325, 100), Game.VirtualGameWidth,
+            Game.VirtualGameHeight, "element_yellow_rectangle.png");
+        Game.GameObjects.Add(gyb);
+        //proba da dodadam mala zolta cigla
+        SmallBrick syb = new SmallBrick(new Vector2D(530, 100), Game.VirtualGameWidth,
+             Game.VirtualGameHeight, "element_yellow_square.png");
+        Game.GameObjects.Add(syb);
+        //proba da dodadam golema violetova cigla
+        BigBrick gpb = new BigBrick(new Vector2D(640, 100), Game.VirtualGameWidth,
+            Game.VirtualGameHeight, "element_purple_rectangle.png");
+        Game.GameObjects.Add(gpb);
+        //proba da dodadam mala zolta cigla
+        SmallBrick spb = new SmallBrick(new Vector2D(850, 100), Game.VirtualGameWidth,
+             Game.VirtualGameHeight, "element_purple_square.png");
+        Game.GameObjects.Add(spb);
+        //golema zelena cigla
+        BigBrick bgb = new BigBrick(new Vector2D(960, 100), Game.VirtualGameWidth, Game.VirtualGameHeight, "element_green_rectangle.png");
+        Game.GameObjects.Add(bgb);
+        // mala zelena cigla
+        SmallBrick sgb = new SmallBrick(new Vector2D(1165, 100), Game.VirtualGameWidth, Game.VirtualGameHeight, "element_green_square.png");
+        Game.GameObjects.Add(sgb);
+        // golema siva
+        BigBrick bgr = new BigBrick(new Vector2D(Game.VirtualGameWidth - 360, 100), Game.VirtualGameWidth, Game.VirtualGameHeight, "element_grey_rectangle.png");
+        Game.GameObjects.Add(bgr);
+        //mala siva
+        SmallBrick sgg = new SmallBrick(new Vector2D(Game.VirtualGameWidth - 470, 100), Game.VirtualGameWidth, Game.VirtualGameHeight, "element_grey_square.png");
+        Game.GameObjects.Add(sgg);
+        SmallBrick ypp = new SmallBrick(new Vector2D(Game.VirtualGameWidth - 580, 100), Game.VirtualGameWidth,
+             Game.VirtualGameHeight, "element_green_square.png");
+        Game.GameObjects.Add(ypp);
+        BigBrick gbb = new BigBrick(new Vector2D(Game.VirtualGameWidth - 790, 100), Game.VirtualGameWidth,
+            Game.VirtualGameHeight, "element_yellow_rectangle.png");
+        Game.GameObjects.Add(gbb);
+        BigBrick bbb = new BigBrick(new Vector2D(Game.VirtualGameWidth - 1000, 100), Game.VirtualGameWidth,
+         Game.VirtualGameHeight, "element_purple_rectangle.png");
+        Game.GameObjects.Add(bbb);
 
-                SmallBrick sybb = new SmallBrick(new Vector2D(Game.VirtualGameWidth - 1330, 100), Game.VirtualGameWidth,
-                 Game.VirtualGameHeight, "element_yellow_square.png");
-                Game.GameObjects.Add(sybb);
-                SmallBrick nivo2cigla1 = new SmallBrick(new Vector2D(1170, 300), Game.VirtualGameWidth, Game.VirtualGameHeight, "element_grey_square.png");
-                Game.GameObjects.Add(nivo2cigla1);
-                BigBrick nivo2cigla2 = new BigBrick(new Vector2D(1280, 300), Game.VirtualGameWidth, Game.VirtualGameHeight, "element_grey_rectangle.png");
-                Game.GameObjects.Add(nivo2cigla2);
-                BigBrick nivo2cigla3 = new BigBrick(new Vector2D(1490, 300), Game.VirtualGameWidth, Game.VirtualGameHeight, "element_blue_rectangle.png");
-                Game.GameObjects.Add(nivo2cigla3);
-                SmallBrick nivo2cigla4 = new SmallBrick(new Vector2D(1700, 300), Game.VirtualGameWidth, Game.VirtualGameHeight, "element_blue_square.png");
-                Game.GameObjects.Add(nivo2cigla4);
-                SmallBrick nivo2cigla5 = new SmallBrick(new Vector2D(Game.VirtualGameWidth - 1860, 300), Game.VirtualGameWidth, Game.VirtualGameHeight, "element_blue_square.png");
-                Game.GameObjects.Add(nivo2cigla5);
-                BigBrick nivo2cigla6 = new BigBrick(new Vector2D(Game.VirtualGameWidth - 1750, 300), Game.VirtualGameWidth, Game.VirtualGameHeight, "element_blue_rectangle.png");
-                Game.GameObjects.Add(nivo2cigla6);
-                BigBrick nivo2cigla7 = new BigBrick(new Vector2D(Game.VirtualGameWidth - 1540, 300), Game.VirtualGameWidth, Game.VirtualGameHeight, "element_grey_rectangle.png");
-                Game.GameObjects.Add(nivo2cigla7);
-                SmallBrick nivo2cigla8 = new SmallBrick(new Vector2D(Game.VirtualGameWidth - 1330, 300), Game.VirtualGameWidth, Game.VirtualGameHeight, "element_grey_square.png");
-                Game.GameObjects.Add(nivo2cigla8);*/
-            
-        
+        SmallBrick sybb = new SmallBrick(new Vector2D(Game.VirtualGameWidth - 1330, 100), Game.VirtualGameWidth,
+         Game.VirtualGameHeight, "element_yellow_square.png");
+        Game.GameObjects.Add(sybb);
+        SmallBrick nivo2cigla1 = new SmallBrick(new Vector2D(1170, 300), Game.VirtualGameWidth, Game.VirtualGameHeight, "element_grey_square.png");
+        Game.GameObjects.Add(nivo2cigla1);
+        BigBrick nivo2cigla2 = new BigBrick(new Vector2D(1280, 300), Game.VirtualGameWidth, Game.VirtualGameHeight, "element_grey_rectangle.png");
+        Game.GameObjects.Add(nivo2cigla2);
+        BigBrick nivo2cigla3 = new BigBrick(new Vector2D(1490, 300), Game.VirtualGameWidth, Game.VirtualGameHeight, "element_blue_rectangle.png");
+        Game.GameObjects.Add(nivo2cigla3);
+        SmallBrick nivo2cigla4 = new SmallBrick(new Vector2D(1700, 300), Game.VirtualGameWidth, Game.VirtualGameHeight, "element_blue_square.png");
+        Game.GameObjects.Add(nivo2cigla4);
+        SmallBrick nivo2cigla5 = new SmallBrick(new Vector2D(Game.VirtualGameWidth - 1860, 300), Game.VirtualGameWidth, Game.VirtualGameHeight, "element_blue_square.png");
+        Game.GameObjects.Add(nivo2cigla5);
+        BigBrick nivo2cigla6 = new BigBrick(new Vector2D(Game.VirtualGameWidth - 1750, 300), Game.VirtualGameWidth, Game.VirtualGameHeight, "element_blue_rectangle.png");
+        Game.GameObjects.Add(nivo2cigla6);
+        BigBrick nivo2cigla7 = new BigBrick(new Vector2D(Game.VirtualGameWidth - 1540, 300), Game.VirtualGameWidth, Game.VirtualGameHeight, "element_grey_rectangle.png");
+        Game.GameObjects.Add(nivo2cigla7);
+        SmallBrick nivo2cigla8 = new SmallBrick(new Vector2D(Game.VirtualGameWidth - 1330, 300), Game.VirtualGameWidth, Game.VirtualGameHeight, "element_grey_square.png");
+        Game.GameObjects.Add(nivo2cigla8);*/
+
+
 
 #if DEBUG
         private void DebugDrawCollisionArguments(IDictionary<IGameObject, IList<Vector2D>> args,
@@ -512,6 +516,29 @@ namespace ArkanoidGame
             if (KeyStateInfo.GetAsyncKeyState(Keys.Escape).IsPressed)
             {
                 Game.GameState = new ArkanoidPauseMenuState(Game, this);
+            }
+
+            if (!experimentalMultiBall)
+            {
+                IEnumerator<IGameObject> it = ballsInPlay.GetEnumerator();
+                it.MoveNext();
+                BlueBall ball = (BlueBall)it.Current;
+                if (ball.Velocity.Magnitude() > 0)
+                {
+                    BlueBall ball2 = new BlueBall(ball.Position + new Vector2D(ball.Radius, ball.Radius), ball.Radius);
+                    ball2.Velocity.X = ball.Velocity.X;
+                    ball2.Velocity.Y = ball.Velocity.Y;
+                    ball2.Velocity.RotateDeg(-30);
+                    BlueBall ball3 = new BlueBall(ball.Position + new Vector2D(-ball.Radius, -ball.Radius), ball.Radius);
+                    ball3.Velocity.X = ball.Velocity.X;
+                    ball3.Velocity.Y = ball.Velocity.Y;
+                    ball3.Velocity.RotateDeg(30);
+                    gameObjects.Add(ball2);
+                    gameObjects.Add(ball3);
+                    ballsInPlay.Add(ball2);
+                    ballsInPlay.Add(ball3);
+                    experimentalMultiBall = true;
+                }
             }
 
             return 100;
