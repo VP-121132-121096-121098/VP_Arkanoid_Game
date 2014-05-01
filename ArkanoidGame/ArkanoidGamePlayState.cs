@@ -740,6 +740,8 @@ namespace ArkanoidGame
 
         private void UpdateObject(IGameObject obj)
         {
+            if (obj == null)
+                return;
             obj.OnUpdate(ElapsedTime);
         }
 
