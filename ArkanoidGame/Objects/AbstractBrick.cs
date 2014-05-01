@@ -12,7 +12,7 @@ namespace ArkanoidGame.Objects
     public abstract class AbstractBrick : IGameObject
 
     {
-       // public string picture { get; set; }
+       public string picture { get; set; }
         public GameBitmap bmp { get; set; }
         public void OnUpdate(long gameElapsedTime)
         {
