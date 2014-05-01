@@ -13,8 +13,8 @@ namespace ArkanoidGame
 {
     public class ArkanoidPauseMenuState : IGameState
     {
-
-        private IDictionary<string, GameBitmap> menuOptions1; //опции во менито
+        
+        private IDictionary<string, GameBitmap> menuOptions1; //различни опции во менито
         private IDictionary<string, GameBitmap> readyStrings1; //стрингови
 
         public IList<IList<GameBitmap>> BitmapsToRender { get; private set; } //слики од позадината и сите опции заедно
