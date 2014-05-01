@@ -78,8 +78,8 @@ namespace ArkanoidGame.Objects
             
             /*GameRectangle proba = new GameRectangle(ObjectTextures[0].PositionUL, ObjectTextures[0].PositionUR,
                 ObjectTextures[0].PositionDL);
-            //proba.RotateAroundPointDeg(new Vector2D((1750.0 * 2 + ObjectWidth) / 2, (2010.0 * 2 + ObjectHeight) / 2), 10);
-            proba.RotateAroundPointDeg(new Vector2D(1750, 1005), 1);
+            proba.RotateAroundPointDeg(proba.GetCentralPoint(), 10);
+            //proba.RotateAroundPointDeg(new Vector2D(1750, 1005), 1);
             ObjectTextures[0].PositionUL = proba.PositionUL;
             ObjectTextures[0].PositionUR = proba.PositionUR;
             ObjectTextures[0].PositionDL = proba.PositionDL;*/
@@ -225,5 +225,20 @@ namespace ArkanoidGame.Objects
         }
 
         public Vector2D PositionChange { get; private set; }
+
+        public Vector2D PositionUL
+        {
+            get { return this.Position; }
+        }
+
+        public Vector2D PositionUR
+        {
+            get { return this.Position + new Vector2D(ObjectWidth, 0); }
+        }
+
+        public Vector2D PositionDL
+        {
+            get { return this.Position + new Vector2D(0, ObjectHeight); }
+        }
     }
 }

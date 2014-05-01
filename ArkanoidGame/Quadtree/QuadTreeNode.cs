@@ -151,7 +151,7 @@ namespace ArkanoidGame.Quadtree
             // if the item is not contained in this quad, there's a problem
             if (!m_bounds.Contains(item.Rectangle))
             {
-                Trace.TraceWarning("feature is out of the bounds of this quadtree node");
+                //Trace.TraceWarning("feature is out of the bounds of this quadtree node");
                 return;
             }
 

@@ -19,6 +19,11 @@ namespace ArkanoidGame.Interfaces
 
     public interface IGameObject
     {
+        Vector2D PositionUL { get; }
+        Vector2D PositionUR { get; }
+        Vector2D PositionDL { get; }
+        
+
         /// <summary>
         /// „Здравје“ на објектот. Кога ќе дојде на 0 објектот е уништен.
         /// </summary>
@@ -56,7 +61,7 @@ namespace ArkanoidGame.Interfaces
         Vector2D PositionChange { get; }
 
         /// <summary>
-        /// Со кој објект настанало судир и во кои точки.
+        /// Со кој објект настанало судир и во кои точки. Дополнително има информација и со колку објекти
         /// </summary>
         /// <param name="collisionArguments"></param>
         void OnCollisionDetected(IDictionary<IGameObject, IList<Vector2D>> collisionArguments);

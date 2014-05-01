@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace ArkanoidGame.Objects
 {
@@ -107,6 +108,14 @@ namespace ArkanoidGame.Objects
 
         public void OnCollisionDetected(IDictionary<IGameObject, IList<Vector2D>> collisionArguments)
         {
+            foreach (KeyValuePair<IGameObject, IList<Vector2D>> obj in collisionArguments)
+            {
+                if (obj.Key.ObjectType != GameObjectType.Brick)
+                {
+                    Health -= obj.Key.DamageEffect;
+                }
+            }
+
             //throw new NotImplementedException();
         }
 

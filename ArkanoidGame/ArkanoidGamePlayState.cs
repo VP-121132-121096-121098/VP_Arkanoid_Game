@@ -25,6 +25,72 @@ namespace ArkanoidGame
 
         private readonly object lockCollisionDetection;
 
+        private ISet<IGameObject> ballsInPlay;
+
+        private List<GameBitmap> background;
+
+        private void RotateBricks()
+        {
+            QuadTree<IGameObject> quadTree = this.quadtree;
+            List<IGameObject> area = quadtree.Query(new RectangleF(1000, 650, 1000, 600));
+            Vector2D center = new Vector2D(1500, 950);
+
+            if (!Game.IsMultithreadingEnabled)
+            {
+                foreach (IGameObject obj in area)
+                {
+                    if (obj.ObjectType != GameObjectType.Brick)
+                        continue;
+
+
+                    RotateSingleBrick(center, obj);
+                }
+            }
+            else
+            {
+                //паралелен дел
+                using (CountdownEvent e = new CountdownEvent(1))
+                {
+                    // fork work: 
+                    foreach (IGameObject obj in area)
+                    {
+                        // Dynamically increment signal count.
+                        e.AddCount();
+                        ThreadPool.QueueUserWorkItem(delegate(object gameObject)
+                        {
+                            try
+                            {
+                                RotateSingleBrick(center, obj);
+                            }
+                            finally
+                            {
+                                e.Signal();
+                            }
+                        },
+                         obj);
+                    }
+                    e.Signal();
+
+                    // The first element could be run on this thread. 
+
+                    // Join with work.
+                    e.Wait();
+                }
+            }
+        }
+
+        private static void RotateSingleBrick(Vector2D center, IGameObject obj)
+        {
+            GameRectangle rotator = new GameRectangle(obj.PositionUL, obj.PositionUR, obj.PositionDL);
+            rotator.RotateAroundPointDeg(center, 1);
+            obj.PositionUL.X = rotator.PositionUL.X;
+            obj.PositionUL.Y = rotator.PositionUL.Y;
+            obj.PositionUR.X = rotator.PositionUR.X;
+            obj.PositionUR.Y = rotator.PositionUR.Y;
+            obj.PositionDL.X = rotator.PositionDL.X;
+            obj.PositionDL.Y = rotator.PositionDL.Y;
+        }
+
         public ArkanoidGamePlayState(IGame game)
         {
             lockCollisionDetection = new object();
@@ -34,19 +100,60 @@ namespace ArkanoidGame
             this.Game = game;
             BitmapsToRender = new List<IList<GameBitmap>>();
             bitmapsToRenderCopy = new List<IList<GameBitmap>>();
-            List<GameBitmap> background = new List<GameBitmap>();
+            background = new List<GameBitmap>();
             background.Add(new GameBitmap("\\Resources\\Images\\background.jpg", 0, 0, game.VirtualGameWidth,
-                game.VirtualGameHeight));
-            BitmapsToRender.Add(background);
+              game.VirtualGameHeight));
+
+            ballsInPlay = new HashSet<IGameObject>();
 
             //додади го играчот на позиција (1750, 2010).
             PlayerPaddle player = new PlayerPaddle(new Vector2D(1750, 2010), Game.VirtualGameWidth,
                 Game.VirtualGameHeight);
             Game.GameObjects.Add(player);
+
+            //додади ја топката
             BlueBall ball = new BlueBall(new Vector2D((player.Position.X * 2 + player.ObjectWidth) / 2,
                player.Position.Y - 45), 50);
             Game.GameObjects.Add(ball);
-            BigBrick grb = new BigBrick(new Vector2D(20, 100), Game.VirtualGameWidth,
+            ballsInPlay.Add(ball);
+
+            CreateBricks();
+
+
+
+            /* //proba da dodadam golema crvena cigla
+             BigRedBrick grb = new BigRedBrick(new Vector2D(20, 100), Game.VirtualGameWidth,
+                 Game.VirtualGameHeight);
+           
+             //proba da dodadam mala crvena cigla
+            
+             //proba da dodadam golema zolta cigla
+             */
+
+
+            ElapsedTime = 0;
+        }
+
+        private void CreateBricks()
+        {
+            double y = 100;
+
+            for (int i = 0; i < 7; i++)
+            {
+                BigBrick grb = new BigBrick(new Vector2D(20, 100), Game.VirtualGameWidth,
+                Game.VirtualGameHeight, "element_red_rectangle.png");
+                double offset = 20;
+                while (offset + grb.ObjectWidth < Game.VirtualGameWidth - 20)
+                {
+                    Game.GameObjects.Add(new BigBrick(new Vector2D(offset, y), Game.VirtualGameWidth,
+                Game.VirtualGameHeight, "element_red_rectangle.png"));
+                    offset += grb.ObjectWidth + 80;
+                }
+
+                y += grb.ObjectHeight + 80;
+            }
+
+            /*BigBrick grb = new BigBrick(new Vector2D(20, 100), Game.VirtualGameWidth,
                 Game.VirtualGameHeight, "element_red_rectangle.png");
             Game.GameObjects.Add(grb);
             SmallBrick srb = new SmallBrick(new Vector2D(220, 100), Game.VirtualGameWidth,
@@ -88,8 +195,8 @@ namespace ArkanoidGame
             SmallBrick ypp = new SmallBrick(new Vector2D(Game.VirtualGameWidth - 580, 100), Game.VirtualGameWidth,
                  Game.VirtualGameHeight, "element_green_square.png");
             Game.GameObjects.Add(ypp);
-           BigBrick gbb = new BigBrick(new Vector2D(Game.VirtualGameWidth - 790, 100), Game.VirtualGameWidth,
-               Game.VirtualGameHeight, "element_yellow_rectangle.png");
+            BigBrick gbb = new BigBrick(new Vector2D(Game.VirtualGameWidth - 790, 100), Game.VirtualGameWidth,
+                Game.VirtualGameHeight, "element_yellow_rectangle.png");
             Game.GameObjects.Add(gbb);
             BigBrick bbb = new BigBrick(new Vector2D(Game.VirtualGameWidth - 1000, 100), Game.VirtualGameWidth,
              Game.VirtualGameHeight, "element_purple_rectangle.png");
@@ -113,18 +220,7 @@ namespace ArkanoidGame
             BigBrick nivo2cigla7 = new BigBrick(new Vector2D(Game.VirtualGameWidth - 1540, 300), Game.VirtualGameWidth, Game.VirtualGameHeight, "element_grey_rectangle.png");
             Game.GameObjects.Add(nivo2cigla7);
             SmallBrick nivo2cigla8 = new SmallBrick(new Vector2D(Game.VirtualGameWidth - 1330, 300), Game.VirtualGameWidth, Game.VirtualGameHeight, "element_grey_square.png");
-            Game.GameObjects.Add(nivo2cigla8);
-           /* //proba da dodadam golema crvena cigla
-            BigRedBrick grb = new BigRedBrick(new Vector2D(20, 100), Game.VirtualGameWidth,
-                Game.VirtualGameHeight);
-           
-            //proba da dodadam mala crvena cigla
-            
-            //proba da dodadam golema zolta cigla
-            */
-
-
-            ElapsedTime = 0;
+            Game.GameObjects.Add(nivo2cigla8);*/
         }
 
 #if DEBUG
@@ -175,6 +271,8 @@ namespace ArkanoidGame
             EnableOrDisableDebugMode();
 #endif
 
+            RemoveDeadObjects(gameObjects);
+
             if (Game.IsMultithreadingEnabled)
             {
                 UpdateObjectsMT(gameObjects);
@@ -184,13 +282,15 @@ namespace ArkanoidGame
                 UpdateObjectsST(gameObjects);
             }
 
+            RotateBricks();
+
             //Спреми ги текстурите
-            for (int i = 0; i < gameObjects.Count; i++)
+            BitmapsToRender = new List<IList<GameBitmap>>();
+            BitmapsToRender.Add(background);
+
+            foreach (IGameObject obj in gameObjects)
             {
-                if (i + 1 >= BitmapsToRender.Count)
-                    BitmapsToRender.Add(gameObjects[i].ObjectTextures);
-                else
-                    BitmapsToRender[i + 1] = gameObjects[i].ObjectTextures;
+                BitmapsToRender.Add(obj.ObjectTextures);
             }
 
             //Посебна readonly копија за рендерерот
@@ -204,6 +304,24 @@ namespace ArkanoidGame
             }
 
             return 100;
+        }
+
+        private void RemoveDeadObjects(IList<IGameObject> objects)
+        {
+            for (int i = 0; i < objects.Count; i++)
+            {
+                IGameObject obj = objects[i];
+                if (obj.Health <= 0)
+                {
+                    if (obj.ObjectType == GameObjectType.Ball)
+                    {
+                        ballsInPlay.Remove(obj);
+                    }
+
+                    objects.RemoveAt(i);
+                }
+
+            }
         }
 
         private int ButtonDWaitNFrames;
@@ -292,6 +410,36 @@ namespace ArkanoidGame
             /* http://msdn.microsoft.com/en-us/library/dd997365.aspx */
 
             //не може паралелно да се одвива оваа операција
+
+            //паралелен дел
+            using (CountdownEvent e = new CountdownEvent(1))
+            {
+                // fork work: 
+                foreach (IGameObject obj in gameObjects)
+                {
+                    // Dynamically increment signal count.
+                    e.AddCount();
+                    ThreadPool.QueueUserWorkItem(delegate(object gameObject)
+                    {
+                        try
+                        {
+                            UpdateObject((IGameObject)gameObject);
+                        }
+                        finally
+                        {
+                            e.Signal();
+                        }
+                    },
+                     obj);
+                }
+                e.Signal();
+
+                // The first element could be run on this thread. 
+
+                // Join with work.
+                e.Wait();
+            }
+
             InitQuadTree(gameObjects);
             InitCollisionArguments(gameObjects);
 
@@ -308,8 +456,35 @@ namespace ArkanoidGame
                         try
                         {
                             CheckForCollisions((IGameObject)gameObject);
+                        }
+                        finally
+                        {
+                            e.Signal();
+                        }
+                    },
+                     obj);
+                }
+                e.Signal();
+
+                // The first element could be run on this thread. 
+
+                // Join with work.
+                e.Wait();
+            }
+
+            //паралелен дел
+            using (CountdownEvent e = new CountdownEvent(1))
+            {
+                // fork work: 
+                foreach (IGameObject obj in gameObjects)
+                {
+                    // Dynamically increment signal count.
+                    e.AddCount();
+                    ThreadPool.QueueUserWorkItem(delegate(object gameObject)
+                    {
+                        try
+                        {
                             PassCollisionArgumentsToObject((IGameObject)gameObject);
-                            UpdateObject((IGameObject)gameObject);
                         }
                         finally
                         {
