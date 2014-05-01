@@ -265,8 +265,6 @@ namespace ArkanoidGame.Objects
                         }
                     }
 
-                    Console.WriteLine(temp);
-
                     //најди го нормалниот вектор на temp
                     //нормалите се (-dy, dx) и (dy, -dx)
                     Vector2D normal = new Vector2D(-temp.Y, temp.X);
