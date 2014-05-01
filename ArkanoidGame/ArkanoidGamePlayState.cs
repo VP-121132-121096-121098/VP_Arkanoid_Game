@@ -146,81 +146,77 @@ namespace ArkanoidGame
             GameBitmap BrickTexture=null;
 
             GameBitmap BrickTextureRedRectangle = new GameBitmap(RendererCache.GetBitmapFromFile(
-                            "\\Resources\\Images\\element_red_rectangle.png"), new Vector2D(0, 0),
-                            new Vector2D(200, 0), new Vector2D(0, 100));
+                       "\\Resources\\Images\\element_red_rectangle.png"), new Vector2D(0, 0),
+                          new Vector2D(200, 0), new Vector2D(0, 100));
             GameBitmap BrickTextureBlueRectangle = new GameBitmap(RendererCache.GetBitmapFromFile(
-                          "\\Resources\\Images\\element_blue_rectangle.png"), new Vector2D(0, 0),
+                       "\\Resources\\Images\\element_blue_rectangle.png"), new Vector2D(0, 0),
                           new Vector2D(200, 0), new Vector2D(0, 100));
             GameBitmap BrickTexturePurpleRectangle = new GameBitmap(RendererCache.GetBitmapFromFile(
-                          "\\Resources\\Images\\element_purple_rectangle.png"), new Vector2D(0, 0),
+                       "\\Resources\\Images\\element_purple_rectangle.png"), new Vector2D(0, 0),
                           new Vector2D(200, 0), new Vector2D(0, 100));
             GameBitmap BrickTextureYellowRectangle = new GameBitmap(RendererCache.GetBitmapFromFile(
-                          "\\Resources\\Images\\element_yellow_rectangle.png"), new Vector2D(0, 0),
+                       "\\Resources\\Images\\element_yellow_rectangle.png"), new Vector2D(0, 0),
                           new Vector2D(200, 0), new Vector2D(0, 100));
             GameBitmap BrickTextureGreyRectangle = new GameBitmap(RendererCache.GetBitmapFromFile(
-                          "\\Resources\\Images\\element_grey_rectangle.png"), new Vector2D(0, 0),
+                       "\\Resources\\Images\\element_grey_rectangle.png"), new Vector2D(0, 0),
                           new Vector2D(200, 0), new Vector2D(0, 100));
             GameBitmap BrickTextureGreenRectangle = new GameBitmap(RendererCache.GetBitmapFromFile(
                       "\\Resources\\Images\\element_green_rectangle.png"), new Vector2D(0, 0),
-                      new Vector2D(200, 0), new Vector2D(0, 100));
-
-
-
-           
+                          new Vector2D(200, 0), new Vector2D(0, 100));
             
                
             for (int i = 0; i < 6; i++)
                 {
                     int opcija = r.Next(6);
-                    
-                   
-                        if (opcija == 0)
-                        {
-                            BrickTexture = new GameBitmap(BrickTextureRedRectangle.UniqueKey, new Vector2D(0, 0),
-                                new Vector2D(200, 0), new Vector2D(0, 100));
-                        }
-                        else if (opcija == 1)
-                        {
-                            BrickTexture = new GameBitmap(BrickTextureBlueRectangle.UniqueKey, new Vector2D(0, 0),
-                                new Vector2D(200, 0), new Vector2D(0, 100));
-                        }
-                        else if (opcija == 2)
-                        {
-                            BrickTexture = new GameBitmap(BrickTexturePurpleRectangle.UniqueKey, new Vector2D(0, 0),
-                                new Vector2D(200, 0), new Vector2D(0, 100));
-                        }
-                        else if (opcija == 3)
-                        {
-                            BrickTexture = new GameBitmap(BrickTextureYellowRectangle.UniqueKey, new Vector2D(0, 0),
-                                new Vector2D(200, 0), new Vector2D(0, 100));
-                        }
-                        else if (opcija == 4)
-                        {
-                            BrickTexture = new GameBitmap(BrickTextureGreyRectangle.UniqueKey, new Vector2D(0, 0),
-                                new Vector2D(200, 0), new Vector2D(0, 100));
-                        }
-                        else
-                        {
-                            BrickTexture = new GameBitmap(BrickTextureGreenRectangle.UniqueKey, new Vector2D(0, 0),
-                                new Vector2D(200, 0), new Vector2D(0, 100));
-                        }
+                    if (opcija == 0)
+                    {
+                        BrickTexture = new GameBitmap(BrickTextureRedRectangle.UniqueKey, new Vector2D(0, 0),
+                            new Vector2D(200, 0), new Vector2D(0, 100));
+                    }
+                    else if (opcija == 1)
+                    {
+                        BrickTexture = new GameBitmap(BrickTextureBlueRectangle.UniqueKey, new Vector2D(0, 0),
+                            new Vector2D(200, 0), new Vector2D(0, 100));
+                    }
+                    else if (opcija == 2)
+                    {
+                        BrickTexture = new GameBitmap(BrickTexturePurpleRectangle.UniqueKey, new Vector2D(0, 0),
+                            new Vector2D(200, 0), new Vector2D(0, 100));
+                    }
+                    else if (opcija == 3)
+                    {
+                        BrickTexture = new GameBitmap(BrickTextureYellowRectangle.UniqueKey, new Vector2D(0, 0),
+                            new Vector2D(200, 0), new Vector2D(0, 100));
+                    }
+                    else if (opcija == 4)
+                    {
+                        BrickTexture = new GameBitmap(BrickTextureGreyRectangle.UniqueKey, new Vector2D(0, 0),
+                            new Vector2D(200, 0), new Vector2D(0, 100));
+                    }
+                    else
+                    {
+                        BrickTexture = new GameBitmap(BrickTextureGreenRectangle.UniqueKey, new Vector2D(0, 0),
+                            new Vector2D(200, 0), new Vector2D(0, 100));
+                    }
 
-                        BigBrick grb = new BigBrick(new Vector2D(20, 100), Game.VirtualGameWidth,
-                        Game.VirtualGameHeight, BrickTexture);
-                        double offset = 250;
-                        while (offset + grb.ObjectWidth < Game.VirtualGameWidth - 50)
-                        {
-
-                            GameBitmap temp = new GameBitmap(BrickTexture.UniqueKey, offset, y, 200,
-                            80);
-
-                            Game.GameObjects.Add(new BigBrick(new Vector2D(offset, y), Game.VirtualGameWidth,
-                        Game.VirtualGameHeight, temp));
-                            offset += grb.ObjectWidth + 250;
-                        }
-                        y += grb.ObjectHeight + 100;
+                
+                    BigBrick grb = new BigBrick(new Vector2D(20, 100), Game.VirtualGameWidth,
+                    Game.VirtualGameHeight, BrickTexture);
                    
-                   
+                    double offset = 250;
+                    while (offset + grb.ObjectWidth < Game.VirtualGameWidth - 50)
+                    {
+
+                        GameBitmap temp = new GameBitmap(BrickTexture.UniqueKey, offset, y, 200,
+                        80);
+                        
+                        Game.GameObjects.Add(new BigBrick(new Vector2D(offset, y), Game.VirtualGameWidth,
+                    Game.VirtualGameHeight, temp));
+                      
+                        offset += grb.ObjectWidth + 250;
+                    }
+
+                    y += grb.ObjectHeight + 100;
                 }
             }
            
