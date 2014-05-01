@@ -190,10 +190,10 @@ namespace ArkanoidGame
             BigBrick bgr = new BigBrick(new Vector2D(Game.VirtualGameWidth - 360, 100), Game.VirtualGameWidth, Game.VirtualGameHeight, "element_grey_rectangle.png");
             Game.GameObjects.Add(bgr);
             //mala siva
-            SmallBrick sgg = new SmallBrick(new Vector2D(Game.VirtualGameWidth - 470, 100), Game.VirtualGameWidth, Game.VirtualGameHeight, "element_grey_rectangle.png");
+            SmallBrick sgg = new SmallBrick(new Vector2D(Game.VirtualGameWidth - 470, 100), Game.VirtualGameWidth, Game.VirtualGameHeight, "element_grey_square.png");
             Game.GameObjects.Add(sgg);
             SmallBrick ypp = new SmallBrick(new Vector2D(Game.VirtualGameWidth - 580, 100), Game.VirtualGameWidth,
-                 Game.VirtualGameHeight, "element_green_rectangle.png");
+                 Game.VirtualGameHeight, "element_green_square.png");
             Game.GameObjects.Add(ypp);
             BigBrick gbb = new BigBrick(new Vector2D(Game.VirtualGameWidth - 790, 100), Game.VirtualGameWidth,
                 Game.VirtualGameHeight, "element_yellow_rectangle.png");
