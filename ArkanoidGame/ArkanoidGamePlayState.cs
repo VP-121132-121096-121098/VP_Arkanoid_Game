@@ -300,7 +300,8 @@ namespace ArkanoidGame
 
             if (KeyStateInfo.GetAsyncKeyState(Keys.Escape).IsPressed)
             {
-                return 0;
+                Game.GameState = new ArkanoidPauseMenuState(Game);
+                return 100;
             }
 
             return 100;
