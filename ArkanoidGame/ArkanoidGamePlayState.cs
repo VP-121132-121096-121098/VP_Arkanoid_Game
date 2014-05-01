@@ -164,33 +164,6 @@ namespace ArkanoidGame
                 y += grb.ObjectHeight + 80;
             }
 
-
-            
-
-          /*  GameBitmap greyBrickTexture = new GameBitmap(RendererCache.GetBitmapFromFile(
-                "\\Resources\\Images\\element_grey_square.png"), new Vector2D(0, 0),
-                new Vector2D(150, 0), new Vector2D(0, 150));
-
-            for (int i = 0; i < 6; i++)
-            {
-
-                SmallBrick sgb = new SmallBrick(new Vector2D(20, 100), Game.VirtualGameWidth,
-                Game.VirtualGameHeight, greyBrickTexture);
-                double offset = 100;
-                while (offset + sgb.ObjectWidth < Game.VirtualGameWidth - 20)
-                {
-
-                    GameBitmap temp = new GameBitmap(greyBrickTexture.UniqueKey, offset, y, 200,
-                    80);
-
-                    Game.GameObjects.Add(new BigBrick(new Vector2D(offset, y), Game.VirtualGameWidth,
-                Game.VirtualGameHeight, temp));
-                    offset += sgb.ObjectWidth + 120;
-                }
-
-                y += sgb.ObjectHeight + 80;
-            }*/
-
             /*BigBrick grb = new BigBrick(new Vector2D(20, 100), Game.VirtualGameWidth,
                 Game.VirtualGameHeight, "element_red_rectangle.png");
             Game.GameObjects.Add(grb);

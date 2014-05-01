@@ -13,8 +13,24 @@ namespace ArkanoidGame
     public class ArkanoidMainMenuState : IGameState
     {
 
-        private IDictionary<string, GameBitmap> menuOptions; //опции во менито
-        private IDictionary<string, GameBitmap> readyStrings; //стрингови
+        private IDictionary<string, GameBitmap> menuOptions; /*Листа од опции. Бидејќи постојат плави и портокалови
+                                                              * опции, ова може да се искористи за да се добијат 
+                                                              * координатите на дадена опција. Пример за start game
+                                                              * без разлика дали е со плава или со портокалова боја
+                                                              * овде ќе стојат истите координати
+                                                              */
+
+        private IDictionary<string, GameBitmap> readyStrings; /* Бафер на сликите во кои се чува текстот од опциите.
+                                                              * Бидејќи RendererCache не ги брише автоматски
+                                                              * сликите од RAM, корисно е да се чува листа на сите веќе
+                                                              * креирани слики со цел нивно реискористување, а потоа 
+                                                              * кога нема да требаат може рачно да се повика RenderCache.Remove(со
+                                                              * ID на сликата. Наместо да се креира на секое Start new game и
+                                                              * Start new game hover, од овде може да се искористи слика
+                                                              * што веќе е во меморија :). Се избегнува и читање од хард диск
+                                                              * и губење на циклуси во бришење на старите и непотребно скалирање
+                                                              * на новата слика во потребните димензии.
+                                                              */
 
         public IList<IList<GameBitmap>> BitmapsToRender { get; private set; } //слики од позадината и сите опции заедно
         private IList<IList<GameBitmap>> bitmapsToRenderCopy; /* на Draw се праќа копија од листа
