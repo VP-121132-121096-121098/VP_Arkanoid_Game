@@ -47,9 +47,6 @@ namespace ArkanoidGame
                 if (KeyStateInfo.GetAsyncKeyState(Keys.LButton).WasPressedAfterPreviousCall
                         && KeyStateInfo.GetAsyncKeyState(Keys.LButton).IsPressed)
                 {
-                    //Бриши се од меморија. Не ни требаат дупликати.
-                    RendererCache.RemoveAllBitmapsFromMainMemory();
-
                     //Ако се притисне глушецот на quit game тогаш излези нормално
                     Game.GameState = new ArkanoidGamePlayState(Game);
 
