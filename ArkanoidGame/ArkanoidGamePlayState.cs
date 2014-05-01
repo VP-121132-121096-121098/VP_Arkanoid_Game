@@ -311,7 +311,7 @@ namespace ArkanoidGame
 
             if (KeyStateInfo.GetAsyncKeyState(Keys.Escape).IsPressed)
             {
-                return 0;
+                Game.GameState = new ArkanoidPauseMenuState(Game, this);
             }
 
             return 100;
@@ -408,8 +408,6 @@ namespace ArkanoidGame
             foreach (IGameObject obj in gameObjects)
                 quadtree.Insert(obj);
         }
-
-        private static ManualResetEvent resetEvent = new ManualResetEvent(false);
 
         /// <summary>
         /// Повикува Update на секој објект во посебен thread. Се користи ThreadPool.
