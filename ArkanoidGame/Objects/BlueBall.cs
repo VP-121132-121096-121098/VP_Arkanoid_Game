@@ -273,43 +273,19 @@ namespace ArkanoidGame.Objects
                     if (normal.Magnitude() != 0)
                         normal /= normal.Magnitude();
                     else
-                        normal = new Vector2D(0, 0);
-
-                    //новата брзина е
-                    if (normal.Magnitude() > 0)
-                        this.Velocity = -2 * (Velocity * normal) * normal + Velocity;
-                    else
                     {
-                        //топчето удрило во една точка
-
-                        //векторот помеѓу позицијата и точката на судир
-                        Vector2D u = args.Value[0] - this.Position;
-
-                        if (u.Magnitude() == 0 || Velocity.Magnitude() == 0)
+                        temp = args.Value[0] - args.Key.PositionUL;
+                        if (temp.Magnitude() == 0)
                         {
-                            this.Velocity = -this.Velocity;
-                            return;
+                            temp = args.Key.PositionDL - args.Key.PositionUR;
                         }
 
-                        this.Velocity = -this.Velocity;
-
-                        //косинусот на аголот помеѓу векторите
-                        double cosineA = u * Velocity / (u.Magnitude() * Velocity.Magnitude());
-                        double sineA = ((Vector3D)u).CrossProduct(Velocity).Magnitude()
-                            / (u.Magnitude() * Velocity.Magnitude());
-
-                        //треба да свртиме за 2 пати повеќе од аголот
-                        double cosine2A = cosineA * cosineA - sineA * sineA;
-                        double sine2A = 2 * sineA * cosineA;
-
-                        if (-this.Velocity.X > 0 && -this.Velocity.Y > 0 ||
-                            -this.Velocity.X < 0 && -this.Velocity.Y > 0)
-                            cosine2A *= -1;
-
-                        Velocity.Rotate(sine2A, cosine2A);
-
-                        this.collisionDetectorSkipFrames = 2;
+                        normal = new Vector2D(-temp.Y, temp.X);
+                        normal /= normal.Magnitude();
                     }
+
+                    //новата брзина е
+                    this.Velocity = -2 * (Velocity * normal) * normal + Velocity;
 
                     //овозможи играчот да ја менува насоката на топчето со тоа што ќе го удри
                     //во моментот кога paddle се движи
