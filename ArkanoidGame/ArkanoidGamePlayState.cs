@@ -231,8 +231,8 @@ namespace ArkanoidGame
                     while (offset + grb.ObjectWidth < Game.VirtualGameWidth - 50)
                     {
 
-                        GameBitmap temp = new GameBitmap(BrickTexture.UniqueKey, offset, y, 200,
-                        80);
+                        GameBitmap temp = new GameBitmap(BrickTexture.UniqueKey, offset, y, 220,
+                       100);
 
                         Game.GameObjects.Add(new BigBrick(new Vector2D(offset, y), Game.VirtualGameWidth,
                     Game.VirtualGameHeight, temp));
@@ -284,13 +284,13 @@ namespace ArkanoidGame
                     while (offset + grb.ObjectWidth < Game.VirtualGameWidth - 50)
                     {
 
-                        GameBitmap temp = new GameBitmap(BrickTexture.UniqueKey, offset, y, 150,
-                        130);
+                        GameBitmap temp = new GameBitmap(BrickTexture.UniqueKey, offset, y, 130,
+                        100);
 
                         Game.GameObjects.Add(new BigBrick(new Vector2D(offset, y), Game.VirtualGameWidth,
                     Game.VirtualGameHeight, temp));
 
-                        offset += grb.ObjectWidth + 300;
+                        offset += grb.ObjectWidth + 200;
                     }
 
                     y += grb.ObjectHeight + 140;
