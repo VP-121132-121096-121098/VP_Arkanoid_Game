@@ -81,7 +81,7 @@ namespace ArkanoidGame
         private GameArkanoid()
         {
             this.ButtonMWaitNFrames = 0;
-            this.IsMultithreadingEnabled = true;
+            this.IsMultithreadingEnabled = false;
             IsRendererEnabled = false;
 
             VirtualGameWidth = 3840;
