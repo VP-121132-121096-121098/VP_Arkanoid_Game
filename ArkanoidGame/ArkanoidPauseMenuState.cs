@@ -24,15 +24,7 @@ namespace ArkanoidGame
 
         public void OnDraw(Graphics graphics, int frameWidth, int frameHeight)
         {
-            try
-            {
-                Game.Renderer.Render(bitmapsToRenderCopy, graphics, frameWidth, frameHeight);
-            }
-            catch(Exception e)
-            {
-                return;
-                //во случај да нема слики не прави ништо
-            }
+            Game.Renderer.Render(bitmapsToRenderCopy, graphics, frameWidth, frameHeight);
         }
 
         public int OnUpdate(IList<IGameObject> gameObjects)
