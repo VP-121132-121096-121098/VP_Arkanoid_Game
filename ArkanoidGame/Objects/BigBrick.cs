@@ -21,7 +21,7 @@ namespace ArkanoidGame.Objects
         }
 
         public BigBrick(Vector2D positionVector, int virtualGameWidth, int virtualGameHeight, GameBitmap bmp)
-            : base(new Vector2D(positionVector), new Vector2D(positionVector.X + 200, positionVector.Y), //+ висината
+            : base(new Vector2D(positionVector), new Vector2D(positionVector.X + 220, positionVector.Y), //+ висината
             new Vector2D(positionVector.X, positionVector.Y + 100) /* + висината */ ,bmp/*slikata*/)
         {
             this.GameWidth = virtualGameWidth;

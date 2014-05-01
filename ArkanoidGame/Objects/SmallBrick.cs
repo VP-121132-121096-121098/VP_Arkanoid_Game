@@ -30,14 +30,14 @@ namespace ArkanoidGame.Objects
         //да биде за вектор (должина, 0), затоа тука е 100, не 200.
         public SmallBrick(Vector2D positionVector, int virtualGameWidth, int virtualGameHeight,GameBitmap bmp)
             : base(new Vector2D(positionVector), new Vector2D(positionVector.X + 150, positionVector.Y), //+ ШИРИНА (width)
-            new Vector2D(positionVector.X, positionVector.Y + 130) /* + висината (height) */,bmp)
+            new Vector2D(positionVector.X, positionVector.Y + 150) /* + висината (height) */,bmp)
         {
             this.GameWidth = virtualGameWidth;
             this.GameHeight = virtualGameHeight;
             this.Position = new Vector2D(positionVector);
 
-            ObjectWidth = 130;
-            ObjectHeight = 100;
+            ObjectWidth = 150;
+            ObjectHeight = 150;
             Velocity = new Vector2D(0, 0);
 
             this.Health = 100;
