@@ -298,7 +298,13 @@ namespace ArkanoidGame.Objects
                         double sineA = ((Vector3D)u).CrossProduct(Velocity).Magnitude()
                             / (u.Magnitude() * Velocity.Magnitude());
 
-                        Velocity.Rotate(sineA, cosineA);
+                        //треба да свртиме за 2 пати повеќе од аголот
+                        double cosine2A = cosineA * cosineA - sineA * sineA;
+                        double sine2A = 2 * sineA * cosineA;
+
+                        Velocity.Rotate(sine2A, cosine2A);
+
+                        this.collisionDetectorSkipFrames = 2;
                     }
 
                     //овозможи играчот да ја менува насоката на топчето со тоа што ќе го удри
@@ -324,7 +330,7 @@ namespace ArkanoidGame.Objects
                         Velocity.X = x;
                         Velocity.Y = y;
 
-                        this.collisionDetectorSkipFrames = 2;
+                        this.collisionDetectorSkipFrames = 7;
                     }
                 }
             }
