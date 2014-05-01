@@ -276,7 +276,7 @@ namespace ArkanoidGame
                     SmallBrick grb = new SmallBrick(new Vector2D(20, 100), Game.VirtualGameWidth,
                     Game.VirtualGameHeight, BrickTexture);
 
-                    double offset = 250;
+                    double offset = 270;
                     while (offset + grb.ObjectWidth < Game.VirtualGameWidth - 50)
                     {
 
@@ -286,7 +286,7 @@ namespace ArkanoidGame
                         Game.GameObjects.Add(new BigBrick(new Vector2D(offset, y), Game.VirtualGameWidth,
                     Game.VirtualGameHeight, temp));
 
-                        offset += grb.ObjectWidth + 305;
+                        offset += grb.ObjectWidth + 300;
                     }
 
                     y += grb.ObjectHeight + 140;
