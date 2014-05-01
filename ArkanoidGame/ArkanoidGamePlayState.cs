@@ -144,6 +144,10 @@ namespace ArkanoidGame
             
             double y = 100;
             GameBitmap BrickTexture=null;
+
+            GameBitmap BrickTextureRedRectangle = new GameBitmap(RendererCache.GetBitmapFromFile(
+                            "\\Resources\\Images\\element_red_rectangle.png"), new Vector2D(0, 0),
+                            new Vector2D(200, 0), new Vector2D(0, 100));
             
                
             for (int i = 0; i < 5; i++)
@@ -151,8 +155,7 @@ namespace ArkanoidGame
                     int opcija = r.Next(5);
                     if (opcija == 1)
                     {
-                        BrickTexture = new GameBitmap(RendererCache.GetBitmapFromFile(
-                            "\\Resources\\Images\\element_red_rectangle.png"), new Vector2D(0, 0),
+                        BrickTexture = new GameBitmap(BrickTextureRedRectangle.UniqueKey, new Vector2D(0, 0),
                             new Vector2D(200, 0), new Vector2D(0, 100));
                     }
                     else if (opcija == 2)
