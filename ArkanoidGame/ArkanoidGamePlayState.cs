@@ -126,8 +126,6 @@ namespace ArkanoidGame
 
             CreateBricks();
 
-
-
             /* //proba da dodadam golema crvena cigla
              BigRedBrick grb = new BigRedBrick(new Vector2D(20, 100), Game.VirtualGameWidth,
                  Game.VirtualGameHeight);
@@ -248,32 +246,32 @@ namespace ArkanoidGame
                     if (opcija == 0)
                     {
                         BrickTexture = new GameBitmap(BrickTextureRedRectangle1.UniqueKey, new Vector2D(0, 0),
-                            new Vector2D(200, 0), new Vector2D(0, 100));
+                            new Vector2D(150, 0), new Vector2D(0, 150));
                     }
                     else if (opcija == 1)
                     {
                         BrickTexture = new GameBitmap(BrickTextureBlueRectangle1.UniqueKey, new Vector2D(0, 0),
-                            new Vector2D(200, 0), new Vector2D(0, 100));
+                            new Vector2D(150, 0), new Vector2D(0, 150));
                     }
                     else if (opcija == 2)
                     {
                         BrickTexture = new GameBitmap(BrickTexturePurpleRectangle1.UniqueKey, new Vector2D(0, 0),
-                            new Vector2D(200, 0), new Vector2D(0, 100));
+                            new Vector2D(150, 0), new Vector2D(0, 150));
                     }
                     else if (opcija == 3)
                     {
                         BrickTexture = new GameBitmap(BrickTextureYellowRectangle1.UniqueKey, new Vector2D(0, 0),
-                            new Vector2D(200, 0), new Vector2D(0, 100));
+                            new Vector2D(150, 0), new Vector2D(0, 150));
                     }
                     else if (opcija == 4)
                     {
                         BrickTexture = new GameBitmap(BrickTextureGreyRectangle1.UniqueKey, new Vector2D(0, 0),
-                            new Vector2D(200, 0), new Vector2D(0, 100));
+                            new Vector2D(150, 0), new Vector2D(0, 150));
                     }
                     else
                     {
                         BrickTexture = new GameBitmap(BrickTextureGreenRectangle1.UniqueKey, new Vector2D(0, 0),
-                            new Vector2D(200, 0), new Vector2D(0, 100));
+                            new Vector2D(150, 0), new Vector2D(0, 150));
                     }
 
 
@@ -287,7 +285,7 @@ namespace ArkanoidGame
                         GameBitmap temp = new GameBitmap(BrickTexture.UniqueKey, offset, y, 150,
                         150);
 
-                        Game.GameObjects.Add(new BigBrick(new Vector2D(offset, y), Game.VirtualGameWidth,
+                        Game.GameObjects.Add(new SmallBrick(new Vector2D(offset, y), Game.VirtualGameWidth,
                     Game.VirtualGameHeight, temp));
 
                         offset += grb.ObjectWidth + 200;
