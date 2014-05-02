@@ -751,6 +751,7 @@ namespace ArkanoidGame
             }
         }
 
+        //Повикај OnUpdate на IGameObject obj. Тривијален метод.
         private void UpdateObject(IGameObject obj)
         {
             if (obj == null)
