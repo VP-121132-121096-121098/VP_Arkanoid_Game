@@ -59,13 +59,14 @@ namespace ArkanoidGame.Objects
 
         private GameRectangle textureRotator;
 
-        public BlueBall(Vector2D position, double radius)
+        public BlueBall(Vector2D position, double radius, PlayerPaddle paddle)
         {
             lock (lockCounter)
             {
                 ballID = IDCounter++;
             }
 
+            this.playerPaddle = paddle;
             this.Velocity = new Vector2D(0, 0);
             ObjectTextures = new List<GameBitmap>();
             this.Position = position;
@@ -81,7 +82,6 @@ namespace ArkanoidGame.Objects
             textureRotator = new GameRectangle(ObjectTextures[0].PositionUL,
                 ObjectTextures[0].PositionUR, ObjectTextures[0].PositionDL);
 
-            playerPaddle = null;
             Health = 1000;
         }
 
@@ -190,12 +190,6 @@ namespace ArkanoidGame.Objects
             foreach (KeyValuePair<IGameObject, IList<Vector2D>> args in collisionArguments)
             {
                 IGameObject collidingObject = args.Key;
-
-                //Земи ја референцата од PlayerPaddle објектот
-                if (args.Key.ObjectType == GameObjectType.PlayerPaddle)
-                {
-                    playerPaddle = args.Key;
-                }
 
                 bool collisionWithSingleObject = collisionArguments.Count == 1;
 

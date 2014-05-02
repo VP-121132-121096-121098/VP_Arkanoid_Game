@@ -93,6 +93,11 @@ namespace ArkanoidGame
 
         private bool experimentalMultiBall;
 
+        /// <summary>
+        /// Референца кон paddle (објектот што се контролира со глувчето или тастатурата)
+        /// </summary>
+        private PlayerPaddle LocalPlayer { get; set; }
+
         public ArkanoidGamePlayState(IGame game)
         {
             experimentalMultiBall = false;
@@ -117,10 +122,11 @@ namespace ArkanoidGame
             PlayerPaddle player = new PlayerPaddle(new Vector2D(1750, 2010), Game.VirtualGameWidth,
                 Game.VirtualGameHeight);
             Game.GameObjects.Add(player);
+            this.LocalPlayer = player;
 
             //додади ја топката
             BlueBall ball = new BlueBall(new Vector2D((player.Position.X * 2 + player.ObjectWidth) / 2,
-               player.Position.Y - 45), 50);
+               player.Position.Y - 45), 50, player);
             Game.GameObjects.Add(ball);
             ballsInPlay.Add(ball);
 
@@ -516,6 +522,8 @@ namespace ArkanoidGame
                 Game.GameState = new ArkanoidPauseMenuState(Game, this);
             }
 
+            //тест верзија на креирање на повеќе топчиња (се креираат откако првото топче
+            //ќе биде уфрлено во игра со клик на левиот клик од глувчето)
             if (!experimentalMultiBall)
             {
                 IEnumerator<IGameObject> it = ballsInPlay.GetEnumerator();
@@ -523,11 +531,13 @@ namespace ArkanoidGame
                 BlueBall ball = (BlueBall)it.Current;
                 if (ball.Velocity.Magnitude() > 0)
                 {
-                    BlueBall ball2 = new BlueBall(ball.Position + new Vector2D(ball.Radius, ball.Radius), ball.Radius);
+                    BlueBall ball2 = new BlueBall(ball.Position + new Vector2D(ball.Radius, ball.Radius),
+                        ball.Radius, LocalPlayer);
                     ball2.Velocity.X = ball.Velocity.X;
                     ball2.Velocity.Y = ball.Velocity.Y;
                     ball2.Velocity.RotateDeg(-30);
-                    BlueBall ball3 = new BlueBall(ball.Position + new Vector2D(-ball.Radius, -ball.Radius), ball.Radius);
+                    BlueBall ball3 = new BlueBall(ball.Position + new Vector2D(-ball.Radius, -ball.Radius),
+                        ball.Radius, LocalPlayer);
                     ball3.Velocity.X = ball.Velocity.X;
                     ball3.Velocity.Y = ball.Velocity.Y;
                     ball3.Velocity.RotateDeg(30);
