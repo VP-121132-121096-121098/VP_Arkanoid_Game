@@ -108,7 +108,7 @@ namespace ArkanoidGame.Objects
 
             //ако брзината е 0, тогаш топчето се наоѓа врз paddle и 
             //мора да се помести за да остане врз него
-            if (this.Velocity.Magnitude() == 0 && playerPaddle != null)
+            if (this.Velocity.Magnitude() == 0)
             {
                 this.Position += playerPaddle.PositionChange;
             }
@@ -116,7 +116,7 @@ namespace ArkanoidGame.Objects
             this.Position += Velocity;
 
             IKeyState leftMouseKey = KeyStateInfo.GetAsyncKeyState(Keys.LButton);
-            if (this.Velocity.Magnitude() < 0.001 && playerPaddle != null && leftMouseKey.IsPressed)
+            if (this.Velocity.Magnitude() < 0.001 && leftMouseKey.IsPressed)
             {
                 //најди ја средната точка на paddle
                 Vector2D middlePoint = playerPaddle.Position + new Vector2D(playerPaddle.ObjectWidth / 2, 0)
@@ -135,7 +135,7 @@ namespace ArkanoidGame.Objects
             {
                 this.Velocity.Y = -this.Velocity.Y;
 
-                if (playerPaddle != null && this.Position.Y > playerPaddle.PositionDL.Y)
+                if (this.Position.Y > playerPaddle.PositionDL.Y)
                 {
                     this.Health = 0;
                 }
