@@ -636,6 +636,11 @@ namespace ArkanoidGame
             obj.OnCollisionDetected(collisionArguments[obj]);
         }
 
+        /// <summary>
+        /// Направи нов QuadTree и пополни го со сите објекти кои моментално постојат во играта.
+        /// Се повикува при секој повик на OnUpdate
+        /// </summary>
+        /// <param name="gameObjects"></param>
         private void InitQuadTree(IList<IGameObject> gameObjects)
         {
             quadtree = new QuadTree<IGameObject>(new RectangleF(0, 0, (float)Game.VirtualGameWidth + 0.1f,
