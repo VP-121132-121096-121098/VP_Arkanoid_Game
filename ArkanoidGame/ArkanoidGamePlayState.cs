@@ -252,32 +252,32 @@ namespace ArkanoidGame
                     if (opcija == 0)
                     {
                         BrickTexture = new GameBitmap(BrickTextureRedRectangle1.UniqueKey, new Vector2D(0, 0),
-                            new Vector2D(150, 0), new Vector2D(0, 150));
+                            new Vector2D(100, 0), new Vector2D(0, 100));
                     }
                     else if (opcija == 1)
                     {
                         BrickTexture = new GameBitmap(BrickTextureBlueRectangle1.UniqueKey, new Vector2D(0, 0),
-                            new Vector2D(150, 0), new Vector2D(0, 150));
+                            new Vector2D(100, 0), new Vector2D(0, 100));
                     }
                     else if (opcija == 2)
                     {
                         BrickTexture = new GameBitmap(BrickTexturePurpleRectangle1.UniqueKey, new Vector2D(0, 0),
-                            new Vector2D(150, 0), new Vector2D(0, 150));
+                            new Vector2D(100, 0), new Vector2D(0, 100));
                     }
                     else if (opcija == 3)
                     {
                         BrickTexture = new GameBitmap(BrickTextureYellowRectangle1.UniqueKey, new Vector2D(0, 0),
-                            new Vector2D(150, 0), new Vector2D(0, 150));
+                            new Vector2D(100, 0), new Vector2D(0, 100));
                     }
                     else if (opcija == 4)
                     {
                         BrickTexture = new GameBitmap(BrickTextureGreyRectangle1.UniqueKey, new Vector2D(0, 0),
-                            new Vector2D(150, 0), new Vector2D(0, 150));
+                            new Vector2D(100, 0), new Vector2D(0, 100));
                     }
                     else
                     {
                         BrickTexture = new GameBitmap(BrickTextureGreenRectangle1.UniqueKey, new Vector2D(0, 0),
-                            new Vector2D(150, 0), new Vector2D(0, 150));
+                            new Vector2D(100, 0), new Vector2D(0, 100));
                     }
 
 
@@ -288,8 +288,8 @@ namespace ArkanoidGame
                     while (offset + grb.ObjectWidth < Game.VirtualGameWidth - 50)
                     {
 
-                        GameBitmap temp = new GameBitmap(BrickTexture.UniqueKey, offset, y, 150,
-                        150);
+                        GameBitmap temp = new GameBitmap(BrickTexture.UniqueKey, offset, y, 100,
+                        100);
 
                         Game.GameObjects.Add(new SmallBrick(new Vector2D(offset, y), Game.VirtualGameWidth,
                     Game.VirtualGameHeight, temp));
@@ -554,7 +554,7 @@ namespace ArkanoidGame
 
         private void RemoveDeadObjects(IList<IGameObject> objects)
         {
-            for (int i = 0; i < objects.Count; i++)
+            for (int i = objects.Count - 1; i > 0; i--)
             {
                 IGameObject obj = objects[i];
                 if (obj.Health <= 0)
