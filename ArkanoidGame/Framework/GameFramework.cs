@@ -163,7 +163,10 @@ namespace ArkanoidGame.Framework
                 throw new SystemException("Attempting to initialize an already initialized framework.");
             }
 
-            //Користи double buffering
+            //Го поставува DoubleBuffered својството од gamePanel на true. Бидејќи кај Panel ова својство
+            //е protected, единствен начин (што јас го знам, може има и друг :) ) да се промени 
+            //неговата вредност надвор од класите Panel и GamePanel
+            //е да се користи OOP Reflection
             System.Reflection.PropertyInfo panelDoubleBuffered = typeof(GamePanel).GetProperty("DoubleBuffered",
                 System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
             panelDoubleBuffered.SetValue(gamePanel, true, null);
