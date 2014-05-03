@@ -173,6 +173,9 @@ namespace ArkanoidGame.Renderer
             this.FrameWidth = frameWidth;
             this.FrameHeight = frameHeight;
 
+            if (bitmaps == null)
+                return;
+
             foreach (IList<GameBitmap> bitmapList in bitmaps)
             {
                 if (bitmapList == null)

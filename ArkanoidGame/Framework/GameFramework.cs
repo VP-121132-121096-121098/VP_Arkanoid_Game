@@ -115,7 +115,8 @@ namespace ArkanoidGame.Framework
             }
             catch (Exception e)
             {
-                this.IsExceptionRaised = true; //Спречи го другиот thread да повика invalidate
+                this.IsExceptionRaised = true; //Спречи го другиот thread да повика invalidate,
+                //и сигнализирај дека апликацијата треба да се исклучи поради грешка
 
                 MessageBox.Show(string.Format("Се случи критична грешка\nДетали за грешката:"
                     + "\nException: {0}\nMessage: {4}\nStack trace: {1}\nSource: {2}\nTarget site: {3}\n",
