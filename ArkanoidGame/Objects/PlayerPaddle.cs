@@ -20,7 +20,7 @@ namespace ArkanoidGame.Objects
         // Во оваа игра секогаш dt = 1, бидејќи времето се смета како број на повикувања
         // на update. (број на gameUpdatePeriods)
 
-        public Vector2D Velocity { get; private set; } /* брзината ќе биде изминат пат (виртуелни единици во секунда) */
+        public Vector2D Velocity { get; set; } /* брзината ќе биде изминат пат (виртуелни единици во секунда) */
         private Vector2D maxVelocity;
         private Vector2D maxAcceleration; /* забрзување -> виртуелна единица во секунда на квадрат */
 
@@ -155,6 +155,7 @@ namespace ArkanoidGame.Objects
             ObjectTextures = new List<GameBitmap>();
             ObjectTextures.Add(new GameBitmap("\\Resources\\Images\\paddleRed.png", Position.X,
                 Position.Y, ObjectWidth, ObjectHeight));
+            ObjectTextures[0].ColorLowSpec = Color.Red;
         }
 
         public PlayerPaddle(Vector2D positionVector, int virtualGameWidth, int virutalGameHeight)

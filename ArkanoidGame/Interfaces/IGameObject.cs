@@ -89,7 +89,7 @@ namespace ArkanoidGame.Interfaces
         /// <summary>
         /// Моментална брзина на објектот изразена како векторска величина
         /// </summary>
-        Vector2D Velocity { get; }
+        Vector2D Velocity { get; set; }
 
         /// <summary>
         /// Тип на објектот

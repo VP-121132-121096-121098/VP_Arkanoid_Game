@@ -38,9 +38,9 @@ namespace ArkanoidGame
                                                                * бидејќи Draw е на посебен Thread.
                                                                */
 
-        public void OnDraw(Graphics graphics, int frameWidth, int frameHeight)
+        public void OnDraw(Graphics graphics, int frameWidth, int frameHeight, bool lowSpec)
         {
-            Game.Renderer.Render(bitmapsToRenderCopy, graphics, frameWidth, frameHeight);
+            Game.Renderer.Render(bitmapsToRenderCopy, graphics, frameWidth, frameHeight, lowSpec);
         }
 
         public int OnUpdate(IList<IGameObject> gameObjects)
@@ -183,6 +183,12 @@ namespace ArkanoidGame
             readyStrings.Add("Game controls keyboard hover", new GameBitmap(StaticStringFactory
                 .CreateBlueString("Controls: keyboard"), (game.VirtualGameWidth - 750) / 2.0, 920,
                 750, 90));
+
+            //прикажи ги опциите и на слаб хардвер.
+            foreach (KeyValuePair<string, GameBitmap> bitmap in readyStrings)
+            {
+                bitmap.Value.DrawLowSpec = true;
+            }
 
             menuOptions = new Dictionary<string, GameBitmap>();
             menuOptions.Add("start game", readyStrings["start game"]);

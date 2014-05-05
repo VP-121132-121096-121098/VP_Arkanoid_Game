@@ -9,7 +9,7 @@ using System.Text;
 
 namespace ArkanoidGame.Renderer
 {
-    public class OldGameRenderer : IGameRenderer
+    public class GameRenderer : IGameRenderer
     {
         /// <summary>
         /// Ширина и висина на прозорецот
@@ -26,7 +26,7 @@ namespace ArkanoidGame.Renderer
         /// </summary>
         /// <param name="virtualGameWidth"></param>
         /// <param name="virtualGameHeight"></param>
-        public OldGameRenderer(int virtualGameWidth, int virtualGameHeight)
+        public GameRenderer(int virtualGameWidth, int virtualGameHeight)
         {
             FrameHeight = FrameWidth = 0;
             this.VirtualGameHeight = virtualGameHeight;
@@ -168,10 +168,15 @@ namespace ArkanoidGame.Renderer
         /// <param name="g"></param>
         /// <param name="width"></param>
         /// <param name="height"></param>
-        public void Render(IList<IList<GameBitmap>> bitmaps, Graphics g, int frameWidth, int frameHeight)
+        public void Render(IList<IList<GameBitmap>> bitmaps, Graphics g, int frameWidth, int frameHeight,
+            bool lowSpec)
         {
             this.FrameWidth = frameWidth;
             this.FrameHeight = frameHeight;
+
+            //ако се работи за слаб хардвер ќе има бела позадина
+            if (lowSpec)
+                g.Clear(Color.White);
 
             if (bitmaps == null)
                 return;
@@ -197,12 +202,6 @@ namespace ArkanoidGame.Renderer
                         height = width = (height + width) / 2;
                     }
 
-                    Bitmap temp = RendererCache.GetBitmapFromMainMemory(bitmap.UniqueKey,
-                        (int)Math.Round(width), (int)Math.Round(height));
-
-                    if (temp == null)
-                        continue;
-
                     Vector2D positionUR = ToScreenCoordinates(bitmap.PositionUR);
                     Vector2D vecUL_UR = positionUR - positionUL;
                     vecUL_UR = vecUL_UR / vecUL_UR.Magnitude() * width;
@@ -213,9 +212,75 @@ namespace ArkanoidGame.Renderer
                     positionDL = positionUL + vecUL_DL;
 
                     Point[] vertices = new Point[] { positionUL, positionUR, positionDL };
-                    g.DrawImage(temp, vertices);
+
+                    if (lowSpec && !bitmap.DrawLowSpec)
+                    {
+                        if (bitmap.IsBall)
+                        {
+                            //ако сликата е топче, цртај топче и ротирај го за да се создаде анимација на ротирање
+
+                            Bitmap temp = FillCircle((int)Math.Round(width), (int)Math.Round(height),
+                                bitmap.ColorLowSpec);
+                            using (Graphics gr = Graphics.FromImage(temp))
+                            {
+                                gr.FillEllipse(new SolidBrush(Color.White),
+                                    (int)Math.Round(width / 2 - 0.12 * width),
+                                    (int)Math.Round(0.12 * height), (int)Math.Round(0.24 * width),
+                                    (int)Math.Round(0.24 * width));
+                            }
+
+                            g.DrawImage(temp, vertices);
+                        }
+                        else
+                        {
+                            //Pрво провери дали може да се исцрта хоризонтален правоаголник. Ако тоа е можно
+                            //исцртај го, инаку направи прво помошна битмапа па ротирај ја според координатите
+                            //UL, UR, DL
+
+                            if (bitmap.PositionUL.X == bitmap.PositionDL.X
+                                && bitmap.PositionUL.Y < bitmap.PositionDL.Y
+                                && bitmap.PositionUL.Y == bitmap.PositionUR.Y)
+                            {
+                                g.FillRectangle(new SolidBrush(bitmap.ColorLowSpec), (float)positionUL.X,
+                                    (float)positionUL.Y, (float)width, (float)height);
+                            }
+                            else
+                            {
+                                int bmpWidth = (int)Math.Round(width);
+                                int bmpHeight = (int)Math.Round(height);
+                                Bitmap temp = new Bitmap(bmpWidth, bmpHeight);
+                                using (Graphics gr = Graphics.FromImage(temp))
+                                {
+                                    gr.FillRectangle(new SolidBrush(bitmap.ColorLowSpec),
+                                        0, 0, bmpWidth, bmpHeight);
+                                }
+
+                                g.DrawImage(temp, vertices);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Bitmap temp = RendererCache.GetBitmapFromMainMemory(bitmap.UniqueKey,
+                            (int)Math.Round(width), (int)Math.Round(height));
+
+                        if (temp == null)
+                            continue;
+
+                        g.DrawImage(temp, vertices);
+                    }
                 }
             }
+        }
+
+        private Bitmap FillCircle(int width, int height, Color color)
+        {
+            Bitmap temp = new Bitmap(width, height);
+            using (Graphics g = Graphics.FromImage(temp))
+            {
+                g.FillEllipse(new SolidBrush(color), 0, 0, width, height);
+            }
+            return temp;
         }
 
         /// <summary>
@@ -225,13 +290,14 @@ namespace ArkanoidGame.Renderer
         /// <param name="g"></param>
         /// <param name="frameWidth"></param>
         /// <param name="frameHeight"></param>
-        public void Render(GameBitmap bitmap, Graphics g, int frameWidth, int frameHeight)
+        public void Render(GameBitmap bitmap, Graphics g, int frameWidth, int frameHeight,
+            bool lowSpec)
         {
             List<GameBitmap> list = new List<GameBitmap>(1);
             List<IList<GameBitmap>> list2 = new List<IList<GameBitmap>>();
             list2.Add(list);
             list.Add(bitmap);
-            this.Render(list2, g, frameWidth, frameHeight);
+            this.Render(list2, g, frameWidth, frameHeight, lowSpec);
         }
 
         public void DrawCircle(Vector2D center, float radius, Graphics g, Color color, int frameWidth, int frameHeight)

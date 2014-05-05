@@ -75,8 +75,10 @@ namespace ArkanoidGame.Objects
                 - new Vector2D(Radius, 0),
                 this.Position - new Vector2D(0, Radius) + new Vector2D(Radius, 0), this.Position + new Vector2D(0, Radius)
                 + new Vector2D(-Radius, 0)));
+            ObjectTextures[0].IsBall = true;
             ObjectWidth = ObjectHeight = 2 * radius;
             ObjectTextures[0].IsSquare = true;
+            ObjectTextures[0].ColorLowSpec = Color.Aqua;
 
             //квадратот ќе ги има истите темиња како и сликата
             textureRotator = new GameRectangle(ObjectTextures[0].PositionUL,
@@ -320,7 +322,7 @@ namespace ArkanoidGame.Objects
 
         public IList<GameBitmap> ObjectTextures { get; private set; }
 
-        public Vector2D Velocity { get; private set; }
+        public Vector2D Velocity { get; set; }
 
         public GameObjectType ObjectType
         {

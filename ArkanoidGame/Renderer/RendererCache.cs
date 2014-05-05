@@ -36,6 +36,10 @@ namespace ArkanoidGame.Renderer
      * се чуваат слики на хард дискот за секоја можна резолуција бидејќи      *
      * играчот може да ја менува големината на прозорецот, па не може         *
      * однапред да се знае колкава ќе биде неговата резолуција.               *
+     * 
+     * Ако PreferQualityOverPerformance = false (што е предефинирано на false)*
+     * тогаш AA (Anti-Aliasing) не се користи, а интерполацијата е Default (во*
+     * спротивно bicubic)                                                     *
      *                                                                        *
      * Тестирањата се направени на компјутер со CPU Intel Core i5 2450M       *
      * 8 GB RAM DDR3-1333, GPU GeForce GT525M                                 *
@@ -50,11 +54,19 @@ namespace ArkanoidGame.Renderer
         private static IDictionary<long, Bitmap> bitmapsInMemory;
         private static IDictionary<long, string> mapBitmapRelativePath;
 
+        /// <summary>
+        /// Ако се постави на false, тогаш Anti-Aliasing (AA) не се користи,
+        /// дополнително на false интерполацијата е Default, a на true
+        /// интерполацијата е HighQualityBicubic. Предефинирано е false.
+        /// </summary>
+        public static bool PreferQualityOverPerformance { get; set; }
+
         static RendererCache()
         {
             objectLock = new object();
             bitmapsInMemory = new Dictionary<long, Bitmap>();
             mapBitmapRelativePath = new Dictionary<long, string>();
+            PreferQualityOverPerformance = false;
         }
 
         /// <summary>
@@ -71,8 +83,16 @@ namespace ArkanoidGame.Renderer
 
             using (Graphics g = Graphics.FromImage(tempBitmap))
             {
-                g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                if (PreferQualityOverPerformance)
+                {
+                    g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                    g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                }
+                else
+                {
+                    g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
+                }
+
                 g.DrawImage(bitmap, 0, 0);
             }
 
@@ -102,8 +122,15 @@ namespace ArkanoidGame.Renderer
             {
                 using (Graphics g = Graphics.FromImage(bitmap))
                 {
-                    g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-                    g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                    if (PreferQualityOverPerformance)
+                    {
+                        g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                        g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                    }
+                    else
+                    {
+                        g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
+                    }
                     g.DrawImage(image, 0, 0, width, height);
                 }
             }
@@ -129,7 +156,7 @@ namespace ArkanoidGame.Renderer
 
         /// <summary>
         /// Вчитува слика од датотека. Сликата се чува во вирутелната меморија. Референца кон сликата
-        /// може да се добие со повик на методот GetBitmapFromMainMemory(string uniqueKey)
+        /// може да се добие со повик на методот GetBitmapFromMainMemory(long uniqueKey)
         /// Локацијата на датотеката се задава како 
         /// релативна патека, пример: \\Resources\\Images\\background.jpg
         /// Доколку сликата не е во бараната резолуција се прави скалирање, при што
@@ -155,8 +182,16 @@ namespace ArkanoidGame.Renderer
 
             using (Graphics g = Graphics.FromImage(bitmap))
             {
-                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-                g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                if (PreferQualityOverPerformance)
+                {
+                    g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                    g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                }
+                else
+                {
+                    g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
+                }
+
                 g.DrawImage(image, 0, 0, image.Width, image.Height);
             }
 

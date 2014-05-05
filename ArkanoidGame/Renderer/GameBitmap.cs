@@ -106,7 +106,30 @@ namespace ArkanoidGame.Renderer
             return new GameBitmapKey(UniqueKey, PositionUR, PositionUL, PositionDL);
         }
 
+        /// <summary>
+        /// Дефинира со кваква боја да се исцрта објектот на слаб хардвер.
+        /// </summary>
+        public Color ColorLowSpec { get; set; }
+
+        /// <summary>
+        /// UniqueKey е клуч со кој што сликата се
+        /// зачувува во меморија (со класата RendererCache).
+        /// Истата може да се добие со повик на методот
+        /// RendererCache.GetBitmapFromMainMemory(long uniqueKey);
+        /// </summary>
         public long UniqueKey { get; private set; }
+
+        /// <summary>
+        /// Дефинира дали оваа слика да се исцртува на послаб хардвер. Предефинираната 
+        /// вредност е false.
+        /// </summary>
+        public bool DrawLowSpec { get; set; }
+
+        /// <summary>
+        /// Дефинира дали на слаб хардвер наместо оваа слика треба да се прикаже геометриска
+        /// фигура што ќе личи на топка.
+        /// </summary>
+        public bool IsBall { get; set; }
 
         public GameBitmap(string relativePath, double x, double y, double widthInGameUnits,
             double heightInGameUnits)
@@ -124,6 +147,7 @@ namespace ArkanoidGame.Renderer
             this.PositionUR = this.PositionUL + new Vector2D(widthInGameUnits, 0);
             this.PositionDL = this.PositionUL + new Vector2D(0, heightInGameUnits);
             this.UniqueKey = uniqueKey;
+            this.DrawLowSpec = false;
         }
 
         private void SetDimensions()
@@ -145,6 +169,7 @@ namespace ArkanoidGame.Renderer
             this.PositionDL = positionDL;
             this.UniqueKey = uniqueKey;
             this.SetDimensions();
+            this.DrawLowSpec = false;
         }
 
         public GameBitmap(Bitmap bitmap, double x,
@@ -163,6 +188,7 @@ namespace ArkanoidGame.Renderer
             this.PositionUR = this.PositionUL + new Vector2D(widthInGameUnits, 0);
             this.PositionDL = this.PositionUL + new Vector2D(0, heightInGameUnits);
             this.UniqueKey = uniqueKey;
+            this.DrawLowSpec = false;
         }
 
         public GameBitmap(Bitmap bitmap, Vector2D positionUL, Vector2D positionUR, Vector2D positionDL)
@@ -179,6 +205,7 @@ namespace ArkanoidGame.Renderer
             this.PositionDL = positionDL;
             this.SetDimensions();
             this.UniqueKey = uniqueKey;
+            this.DrawLowSpec = false;
         }
 
         public GameBitmap(long UniqueKey, double x,
@@ -190,6 +217,7 @@ namespace ArkanoidGame.Renderer
             this.PositionUR = this.PositionUL + new Vector2D(widthInGameUnits, 0);
             this.PositionDL = this.PositionUL + new Vector2D(0, heightInGameUnits);
             this.UniqueKey = UniqueKey;
+            this.DrawLowSpec = false;
         }
 
         public GameBitmap(long uniqueKey, Vector2D positionUL, Vector2D positionUR, Vector2D positionDL)
@@ -199,7 +227,8 @@ namespace ArkanoidGame.Renderer
             this.PositionUR = positionUR;
             this.PositionDL = positionDL;
             this.SetDimensions();
-            this.UniqueKey = uniqueKey;
+            this.UniqueKey = uniqueKey;            
+            this.DrawLowSpec = false;
         }
     }
 }

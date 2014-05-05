@@ -200,31 +200,37 @@ namespace ArkanoidGame
                     {
                         BrickTexture = new GameBitmap(BrickTextureRedRectangle.UniqueKey, new Vector2D(0, 0),
                             new Vector2D(200, 0), new Vector2D(0, 100));
+                        BrickTexture.ColorLowSpec = Color.Red;
                     }
                     else if (opcija == 1)
                     {
                         BrickTexture = new GameBitmap(BrickTextureBlueRectangle.UniqueKey, new Vector2D(0, 0),
                             new Vector2D(200, 0), new Vector2D(0, 100));
+                        BrickTexture.ColorLowSpec = Color.Blue;
                     }
                     else if (opcija == 2)
                     {
                         BrickTexture = new GameBitmap(BrickTexturePurpleRectangle.UniqueKey, new Vector2D(0, 0),
                             new Vector2D(200, 0), new Vector2D(0, 100));
+                        BrickTexture.ColorLowSpec = Color.Purple;
                     }
                     else if (opcija == 3)
                     {
                         BrickTexture = new GameBitmap(BrickTextureYellowRectangle.UniqueKey, new Vector2D(0, 0),
                             new Vector2D(200, 0), new Vector2D(0, 100));
+                        BrickTexture.ColorLowSpec = Color.Yellow;
                     }
                     else if (opcija == 4)
                     {
                         BrickTexture = new GameBitmap(BrickTextureGreyRectangle.UniqueKey, new Vector2D(0, 0),
                             new Vector2D(200, 0), new Vector2D(0, 100));
+                        BrickTexture.ColorLowSpec = Color.Gray;
                     }
                     else
                     {
                         BrickTexture = new GameBitmap(BrickTextureGreenRectangle.UniqueKey, new Vector2D(0, 0),
                             new Vector2D(200, 0), new Vector2D(0, 100));
+                        BrickTexture.ColorLowSpec = Color.Green;
                     }
 
 
@@ -237,6 +243,7 @@ namespace ArkanoidGame
 
                         GameBitmap temp = new GameBitmap(BrickTexture.UniqueKey, offset, y, 220,
                        100);
+                        temp.ColorLowSpec = BrickTexture.ColorLowSpec;
 
                         Game.GameObjects.Add(new BigBrick(new Vector2D(offset, y), Game.VirtualGameWidth,
                     Game.VirtualGameHeight, temp));
@@ -253,31 +260,37 @@ namespace ArkanoidGame
                     {
                         BrickTexture = new GameBitmap(BrickTextureRedRectangle1.UniqueKey, new Vector2D(0, 0),
                             new Vector2D(100, 0), new Vector2D(0, 100));
+                        BrickTexture.ColorLowSpec = Color.Red;
                     }
                     else if (opcija == 1)
                     {
                         BrickTexture = new GameBitmap(BrickTextureBlueRectangle1.UniqueKey, new Vector2D(0, 0),
                             new Vector2D(100, 0), new Vector2D(0, 100));
+                        BrickTexture.ColorLowSpec = Color.Blue;
                     }
                     else if (opcija == 2)
                     {
                         BrickTexture = new GameBitmap(BrickTexturePurpleRectangle1.UniqueKey, new Vector2D(0, 0),
                             new Vector2D(100, 0), new Vector2D(0, 100));
+                        BrickTexture.ColorLowSpec = Color.Purple;
                     }
                     else if (opcija == 3)
                     {
                         BrickTexture = new GameBitmap(BrickTextureYellowRectangle1.UniqueKey, new Vector2D(0, 0),
                             new Vector2D(100, 0), new Vector2D(0, 100));
+                        BrickTexture.ColorLowSpec = Color.Yellow;
                     }
                     else if (opcija == 4)
                     {
                         BrickTexture = new GameBitmap(BrickTextureGreyRectangle1.UniqueKey, new Vector2D(0, 0),
                             new Vector2D(100, 0), new Vector2D(0, 100));
+                        BrickTexture.ColorLowSpec = Color.Gray;
                     }
                     else
                     {
                         BrickTexture = new GameBitmap(BrickTextureGreenRectangle1.UniqueKey, new Vector2D(0, 0),
                             new Vector2D(100, 0), new Vector2D(0, 100));
+                        BrickTexture.ColorLowSpec = Color.Green;
                     }
 
 
@@ -290,6 +303,7 @@ namespace ArkanoidGame
 
                         GameBitmap temp = new GameBitmap(BrickTexture.UniqueKey, offset, y, 100,
                         100);
+                        temp.ColorLowSpec = BrickTexture.ColorLowSpec;
 
                         Game.GameObjects.Add(new SmallBrick(new Vector2D(offset, y), Game.VirtualGameWidth,
                     Game.VirtualGameHeight, temp));
@@ -456,9 +470,9 @@ namespace ArkanoidGame
         }
 #endif
 
-        public void OnDraw(Graphics graphics, int frameWidth, int frameHeight)
+        public void OnDraw(Graphics graphics, int frameWidth, int frameHeight, bool lowSpec)
         {
-            Game.Renderer.Render(bitmapsToRenderCopy, graphics, frameWidth, frameHeight);
+            Game.Renderer.Render(bitmapsToRenderCopy, graphics, frameWidth, frameHeight, lowSpec);
 
 #if DEBUG
             if (debugMode && quadtree != null)

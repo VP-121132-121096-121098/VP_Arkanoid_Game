@@ -22,9 +22,9 @@ namespace ArkanoidGame
                                                                * за да се избегнат проблемите со нејзино модифицирање
                                                                */
 
-        public void OnDraw(Graphics graphics, int frameWidth, int frameHeight)
+        public void OnDraw(Graphics graphics, int frameWidth, int frameHeight, bool lowSpec)
         {
-            Game.Renderer.Render(bitmapsToRenderCopy, graphics, frameWidth, frameHeight);
+            Game.Renderer.Render(bitmapsToRenderCopy, graphics, frameWidth, frameHeight, lowSpec);
         }
 
         public int OnUpdate(IList<IGameObject> gameObjects)
@@ -151,7 +151,11 @@ namespace ArkanoidGame
             readyStrings1.Add("quit game hover", new GameBitmap(StaticStringFactory.CreateBlueString("quit game"),
                (game.VirtualGameWidth - 500) / 2, 1100, 550, 90));
 
-
+            //прикажи ги опциите и на слаб хардвер.
+            foreach (KeyValuePair<string, GameBitmap> bitmap in readyStrings1)
+            {
+                bitmap.Value.DrawLowSpec = true;
+            }
             
           
             menuOptions1 = new Dictionary<string, GameBitmap>();
@@ -174,11 +178,12 @@ namespace ArkanoidGame
         }
 
         /// <summary>
-        /// времето во играта во меѓувреме си тече нормално
+        /// Нема потреба од сихнронизација, додека играчот е на пауза во играта
+        /// не се случува ништо. (Не е ова multiplayer)
         /// </summary>
         public bool IsTimesynchronizationImportant
         {
-            get { return true; }
+            get { return false; }
         }
     }
 }

@@ -16,7 +16,7 @@ namespace ArkanoidGame.Interfaces
         /// <param name="graphics"></param>
         /// <param name="frameWidth"></param>
         /// <param name="frameHeight"></param>
-        void OnDraw(Graphics graphics, int frameWidth, int frameHeight);
+        void OnDraw(Graphics graphics, int frameWidth, int frameHeight, bool lowSpec);
 
         /// <summary>
         /// Прави update на сите објекти во играта. Ако функцијата врати 0,

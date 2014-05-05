@@ -8,8 +8,23 @@ using System.Text;
 
 namespace ArkanoidGame.Interfaces
 {
+    public enum GraphicsDetails
+    {
+        Low,
+        High,
+        VeryHigh
+    }
+
     public interface IGame
     {
+        /// <summary>
+        /// За послаб хардвер доволно е само да се исцртаат соодветните геометриски фигури за објектите.
+        /// Не мора да се исцртуваат и сликите, на тој начин може да се заштеди на перформанси.
+        /// Поставување на GraphicsDetails на very high значи дека при скалирање на сликите ќе се користи
+        /// HighQualityBicubic interpolation и Anti-Aliasing. Тоа е разликата помеѓу high и very high.
+        /// </summary>
+        GraphicsDetails GraphicsDetails { get; set; }
+
         /// <summary>
         /// Ако претходно биле избришани ресурсите од меморија, со повик на овој метод истите одново ќе се вчитаат
         /// </summary>

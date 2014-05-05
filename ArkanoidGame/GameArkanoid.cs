@@ -64,10 +64,12 @@ namespace ArkanoidGame
                 return;
             }
 
-            this.GameState.OnDraw(graphics, frameWidth, frameHeight);
+            this.GameState.OnDraw(graphics, frameWidth, frameHeight, 
+                GraphicsDetails == Interfaces.GraphicsDetails.Low);
 
             if (IsMultithreadingEnabled)
-                Renderer.Render(textMultithreading, graphics, frameWidth, frameHeight);
+                Renderer.Render(textMultithreading, graphics, frameWidth, frameHeight,
+                    false);
         }
 
         //во милисекунди
@@ -91,10 +93,13 @@ namespace ArkanoidGame
             this.IsMultithreadingEnabled = false;
             IsRendererEnabled = false;
 
+            graphicsDetails = Interfaces.GraphicsDetails.Low;
+            RendererCache.PreferQualityOverPerformance = false;
+
             VirtualGameWidth = 3840;
             VirtualGameHeight = 2160;
 
-            this.Renderer = new OldGameRenderer(VirtualGameWidth, VirtualGameHeight);
+            this.Renderer = new GameRenderer(VirtualGameWidth, VirtualGameHeight);
             CursorIngameCoordinates = Cursor.Position;
             this.GameUpdatePeriod = 0;
             GameState = new ArkanoidMainMenuState(this);
@@ -172,5 +177,33 @@ namespace ArkanoidGame
 
 
         public bool IsControllerMouse { get; set; }
+
+        public GraphicsDetails GraphicsDetails
+        {
+            get
+            {
+                return graphicsDetails;
+            }
+            set
+            {
+                if (value == Interfaces.GraphicsDetails.VeryHigh)
+                {
+                    RendererCache.PreferQualityOverPerformance = true;
+                    this.graphicsDetails = value;
+                }
+                else if (value == Interfaces.GraphicsDetails.High)
+                {
+                    RendererCache.PreferQualityOverPerformance = false;
+                    this.graphicsDetails = value;
+                }
+                else
+                {
+                    RendererCache.PreferQualityOverPerformance = false;
+                    this.graphicsDetails = value;
+                }
+            }
+        }
+
+        private GraphicsDetails graphicsDetails;
     }
 }

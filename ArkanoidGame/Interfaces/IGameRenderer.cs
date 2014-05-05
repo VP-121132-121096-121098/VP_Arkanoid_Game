@@ -12,13 +12,14 @@ namespace ArkanoidGame.Interfaces
     public interface IGameRenderer
     {
         /// <summary>
-        /// Исцртување на една слика
+        /// Исцртување на една слика. Ако lowSpec e true, тогаш
+        /// наместо слика се црта геометриска фигура со соодветни димензии.
         /// </summary>
         /// <param name="?"></param>
         /// <param name="g"></param>
         /// <param name="frameWidth"></param>
         /// <param name="frameHeight"></param>
-        void Render(GameBitmap bitmap, Graphics g, int frameWidth, int frameHeight);
+        void Render(GameBitmap bitmap, Graphics g, int frameWidth, int frameHeight, bool lowSpec);
 
         void DrawCircle(Vector2D center, float radius, Graphics g, Color color, int frameWidth, int frameHeight);
 
@@ -50,12 +51,15 @@ namespace ArkanoidGame.Interfaces
         /// <summary>
         /// Исцртување на сите bitmaps редоследно според индексот во листата.
         /// Се исцртува користејќи го Graphics објектот. frameWidth и frameHeight 
-        /// се ширини и висини на рамките на кои се црта
+        /// се ширини и висини на рамките на кои се црта.
+        /// Ако lowSpec e true, тогаш
+        /// наместо слика се црта геометриска фигура со соодветни димензии.
         /// </summary>
         /// <param name="g"></param>
         /// <param name="width"></param>
         /// <param name="height"></param>
-        void Render(IList<IList<GameBitmap>> bitmaps, Graphics g, int frameWidth, int frameHeight);
+        void Render(IList<IList<GameBitmap>> bitmaps, Graphics g, int frameWidth, int frameHeight,
+            bool lowSpec);
 
         /// <summary>
         /// Ги претвора координатите од прозорецот во координати од играта
