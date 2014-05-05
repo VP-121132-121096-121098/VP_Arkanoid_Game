@@ -118,7 +118,11 @@ namespace ArkanoidGame.Objects
             this.Position += Velocity;
 
             IKeyState leftMouseKey = KeyStateInfo.GetAsyncKeyState(Keys.LButton);
-            if (this.Velocity.Magnitude() < 0.001 && leftMouseKey.IsPressed)
+            if (this.Velocity.Magnitude() < 0.001 && leftMouseKey.IsPressed 
+                && GameArkanoid.GetInstance().CursorIngameCoordinates.X >= 5 
+                && GameArkanoid.GetInstance().CursorIngameCoordinates.Y >= 5
+                && GameArkanoid.GetInstance().CursorIngameCoordinates.X < GameArkanoid.GetInstance().VirtualGameWidth - 5
+                && GameArkanoid.GetInstance().CursorIngameCoordinates.Y < GameArkanoid.GetInstance().VirtualGameHeight - 5)
             {
                 //најди ја средната точка на paddle
                 Vector2D middlePoint = playerPaddle.Position + new Vector2D(playerPaddle.ObjectWidth / 2, 0)
