@@ -109,6 +109,7 @@ namespace ArkanoidGame
             this.Game.GameObjects.Clear(); //бриши ги сите објекти (ако има такви)
             RendererCache.RemoveAllBitmapsFromMainMemory(); //исчисти го баферот од претходната состојба
             Game.ReloadResources();
+            this.InitBrickTextures();
 
             BitmapsToRender = new List<IList<GameBitmap>>();
             bitmapsToRenderCopy = new List<IList<GameBitmap>>();
@@ -145,50 +146,70 @@ namespace ArkanoidGame
             ElapsedTime = 0;
         }
 
+        private GameBitmap BrickTextureRedRectangle;
+        private GameBitmap BrickTextureBlueRectangle;
+        private GameBitmap BrickTexturePurpleRectangle;
+        private GameBitmap BrickTextureYellowRectangle;
+        private GameBitmap BrickTextureGreyRectangle;
+        private GameBitmap BrickTextureGreenRectangle;
+        private GameBitmap BrickTextureRedRectangle1;
+        private GameBitmap BrickTextureBlueRectangle1;
+        private GameBitmap BrickTexturePurpleRectangle1;
+        private GameBitmap BrickTextureYellowRectangle1;
+        private GameBitmap BrickTextureGreyRectangle1;
+        private GameBitmap BrickTextureGreenRectangle1;
+
+        /// <summary>
+        /// Иницијализирај ги (вчитај ги) сите слики за циглите во меморија. Овој метод е направен
+        /// поради оптимизација. Сите цигли од ист тип ќе користат иста слика (бидејќи
+        /// сите од ист тип се и со исти димензии нема да има resize).
+        /// </summary>
+        private void InitBrickTextures()
+        {
+            BrickTextureRedRectangle = new GameBitmap(RendererCache.GetBitmapFromFile(
+                       "\\Resources\\Images\\element_red_rectangle.png"), new Vector2D(0, 0),
+                          new Vector2D(200, 0), new Vector2D(0, 100));
+            BrickTextureBlueRectangle = new GameBitmap(RendererCache.GetBitmapFromFile(
+                       "\\Resources\\Images\\element_blue_rectangle.png"), new Vector2D(0, 0),
+                          new Vector2D(200, 0), new Vector2D(0, 100));
+            BrickTexturePurpleRectangle = new GameBitmap(RendererCache.GetBitmapFromFile(
+                       "\\Resources\\Images\\element_purple_rectangle.png"), new Vector2D(0, 0),
+                          new Vector2D(200, 0), new Vector2D(0, 100));
+            BrickTextureYellowRectangle = new GameBitmap(RendererCache.GetBitmapFromFile(
+                       "\\Resources\\Images\\element_yellow_rectangle.png"), new Vector2D(0, 0),
+                          new Vector2D(200, 0), new Vector2D(0, 100));
+            BrickTextureGreyRectangle = new GameBitmap(RendererCache.GetBitmapFromFile(
+                       "\\Resources\\Images\\element_grey_rectangle.png"), new Vector2D(0, 0),
+                          new Vector2D(200, 0), new Vector2D(0, 100));
+            BrickTextureGreenRectangle = new GameBitmap(RendererCache.GetBitmapFromFile(
+                      "\\Resources\\Images\\element_green_rectangle.png"), new Vector2D(0, 0),
+                          new Vector2D(200, 0), new Vector2D(0, 100));
+            BrickTextureRedRectangle1 = new GameBitmap(RendererCache.GetBitmapFromFile(
+                       "\\Resources\\Images\\element_red_square.png"), new Vector2D(0, 0),
+                          new Vector2D(200, 0), new Vector2D(0, 100));
+            BrickTextureBlueRectangle1 = new GameBitmap(RendererCache.GetBitmapFromFile(
+                       "\\Resources\\Images\\element_blue_square.png"), new Vector2D(0, 0),
+                          new Vector2D(200, 0), new Vector2D(0, 100));
+            BrickTexturePurpleRectangle1 = new GameBitmap(RendererCache.GetBitmapFromFile(
+                       "\\Resources\\Images\\element_purple_square.png"), new Vector2D(0, 0),
+                          new Vector2D(200, 0), new Vector2D(0, 100));
+            BrickTextureYellowRectangle1 = new GameBitmap(RendererCache.GetBitmapFromFile(
+                       "\\Resources\\Images\\element_yellow_square.png"), new Vector2D(0, 0),
+                          new Vector2D(200, 0), new Vector2D(0, 100));
+            BrickTextureGreyRectangle1 = new GameBitmap(RendererCache.GetBitmapFromFile(
+                       "\\Resources\\Images\\element_grey_square.png"), new Vector2D(0, 0),
+                          new Vector2D(200, 0), new Vector2D(0, 100));
+            BrickTextureGreenRectangle1 = new GameBitmap(RendererCache.GetBitmapFromFile(
+                      "\\Resources\\Images\\element_green_square.png"), new Vector2D(0, 0),
+                          new Vector2D(200, 0), new Vector2D(0, 100));
+        }
+
         private void CreateBricks()
         {
             Random r = new Random((int)DateTime.Now.Ticks);
 
             double y = 100;
             GameBitmap BrickTexture = null;
-
-            GameBitmap BrickTextureRedRectangle = new GameBitmap(RendererCache.GetBitmapFromFile(
-                       "\\Resources\\Images\\element_red_rectangle.png"), new Vector2D(0, 0),
-                          new Vector2D(200, 0), new Vector2D(0, 100));
-            GameBitmap BrickTextureBlueRectangle = new GameBitmap(RendererCache.GetBitmapFromFile(
-                       "\\Resources\\Images\\element_blue_rectangle.png"), new Vector2D(0, 0),
-                          new Vector2D(200, 0), new Vector2D(0, 100));
-            GameBitmap BrickTexturePurpleRectangle = new GameBitmap(RendererCache.GetBitmapFromFile(
-                       "\\Resources\\Images\\element_purple_rectangle.png"), new Vector2D(0, 0),
-                          new Vector2D(200, 0), new Vector2D(0, 100));
-            GameBitmap BrickTextureYellowRectangle = new GameBitmap(RendererCache.GetBitmapFromFile(
-                       "\\Resources\\Images\\element_yellow_rectangle.png"), new Vector2D(0, 0),
-                          new Vector2D(200, 0), new Vector2D(0, 100));
-            GameBitmap BrickTextureGreyRectangle = new GameBitmap(RendererCache.GetBitmapFromFile(
-                       "\\Resources\\Images\\element_grey_rectangle.png"), new Vector2D(0, 0),
-                          new Vector2D(200, 0), new Vector2D(0, 100));
-            GameBitmap BrickTextureGreenRectangle = new GameBitmap(RendererCache.GetBitmapFromFile(
-                      "\\Resources\\Images\\element_green_rectangle.png"), new Vector2D(0, 0),
-                          new Vector2D(200, 0), new Vector2D(0, 100));
-            GameBitmap BrickTextureRedRectangle1 = new GameBitmap(RendererCache.GetBitmapFromFile(
-                       "\\Resources\\Images\\element_red_square.png"), new Vector2D(0, 0),
-                          new Vector2D(200, 0), new Vector2D(0, 100));
-            GameBitmap BrickTextureBlueRectangle1 = new GameBitmap(RendererCache.GetBitmapFromFile(
-                       "\\Resources\\Images\\element_blue_square.png"), new Vector2D(0, 0),
-                          new Vector2D(200, 0), new Vector2D(0, 100));
-            GameBitmap BrickTexturePurpleRectangle1 = new GameBitmap(RendererCache.GetBitmapFromFile(
-                       "\\Resources\\Images\\element_purple_square.png"), new Vector2D(0, 0),
-                          new Vector2D(200, 0), new Vector2D(0, 100));
-            GameBitmap BrickTextureYellowRectangle1 = new GameBitmap(RendererCache.GetBitmapFromFile(
-                       "\\Resources\\Images\\element_yellow_square.png"), new Vector2D(0, 0),
-                          new Vector2D(200, 0), new Vector2D(0, 100));
-            GameBitmap BrickTextureGreyRectangle1 = new GameBitmap(RendererCache.GetBitmapFromFile(
-                       "\\Resources\\Images\\element_grey_square.png"), new Vector2D(0, 0),
-                          new Vector2D(200, 0), new Vector2D(0, 100));
-            GameBitmap BrickTextureGreenRectangle1 = new GameBitmap(RendererCache.GetBitmapFromFile(
-                      "\\Resources\\Images\\element_green_square.png"), new Vector2D(0, 0),
-                          new Vector2D(200, 0), new Vector2D(0, 100));
-
 
             for (int i = 0; i < 6; i++)
             {
