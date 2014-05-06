@@ -310,7 +310,7 @@ namespace ArkanoidGame.Objects
                         Velocity.X = x;
                         Velocity.Y = y;
 
-                        this.collisionDetectorSkipFrames = 10;
+                        this.collisionDetectorSkipFrames = 5;
                     }
                 }
             }
