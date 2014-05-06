@@ -664,7 +664,7 @@ namespace ArkanoidGame
             foreach (IGameObject ball in ballsInPlay)
             {
                 double speed = ball.Velocity.Magnitude();
-                ball.Velocity /= ball.Velocity.Magnitude();
+                ball.Velocity /= speed;
                 speed *= 1.1;
                 ball.Velocity *= speed;
             }
