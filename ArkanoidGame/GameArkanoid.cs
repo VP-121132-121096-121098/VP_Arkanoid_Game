@@ -140,7 +140,11 @@ namespace ArkanoidGame
 
             this.CursorIngameCoordinates = Renderer.ToGameCoordinates(cursorPanelCoordinates);
 
-            return GameState.OnUpdate(GameObjects);
+            int returnValue = GameState.OnUpdate(GameObjects);
+
+            IsTimesynchronizationImportant = GameState.IsTimesynchronizationImportant;
+
+            return returnValue;
         }
 
 
@@ -164,13 +168,7 @@ namespace ArkanoidGame
         /// во дадениот период тогаш не се рендерира и ќе дојде до секцање во играта,
         /// но бројот на поминати периоди најверојатно ќе остане ист.
         /// </summary>
-        public bool IsTimesynchronizationImportant
-        {
-            get
-            {
-                return GameState.IsTimesynchronizationImportant;
-            }
-        }
+        public bool IsTimesynchronizationImportant { get; private set; }
 
 
         public IGameRenderer Renderer { get; private set; }

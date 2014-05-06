@@ -87,7 +87,7 @@ namespace ArkanoidGame.Objects
 
         private void ReadMouseInput(Point cursor)
         {
-            Velocity = new Vector2D(cursor.X - (Position.X + Position.X + ObjectWidth) / 2.0, 0) / 10.0;
+            Velocity = new Vector2D(cursor.X - (Position.X + Position.X + ObjectWidth) / 2.0, 0) / 11.0;
         }
 
         private void ReadKeyboardInput(IKeyState leftArrowState, IKeyState rightArrowState)
