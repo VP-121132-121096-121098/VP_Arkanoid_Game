@@ -365,5 +365,11 @@ namespace ArkanoidGame.Objects
         {
             return ballID.GetHashCode();
         }
+
+
+        public int GetScoreForDestruction()
+        {
+            return 0;
+        }
     }
 }

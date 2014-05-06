@@ -135,7 +135,6 @@ namespace ArkanoidGame.Objects
             get { throw new NotImplementedException(); }
         }
 
-
-        
+        public abstract int GetScoreForDestruction();
     }
 }

@@ -109,8 +109,9 @@ namespace ArkanoidGame.Framework
                 //Display FPS
                 Font theFont = new Font(SystemFonts.CaptionFont.FontFamily, 11.25f,
                     FontStyle.Bold);
+                Color color = (Color)new ColorConverter().ConvertFromString("#ffcc00");
                 graphics.DrawString(string.Format("{0} FPS", PreviousFPSCounterValue),
-                    theFont, Brushes.Orange, frameWidth * 0.01f, frameHeight * 0.01f);
+                    theFont, new SolidBrush(color), frameWidth * 0.01f, frameHeight * 0.01f);
 
                 lastFrameWidth = frameWidth;
                 lastFrameHeight = frameHeight;

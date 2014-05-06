@@ -62,6 +62,11 @@ namespace ArkanoidGame.Objects
             this.InitTextures();
         }*/
 
+
+        public override int GetScoreForDestruction()
+        {
+            return 10;
+        }
     }
 }
 

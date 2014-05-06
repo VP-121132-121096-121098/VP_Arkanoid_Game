@@ -23,6 +23,9 @@ namespace ArkanoidGame.Interfaces
 
         void DrawCircle(Vector2D center, float radius, Graphics g, Color color, int frameWidth, int frameHeight);
 
+        void ShowETAMultiball(float timeRemaining, Color color, float emSize, Graphics g, int frameWidth,
+            int frameHeight);
+
         /// <summary>
         /// Претворање на должина од должина во игра на должина на екран
         /// </summary>
@@ -107,5 +110,17 @@ namespace ArkanoidGame.Interfaces
         Point ToScreenCoordinates(Point pointInGameCoordinates);
 
         void DrawRectangle(Pen pen, RectangleF rectangle, Graphics g, int frameWidth, int frameHeight);
+
+        /// <summary>
+        /// Ги прикажува поените веднаш под горниот десен агол
+        /// </summary>
+        /// <param name="stringToDraw"></param>
+        /// <param name="color"></param>
+        /// <param name="emSize"></param>
+        /// <param name="g"></param>
+        /// <param name="frameWidth"></param>
+        /// <param name="frameHeight"></param>
+        void ShowPointsOnScreen(string stringToDraw, Color color,
+            float emSize, Graphics g, int frameWidth, int frameHeight);
     }
 }

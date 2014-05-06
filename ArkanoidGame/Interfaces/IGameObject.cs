@@ -95,5 +95,11 @@ namespace ArkanoidGame.Interfaces
         /// Тип на објектот
         /// </summary>
         GameObjectType ObjectType { get; }
+
+        /// <summary>
+        /// Колку поени добива играчот ако го уништи објектот
+        /// </summary>
+        /// <returns></returns>
+        int GetScoreForDestruction();
     }
 }

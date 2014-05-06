@@ -18,6 +18,14 @@ namespace ArkanoidGame
     {
         private bool debugMode;
 
+        private int ballIncreaseSpeedPeriodCounter;
+        private int multiBallPeriodCounter;
+
+        /// <summary>
+        /// Колку поени играчот освоил во играта
+        /// </summary>
+        private long Score { get; set; }
+
         private QuadTree<IGameObject> quadtree; //со оваа структура може да се подели рамнината на делови
 
         //за секој објект се чува посебна листа од објекти со кои се судрил и во кои точки се судрил со тие објекти
@@ -101,6 +109,9 @@ namespace ArkanoidGame
         public ArkanoidGamePlayState(IGame game)
         {
             experimentalMultiBall = false;
+            this.ballIncreaseSpeedPeriodCounter = 0;
+            this.multiBallPeriodCounter = 0;
+            Score = 0;
             lockCollisionDetection = new object();
             debugMode = false;
             quadtree = null;
@@ -494,7 +505,10 @@ namespace ArkanoidGame
         public void OnDraw(Graphics graphics, int frameWidth, int frameHeight, bool lowSpec)
         {
             Game.Renderer.Render(bitmapsToRenderCopy, graphics, frameWidth, frameHeight, lowSpec);
-
+            Game.Renderer.ShowPointsOnScreen(string.Format("Score: {0}", Score), Color.Orange, 11.2f, graphics,
+                frameWidth, frameHeight);
+            Game.Renderer.ShowETAMultiball((3750 - multiBallPeriodCounter) * 16 / 1000.0f,
+                Color.Orange, 11.2f, graphics, frameWidth, frameHeight);
 #if DEBUG
             if (debugMode && quadtree != null)
             {
@@ -557,36 +571,53 @@ namespace ArkanoidGame
                 Game.GameState = new ArkanoidPauseMenuState(Game, this);
             }
 
+            this.IncreaseSpeedOfBalls();
+            this.CreateNewBalls();
+
+            IEnumerator<IGameObject> iter = ballsInPlay.GetEnumerator();
+            if (iter.MoveNext() && iter.Current.Velocity.Magnitude() < 0.001)
+            {
+                this.ballIncreaseSpeedPeriodCounter = 0;
+                this.multiBallPeriodCounter = 0;
+            }
+
             //тест верзија на креирање на повеќе топчиња (се креираат откако првото топче
             //ќе биде уфрлено во игра со клик на левиот клик од глувчето)
             if (!experimentalMultiBall)
             {
                 IEnumerator<IGameObject> it = ballsInPlay.GetEnumerator();
-                it.MoveNext();
-                BlueBall ball = (BlueBall)it.Current;
-                if (ball.Velocity.Magnitude() > 0)
+                
+                if (it.MoveNext())
                 {
-                    BlueBall ball2 = new BlueBall(ball.Position + new Vector2D(ball.Radius, ball.Radius),
-                        ball.Radius, LocalPlayer);
-                    ball2.Velocity.X = ball.Velocity.X;
-                    ball2.Velocity.Y = ball.Velocity.Y;
-                    ball2.Velocity.RotateDeg(-30);
-                    BlueBall ball3 = new BlueBall(ball.Position + new Vector2D(-ball.Radius, -ball.Radius),
-                        ball.Radius, LocalPlayer);
-                    ball3.Velocity.X = ball.Velocity.X;
-                    ball3.Velocity.Y = ball.Velocity.Y;
-                    ball3.Velocity.RotateDeg(30);
-                    gameObjects.Add(ball2);
-                    gameObjects.Add(ball3);
-                    ballsInPlay.Add(ball2);
-                    ballsInPlay.Add(ball3);
-                    experimentalMultiBall = true;
+                    BlueBall ball = (BlueBall)it.Current;
+                    if (ball.Velocity.Magnitude() > 0)
+                    {
+                        BlueBall ball2 = new BlueBall(ball.Position + new Vector2D(ball.Radius, ball.Radius),
+                            ball.Radius, LocalPlayer);
+                        ball2.Velocity.X = ball.Velocity.X;
+                        ball2.Velocity.Y = ball.Velocity.Y;
+                        ball2.Velocity.RotateDeg(-30);
+                        BlueBall ball3 = new BlueBall(ball.Position + new Vector2D(-ball.Radius, -ball.Radius),
+                            ball.Radius, LocalPlayer);
+                        ball3.Velocity.X = ball.Velocity.X;
+                        ball3.Velocity.Y = ball.Velocity.Y;
+                        ball3.Velocity.RotateDeg(30);
+                        gameObjects.Add(ball2);
+                        gameObjects.Add(ball3);
+                        ballsInPlay.Add(ball2);
+                        ballsInPlay.Add(ball3);
+                        experimentalMultiBall = true;
+                    }
                 }
             }
 
             return 100;
         }
 
+        /// <summary>
+        /// Избриши ги објектите (циглите) со Health = 0. 
+        /// </summary>
+        /// <param name="objects"></param>
         private void RemoveDeadObjects(IList<IGameObject> objects)
         {
             for (int i = objects.Count - 1; i > 0; i--)
@@ -599,10 +630,59 @@ namespace ArkanoidGame
                         ballsInPlay.Remove(obj);
                     }
 
+                    this.Score += obj.GetScoreForDestruction();
                     objects.RemoveAt(i);
                 }
 
             }
+
+            if (ballsInPlay.Count > 0 && ballsInPlay.Count + 1 == objects.Count)
+            {
+                //ако се уште има топчиња во игра, а бројот на објекти е бројот на топчиња + палката
+                //(нема цигли), тогаш генерирај нови цигли
+                this.CreateBricks();
+
+                //multiball
+                this.experimentalMultiBall = false;
+            }
+        }
+
+        /// <summary>
+        /// Ја зголемува брзината на топчето на секои 1250 периоди (20 секунди) од играта.
+        /// </summary>
+        void IncreaseSpeedOfBalls()
+        {
+            ballIncreaseSpeedPeriodCounter++;
+
+            if (ballIncreaseSpeedPeriodCounter < 1250)
+                return;
+
+            foreach (IGameObject ball in ballsInPlay)
+            {
+                double speed = ball.Velocity.Magnitude();
+                ball.Velocity /= ball.Velocity.Magnitude();
+                speed *= 1.1;
+                ball.Velocity *= speed;
+            }
+
+            this.ballIncreaseSpeedPeriodCounter = 0;
+        }
+
+        /// <summary>
+        /// Креира нови топки секоја минута
+        /// </summary>
+        void CreateNewBalls()
+        {
+            multiBallPeriodCounter++;
+
+            if (multiBallPeriodCounter < 3750)
+            {
+                return;
+            }
+
+            //направи нови топки на секои 3750 периоди (1 минута)
+            experimentalMultiBall = false;
+            this.multiBallPeriodCounter = 0;
         }
 
         private int ButtonDWaitNFrames;

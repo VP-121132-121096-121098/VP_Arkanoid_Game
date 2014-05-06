@@ -80,7 +80,7 @@ namespace ArkanoidGame
         public void ReloadResources()
         {
             Bitmap textMT = StaticStringFactory.CreateOrangeString("Multithreading");
-            textMultithreading = new GameBitmap(textMT, VirtualGameWidth - 400 - 10, 5, 400,
+            textMultithreading = new GameBitmap(textMT, (VirtualGameWidth - 400) / 2.0, 5, 400,
                 60);
         }
 

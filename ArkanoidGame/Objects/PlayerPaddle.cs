@@ -241,5 +241,11 @@ namespace ArkanoidGame.Objects
         {
             get { return this.Position + new Vector2D(0, ObjectHeight); }
         }
+
+
+        public int GetScoreForDestruction()
+        {
+            return 0;
+        }
     }
 }

@@ -325,5 +325,28 @@ namespace ArkanoidGame.Renderer
             float height = (float)ToScreenLength(x, y, x, y + rectangle.Height);
             g.DrawRectangle(pen, x, y, width, height);
         }
+
+
+        public void ShowPointsOnScreen(string stringToDraw, Color color, float emSize, Graphics g, int frameWidth, int frameHeight)
+        {
+            Font font = new Font(SystemFonts.CaptionFont.FontFamily,
+                emSize, FontStyle.Bold);
+            SizeF stringSize = g.MeasureString(stringToDraw, font);
+            float width = stringSize.Width;
+            float height = stringSize.Height;
+            g.DrawString(stringToDraw, font, new SolidBrush(color), new PointF(frameWidth - width - 5, 5));
+        }
+
+        public void ShowETAMultiball(float timeRemaining, Color color, float emSize, Graphics g, int frameWidth,
+            int frameHeight)
+        {
+            Font font = new Font(SystemFonts.CaptionFont.FontFamily,
+                emSize, FontStyle.Bold);
+            string ETA = timeRemaining.ToString("0.0");
+            SizeF stringSize = g.MeasureString(ETA, font);
+            float width = stringSize.Width;
+            float height = stringSize.Height;
+            g.DrawString(ETA, font, new SolidBrush(color), new PointF(frameWidth - width - 5, 10 + height));
+        }
     }
 }
