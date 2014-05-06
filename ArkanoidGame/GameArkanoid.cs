@@ -65,7 +65,7 @@ namespace ArkanoidGame
             }
 
             this.GameState.OnDraw(graphics, frameWidth, frameHeight, 
-                GraphicsDetails == Interfaces.GraphicsDetails.Low);
+                GraphicDetails == Interfaces.GraphicsDetails.Low);
 
             if (IsMultithreadingEnabled)
                 Renderer.Render(textMultithreading, graphics, frameWidth, frameHeight,
@@ -176,7 +176,7 @@ namespace ArkanoidGame
 
         public bool IsControllerMouse { get; set; }
 
-        public GraphicsDetails GraphicsDetails
+        public GraphicsDetails GraphicDetails
         {
             get
             {
@@ -187,11 +187,6 @@ namespace ArkanoidGame
                 if (value == Interfaces.GraphicsDetails.VeryHigh)
                 {
                     RendererCache.PreferQualityOverPerformance = true;
-                    this.graphicsDetails = value;
-                }
-                else if (value == Interfaces.GraphicsDetails.High)
-                {
-                    RendererCache.PreferQualityOverPerformance = false;
                     this.graphicsDetails = value;
                 }
                 else
