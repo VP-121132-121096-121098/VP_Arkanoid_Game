@@ -628,6 +628,10 @@ namespace ArkanoidGame
                     if (obj.ObjectType == GameObjectType.Ball)
                     {
                         ballsInPlay.Remove(obj);
+                        foreach (GameBitmap texture in obj.ObjectTextures)
+                        {
+                            RendererCache.RemoveBitmapFromMainMemory(texture.UniqueKey);
+                        }
                     }
 
                     this.Score += obj.GetScoreForDestruction();
