@@ -85,45 +85,45 @@ namespace ArkanoidGame
             GameBitmap graphicDetails = menuOptions["graphic details"];
             if (MenuOptionHover(cursor, graphicDetails))
             {
-                if (Game.GraphicDetails == GraphicsDetails.Low)
+                if (Game.GraphicDetails == GraphicDetails.Low)
                 {
                     menuOptions["graphic details"] = readyStrings["Graphic details: low hover"];
                     if (KeyStateInfo.GetAsyncKeyState(Keys.LButton).WasPressedAfterPreviousCall
                         && KeyStateInfo.GetAsyncKeyState(Keys.LButton).IsPressed)
                     {
-                        Game.GraphicDetails = GraphicsDetails.High;
+                        Game.GraphicDetails = GraphicDetails.High;
                     }
                 }
-                else if (Game.GraphicDetails == GraphicsDetails.High)
+                else if (Game.GraphicDetails == GraphicDetails.High)
                 {
                     menuOptions["graphic details"] = readyStrings["Graphic details: high hover"];
                     if (KeyStateInfo.GetAsyncKeyState(Keys.LButton).WasPressedAfterPreviousCall
                         && KeyStateInfo.GetAsyncKeyState(Keys.LButton).IsPressed)
                     {
-                        Game.GraphicDetails = GraphicsDetails.VeryHigh;
+                        Game.GraphicDetails = GraphicDetails.VeryHigh;
                     }
                 }
-                else if (Game.GraphicDetails == GraphicsDetails.VeryHigh)
+                else if (Game.GraphicDetails == GraphicDetails.VeryHigh)
                 {
                     menuOptions["graphic details"] = readyStrings["Graphic details: very high hover"];
                     if (KeyStateInfo.GetAsyncKeyState(Keys.LButton).WasPressedAfterPreviousCall
                         && KeyStateInfo.GetAsyncKeyState(Keys.LButton).IsPressed)
                     {
-                        Game.GraphicDetails = GraphicsDetails.Low;
+                        Game.GraphicDetails = GraphicDetails.Low;
                     }
                 }
             }
             else
             {
-                if (Game.GraphicDetails == GraphicsDetails.Low)
+                if (Game.GraphicDetails == GraphicDetails.Low)
                 {
                     menuOptions["graphic details"] = readyStrings["Graphic details: low"];
                 }
-                else if (Game.GraphicDetails == GraphicsDetails.High)
+                else if (Game.GraphicDetails == GraphicDetails.High)
                 {
                     menuOptions["graphic details"] = readyStrings["Graphic details: high"];
                 }
-                else if (Game.GraphicDetails == GraphicsDetails.VeryHigh)
+                else if (Game.GraphicDetails == GraphicDetails.VeryHigh)
                 {
                     menuOptions["graphic details"] = readyStrings["Graphic details: very high"];
                 }
@@ -229,8 +229,8 @@ namespace ArkanoidGame
                 .CreateBlueString("Controls: mouse"), (game.VirtualGameWidth - 750) / 2.0, 920,
                 750, 90));
 
-            //постави графика на low
-            Game.GraphicDetails = GraphicsDetails.Low;
+            //остави ги деталите онака како што се поставени
+            //Game.GraphicDetails = GraphicsDetails.Low;
             readyStrings.Add("Graphic details: low", new GameBitmap(
                 StaticStringFactory.CreateOrangeString("Graphic details: low"), (game.VirtualGameWidth - 900) / 2.0,
                 1100, 900, 90));

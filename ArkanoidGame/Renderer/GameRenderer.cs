@@ -261,8 +261,17 @@ namespace ArkanoidGame.Renderer
                     }
                     else
                     {
-                        Bitmap temp = RendererCache.GetBitmapFromMainMemory(bitmap.UniqueKey,
+                        Bitmap temp = null;
+
+                        try
+                        {
+                            temp = RendererCache.GetBitmapFromMainMemory(bitmap.UniqueKey,
                             (int)Math.Round(width), (int)Math.Round(height));
+                        }
+                        catch (Exception)
+                        {
+                            continue;
+                        }
 
                         if (temp == null)
                             continue;

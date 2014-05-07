@@ -8,7 +8,7 @@ using System.Text;
 
 namespace ArkanoidGame.Interfaces
 {
-    public enum GraphicsDetails
+    public enum GraphicDetails
     {
         Low,
         High,
@@ -23,7 +23,7 @@ namespace ArkanoidGame.Interfaces
         /// Поставување на GraphicsDetails на very high значи дека при скалирање на сликите ќе се користи
         /// HighQualityBicubic interpolation и Anti-Aliasing. Тоа е разликата помеѓу high и very high.
         /// </summary>
-        GraphicsDetails GraphicDetails { get; set; }
+        GraphicDetails GraphicDetails { get; set; }
 
         /// <summary>
         /// Ако претходно биле избришани ресурсите од меморија, со повик на овој метод истите одново ќе се вчитаат

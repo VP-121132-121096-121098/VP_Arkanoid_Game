@@ -1,5 +1,6 @@
 ﻿using ArkanoidGame;
 using ArkanoidGame.Framework;
+using ArkanoidGame.Interfaces;
 using ArkanoidGame.Renderer;
 using System;
 using System.IO;
@@ -16,10 +17,12 @@ namespace ArkanoidGameWindow
             Application.Run(window);
         }
 
-        private static void StartNewGame(GameWindow window)
+        private static void StartNewGame(GameWindow window, GraphicDetails details)
         {
             int gameUpdatePeriod = 16; //~60 FPS
             //int gameUpdatePeriod = 9; //debugging;
+
+            GameArkanoid.GetInstance().GraphicDetails = details;
             window.StartGameFramework(new GameFramework(GameArkanoid.GetInstance(), gameUpdatePeriod));
         }
 
@@ -53,15 +56,23 @@ namespace ArkanoidGameWindow
             //Настан кој ќе се повика пред да терминира процесот
             AppDomain.CurrentDomain.ProcessExit += new EventHandler(OnProcessExit);
 
-            DialogResult result = MessageBox.Show("Дали сакате играта да се стартува на целиот екран (fullscreen)?",
-                "Fullscreen мод?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            bool fullScreen = result == DialogResult.Yes;
+            SettingsForm settingsForm = new SettingsForm();
+            DialogResult result = settingsForm.ShowDialog();
+            if (result != DialogResult.OK)
+            {
+                settingsForm.Dispose();
+                return;
+            }
+
+            bool fullScreen = settingsForm.Fullscreen;
+            GraphicDetails graphicDetails = settingsForm.GraphicDetails;
+            settingsForm.Dispose();
 
             GameWindow window = new GameWindow(fullScreen);
             Thread windowThread = new Thread(() => Program.StartGameWindow(window));
             windowThread.Start();
 
-            Thread gameThread = new Thread(() => Program.StartNewGame(window));
+            Thread gameThread = new Thread(() => Program.StartNewGame(window, graphicDetails));
             gameThread.Start();
         }
 
