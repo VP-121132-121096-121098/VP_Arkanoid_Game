@@ -267,7 +267,7 @@ namespace ArkanoidGame
             menuOptions.Add("start game", readyStrings["start game"]);
             menuOptions.Add("quit game", readyStrings["quit game"]);
             menuOptions.Add("controls", readyStrings["Game controls mouse"]);
-            menuOptions.Add("graphic details", readyStrings["Graphic details: low"]);
+            menuOptions.Add("graphic details", readyStrings["Graphic details: high"]);
 
             BitmapsToRender.Add(new List<GameBitmap>());
             BitmapsToRender[1].Add(menuOptions["start game"]);
