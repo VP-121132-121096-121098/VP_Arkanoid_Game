@@ -14,8 +14,8 @@ namespace ArkanoidGame
     public class ArkanoidPauseMenuState : IGameState
     {
         
-        private IDictionary<string, GameBitmap> menuOptions1; //различни опции во менито
-        private IDictionary<string, GameBitmap> readyStrings1; //стрингови
+        private IDictionary<string, GameBitmap> menuOptions; //различни опции во менито
+        private IDictionary<string, GameBitmap> readyStrings; //стрингови
 
         public IList<IList<GameBitmap>> BitmapsToRender { get; private set; } //слики од позадината и сите опции заедно
         private IList<IList<GameBitmap>> bitmapsToRenderCopy; /* на Draw се праќа копија од листа
@@ -31,11 +31,11 @@ namespace ArkanoidGame
         {
             Point cursor = Game.CursorIngameCoordinates;
 
-            GameBitmap startNewGame = menuOptions1["start new game"];
+            GameBitmap startNewGame = menuOptions["start new game"];
 
             if (MenuOptionHover(cursor, startNewGame))
             {
-                BitmapsToRender[1][1] = readyStrings1["start new game hover"];
+                BitmapsToRender[1][1] = readyStrings["start new game hover"];
                 if (KeyStateInfo.GetAsyncKeyState(Keys.LButton).WasPressedAfterPreviousCall
                         && KeyStateInfo.GetAsyncKeyState(Keys.LButton).IsPressed)
                 {
@@ -47,12 +47,13 @@ namespace ArkanoidGame
             }
             else
             {
-                BitmapsToRender[1][1] = readyStrings1["start new game"];
+                BitmapsToRender[1][1] = readyStrings["start new game"];
             }
-            GameBitmap resumeGame = menuOptions1["resume game"];
+
+            GameBitmap resumeGame = menuOptions["resume game"];
             if (MenuOptionHover(cursor, resumeGame))
             {
-                BitmapsToRender[1][0] = readyStrings1["resume game hover"];
+                BitmapsToRender[1][0] = readyStrings["resume game hover"];
                 if (KeyStateInfo.GetAsyncKeyState(Keys.LButton).WasPressedAfterPreviousCall
                         && KeyStateInfo.GetAsyncKeyState(Keys.LButton).IsPressed)
                 {
@@ -62,12 +63,14 @@ namespace ArkanoidGame
             }
             else
             {
-                BitmapsToRender[1][0] = readyStrings1["resume game"];
+                BitmapsToRender[1][0] = readyStrings["resume game"];
             }
-           GameBitmap quitGame = menuOptions1["quit game"];
+
+
+           GameBitmap quitGame = menuOptions["quit game"];
             if (MenuOptionHover(cursor, quitGame))
             {
-                BitmapsToRender[1][2] = readyStrings1["quit game hover"];
+                BitmapsToRender[1][2] = readyStrings["quit game hover"];
                 if (KeyStateInfo.GetAsyncKeyState(Keys.LButton).WasPressedAfterPreviousCall
                         && KeyStateInfo.GetAsyncKeyState(Keys.LButton).IsPressed)
                 {
@@ -77,9 +80,57 @@ namespace ArkanoidGame
             }
             else
             {
-                BitmapsToRender[1][2] = readyStrings1["quit game"];
+                BitmapsToRender[1][2] = readyStrings["quit game"];
             }
 
+
+            GameBitmap graphicDetails = menuOptions["graphic details"];
+            if (MenuOptionHover(cursor, graphicDetails))
+            {
+                if (Game.GraphicDetails == GraphicsDetails.Low)
+                {
+                    menuOptions["graphic details"] = readyStrings["Graphic details: low hover"];
+                    if (KeyStateInfo.GetAsyncKeyState(Keys.LButton).WasPressedAfterPreviousCall
+                        && KeyStateInfo.GetAsyncKeyState(Keys.LButton).IsPressed)
+                    {
+                        Game.GraphicDetails = GraphicsDetails.High;
+                    }
+                }
+                else if (Game.GraphicDetails == GraphicsDetails.High)
+                {
+                    menuOptions["graphic details"] = readyStrings["Graphic details: high hover"];
+                    if (KeyStateInfo.GetAsyncKeyState(Keys.LButton).WasPressedAfterPreviousCall
+                        && KeyStateInfo.GetAsyncKeyState(Keys.LButton).IsPressed)
+                    {
+                        Game.GraphicDetails = GraphicsDetails.VeryHigh;
+                    }
+                }
+                else if (Game.GraphicDetails == GraphicsDetails.VeryHigh)
+                {
+                    menuOptions["graphic details"] = readyStrings["Graphic details: very high hover"];
+                    if (KeyStateInfo.GetAsyncKeyState(Keys.LButton).WasPressedAfterPreviousCall
+                        && KeyStateInfo.GetAsyncKeyState(Keys.LButton).IsPressed)
+                    {
+                        Game.GraphicDetails = GraphicsDetails.Low;
+                    }
+                }
+            }
+            else
+            {
+                if (Game.GraphicDetails == GraphicsDetails.Low)
+                {
+                    menuOptions["graphic details"] = readyStrings["Graphic details: low"];
+                }
+                else if (Game.GraphicDetails == GraphicsDetails.High)
+                {
+                    menuOptions["graphic details"] = readyStrings["Graphic details: high"];
+                }
+                else if (Game.GraphicDetails == GraphicsDetails.VeryHigh)
+                {
+                    menuOptions["graphic details"] = readyStrings["Graphic details: very high"];
+                }
+            }
+            BitmapsToRender[1][3] = menuOptions["graphic details"];
         
 
            //Посебна readonly копија за рендерерот
@@ -131,47 +182,76 @@ namespace ArkanoidGame
 
             // додади ги сите опции во меморија
             // додади ги сите опции во меморија
-            readyStrings1 = new Dictionary<string, GameBitmap>();
+            readyStrings = new Dictionary<string, GameBitmap>();
 
 
-            readyStrings1.Add("resume game", new GameBitmap(StaticStringFactory.CreateOrangeString("resume game"),
+            readyStrings.Add("resume game", new GameBitmap(StaticStringFactory.CreateOrangeString("resume game"),
                 (game.VirtualGameWidth - 550) / 2, 750, 600, 90));
-            readyStrings1.Add("resume game hover", new GameBitmap(StaticStringFactory.CreateBlueString("resume game"),
+            readyStrings.Add("resume game hover", new GameBitmap(StaticStringFactory.CreateBlueString("resume game"),
                 (game.VirtualGameWidth - 550) / 2, 750, 600, 90));
 
 
-            readyStrings1.Add("start new game", new GameBitmap(StaticStringFactory.CreateOrangeString("start new game"),
+            readyStrings.Add("start new game", new GameBitmap(StaticStringFactory.CreateOrangeString("start new game"),
                 (game.VirtualGameWidth - 750) / 2.0, 920, 750, 90));
-            readyStrings1.Add("start new game hover", new GameBitmap(StaticStringFactory.CreateBlueString("start new game"),
+            readyStrings.Add("start new game hover", new GameBitmap(StaticStringFactory.CreateBlueString("start new game"),
                 (game.VirtualGameWidth - 750) / 2.0, 920, 750, 90));
 
 
-            readyStrings1.Add("quit game", new GameBitmap(StaticStringFactory.CreateOrangeString("quit game"),
-             (game.VirtualGameWidth - 500) / 2, 1100, 550, 90));
-            readyStrings1.Add("quit game hover", new GameBitmap(StaticStringFactory.CreateBlueString("quit game"),
-               (game.VirtualGameWidth - 500) / 2, 1100, 550, 90));
+            readyStrings.Add("quit game", new GameBitmap(StaticStringFactory.CreateOrangeString("quit game"),
+             (game.VirtualGameWidth - 500) / 2, 1270, 550, 90));
+            readyStrings.Add("quit game hover", new GameBitmap(StaticStringFactory.CreateBlueString("quit game"),
+               (game.VirtualGameWidth - 500) / 2, 1270, 550, 90));
+
+
+            //постави графика на low
+//            Game.GraphicDetails = GraphicsDetails.Low;
+            readyStrings.Add("Graphic details: low", new GameBitmap(
+                StaticStringFactory.CreateOrangeString("Graphic details: low"), (game.VirtualGameWidth - 900) / 2.0,
+                1100, 900, 90));
+            readyStrings.Add("Graphic details: low hover", new GameBitmap(
+                StaticStringFactory.CreateBlueString("Graphic details: low"), (game.VirtualGameWidth - 900) / 2.0,
+                1100, 900, 90));
+            readyStrings.Add("Graphic details: high", new GameBitmap(
+                StaticStringFactory.CreateOrangeString("Graphic details: high"), (game.VirtualGameWidth - 910) / 2.0,
+                1100, 910, 90));
+            readyStrings.Add("Graphic details: high hover", new GameBitmap(
+                StaticStringFactory.CreateBlueString("Graphic details: high"), (game.VirtualGameWidth - 910) / 2.0,
+                1100, 910, 90));
+            readyStrings.Add("Graphic details: very high", new GameBitmap(
+                StaticStringFactory.CreateOrangeString("Graphic details: very high"), (game.VirtualGameWidth - 1000) / 2.0,
+                1100, 1000, 90));
+            readyStrings.Add("Graphic details: very high hover", new GameBitmap(
+                StaticStringFactory.CreateBlueString("Graphic details: very high"), (game.VirtualGameWidth - 1000) / 2.0,
+                1100, 1000, 90));
+
+            readyStrings.Add("Game controls keyboard", new GameBitmap(StaticStringFactory
+                .CreateOrangeString("Controls: keyboard"), (game.VirtualGameWidth - 750) / 2.0, 920,
+                750, 90));
+            readyStrings.Add("Game controls keyboard hover", new GameBitmap(StaticStringFactory
+                .CreateBlueString("Controls: keyboard"), (game.VirtualGameWidth - 750) / 2.0, 920,
+                750, 90));
 
             //прикажи ги опциите и на слаб хардвер.
-            foreach (KeyValuePair<string, GameBitmap> bitmap in readyStrings1)
+            foreach (KeyValuePair<string, GameBitmap> bitmap in readyStrings)
             {
                 bitmap.Value.DrawLowSpec = true;
             }
             
           
-            menuOptions1 = new Dictionary<string, GameBitmap>();
+            menuOptions = new Dictionary<string, GameBitmap>();
         
-            menuOptions1.Add("resume game", readyStrings1["resume game"]);
-            menuOptions1.Add("start new game", readyStrings1["start new game"]);
-            menuOptions1.Add("quit game", readyStrings1["quit game"]);
-           
+            menuOptions.Add("resume game", readyStrings["resume game"]);
+            menuOptions.Add("start new game", readyStrings["start new game"]);
+            menuOptions.Add("quit game", readyStrings["quit game"]);
+            menuOptions.Add("graphic details", readyStrings["Graphic details: low"]);
         
 
             BitmapsToRender.Add(new List<GameBitmap>());
            
-            BitmapsToRender[1].Add(menuOptions1["resume game"]);
-            BitmapsToRender[1].Add(menuOptions1["start new game"]);
-            BitmapsToRender[1].Add(menuOptions1["quit game"]);
-        
+            BitmapsToRender[1].Add(menuOptions["resume game"]);
+            BitmapsToRender[1].Add(menuOptions["start new game"]);
+            BitmapsToRender[1].Add(menuOptions["quit game"]);
+            BitmapsToRender[1].Add(menuOptions["graphic details"]);
       
             this.Game = game;
             Game.IsControllerMouse = true;
