@@ -220,6 +220,8 @@ namespace ArkanoidGame.Renderer
 
                         if (lowSpec && !bitmap.DrawLowSpec)
                         {
+                            //за послаб хардвер (low графика)
+
                             if (bitmap.IsBall)
                             {
                                 //ако сликата е топче, цртај топче и ротирај го за да се создаде анимација на ротирање
