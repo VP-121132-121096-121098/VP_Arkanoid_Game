@@ -181,104 +181,107 @@ namespace ArkanoidGame.Renderer
             if (bitmaps == null)
                 return;
 
-            foreach (IList<GameBitmap> bitmapList in bitmaps)
+            //може да се случи raceCondition, во тој случај само фати го исклучокот и излези
+            try
             {
-                if (bitmapList == null)
-                    continue;
 
-                foreach (GameBitmap bitmap in bitmapList)
+                foreach (IList<GameBitmap> bitmapList in bitmaps)
                 {
-                    if (bitmap == null)
+
+                    if (bitmapList == null)
                         continue;
 
-                    Vector2D positionUL = ToScreenCoordinates(bitmap.PositionUL);
-                    double width = ToScreenLength(new Vector2D(positionUL.X + bitmap.WidthInGameUnits, positionUL.Y)
-                         - positionUL);
-                    double height = ToScreenLength(new Vector2D(positionUL.X, positionUL.Y + bitmap.HeightInGameUnits)
-                         - positionUL);
-
-                    if (bitmap.WidthInGameUnits == bitmap.HeightInGameUnits)
+                    foreach (GameBitmap bitmap in bitmapList)
                     {
-                        height = width = (height + width) / 2;
-                    }
+                        if (bitmap == null)
+                            continue;
 
-                    Vector2D positionUR = ToScreenCoordinates(bitmap.PositionUR);
-                    Vector2D vecUL_UR = positionUR - positionUL;
-                    vecUL_UR = vecUL_UR / vecUL_UR.Magnitude() * width;
-                    positionUR = positionUL + vecUL_UR;
-                    Vector2D positionDL = ToScreenCoordinates(bitmap.PositionDL);
-                    Vector2D vecUL_DL = positionDL - positionUL;
-                    vecUL_DL = vecUL_DL / vecUL_DL.Magnitude() * height;
-                    positionDL = positionUL + vecUL_DL;
+                        Vector2D positionUL = ToScreenCoordinates(bitmap.PositionUL);
+                        double width = ToScreenLength(new Vector2D(positionUL.X + bitmap.WidthInGameUnits, positionUL.Y)
+                             - positionUL);
+                        double height = ToScreenLength(new Vector2D(positionUL.X, positionUL.Y + bitmap.HeightInGameUnits)
+                             - positionUL);
 
-                    Point[] vertices = new Point[] { positionUL, positionUR, positionDL };
-
-                    if (lowSpec && !bitmap.DrawLowSpec)
-                    {
-                        if (bitmap.IsBall)
+                        if (bitmap.WidthInGameUnits == bitmap.HeightInGameUnits)
                         {
-                            //ако сликата е топче, цртај топче и ротирај го за да се создаде анимација на ротирање
-
-                            Bitmap temp = FillCircle((int)Math.Round(width), (int)Math.Round(height),
-                                bitmap.ColorLowSpec);
-                            using (Graphics gr = Graphics.FromImage(temp))
-                            {
-                                gr.FillEllipse(new SolidBrush(Color.White),
-                                    (int)Math.Round(width / 2 - 0.12 * width),
-                                    (int)Math.Round(0.12 * height), (int)Math.Round(0.24 * width),
-                                    (int)Math.Round(0.24 * width));
-                            }
-
-                            g.DrawImage(temp, vertices);
+                            height = width = (height + width) / 2;
                         }
-                        else
-                        {
-                            //Pрво провери дали може да се исцрта хоризонтален правоаголник. Ако тоа е можно
-                            //исцртај го, инаку направи прво помошна битмапа па ротирај ја според координатите
-                            //UL, UR, DL
 
-                            if (bitmap.PositionUL.X == bitmap.PositionDL.X
-                                && bitmap.PositionUL.Y < bitmap.PositionDL.Y
-                                && bitmap.PositionUL.Y == bitmap.PositionUR.Y)
+                        Vector2D positionUR = ToScreenCoordinates(bitmap.PositionUR);
+                        Vector2D vecUL_UR = positionUR - positionUL;
+                        vecUL_UR = vecUL_UR / vecUL_UR.Magnitude() * width;
+                        positionUR = positionUL + vecUL_UR;
+                        Vector2D positionDL = ToScreenCoordinates(bitmap.PositionDL);
+                        Vector2D vecUL_DL = positionDL - positionUL;
+                        vecUL_DL = vecUL_DL / vecUL_DL.Magnitude() * height;
+                        positionDL = positionUL + vecUL_DL;
+
+                        Point[] vertices = new Point[] { positionUL, positionUR, positionDL };
+
+                        if (lowSpec && !bitmap.DrawLowSpec)
+                        {
+                            //за послаб хардвер (low графика)
+
+                            if (bitmap.IsBall)
                             {
-                                g.FillRectangle(new SolidBrush(bitmap.ColorLowSpec), (float)positionUL.X,
-                                    (float)positionUL.Y, (float)width, (float)height);
-                            }
-                            else
-                            {
-                                int bmpWidth = (int)Math.Round(width);
-                                int bmpHeight = (int)Math.Round(height);
-                                Bitmap temp = new Bitmap(bmpWidth, bmpHeight);
+                                //ако сликата е топче, цртај топче и ротирај го за да се создаде анимација на ротирање
+
+                                Bitmap temp = FillCircle((int)Math.Round(width), (int)Math.Round(height),
+                                    bitmap.ColorLowSpec);
                                 using (Graphics gr = Graphics.FromImage(temp))
                                 {
-                                    gr.FillRectangle(new SolidBrush(bitmap.ColorLowSpec),
-                                        0, 0, bmpWidth, bmpHeight);
+                                    gr.FillEllipse(new SolidBrush(Color.White),
+                                        (int)Math.Round(width / 2 - 0.12 * width),
+                                        (int)Math.Round(0.12 * height), (int)Math.Round(0.24 * width),
+                                        (int)Math.Round(0.24 * width));
                                 }
 
                                 g.DrawImage(temp, vertices);
                             }
-                        }
-                    }
-                    else
-                    {
-                        Bitmap temp = null;
+                            else
+                            {
+                                //Pрво провери дали може да се исцрта хоризонтален правоаголник. Ако тоа е можно
+                                //исцртај го, инаку направи прво помошна битмапа па ротирај ја според координатите
+                                //UL, UR, DL
 
-                        try
+                                if (bitmap.PositionUL.X == bitmap.PositionDL.X
+                                    && bitmap.PositionUL.Y < bitmap.PositionDL.Y
+                                    && bitmap.PositionUL.Y == bitmap.PositionUR.Y)
+                                {
+                                    g.FillRectangle(new SolidBrush(bitmap.ColorLowSpec), (float)positionUL.X,
+                                        (float)positionUL.Y, (float)width, (float)height);
+                                }
+                                else
+                                {
+                                    int bmpWidth = (int)Math.Round(width);
+                                    int bmpHeight = (int)Math.Round(height);
+                                    Bitmap temp = new Bitmap(bmpWidth, bmpHeight);
+                                    using (Graphics gr = Graphics.FromImage(temp))
+                                    {
+                                        gr.FillRectangle(new SolidBrush(bitmap.ColorLowSpec),
+                                            0, 0, bmpWidth, bmpHeight);
+                                    }
+
+                                    g.DrawImage(temp, vertices);
+                                }
+                            }
+                        }
+                        else
                         {
-                            temp = RendererCache.GetBitmapFromMainMemory(bitmap.UniqueKey,
-                            (int)Math.Round(width), (int)Math.Round(height));
-                        }
-                        catch (Exception)
-                        {
-                            continue;
-                        }
+                            Bitmap temp = temp = RendererCache.GetBitmapFromMainMemory(bitmap.UniqueKey,
+                                (int)Math.Round(width), (int)Math.Round(height));
 
-                        if (temp == null)
-                            continue;
+                            if (temp == null)
+                                continue;
 
-                        g.DrawImage(temp, vertices);
+                            g.DrawImage(temp, vertices);
+                        }
                     }
                 }
+            }
+            catch (Exception)
+            {
+                return;
             }
         }
 
@@ -336,7 +339,7 @@ namespace ArkanoidGame.Renderer
         }
 
 
-        public void ShowPointsOnScreen(string stringToDraw, Color color, float emSize, Graphics g, int frameWidth, int frameHeight)
+        public void ShowScoreOnScreen(string stringToDraw, Color color, float emSize, Graphics g, int frameWidth, int frameHeight)
         {
             Font font = new Font(SystemFonts.CaptionFont.FontFamily,
                 emSize, FontStyle.Bold);

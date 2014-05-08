@@ -202,6 +202,8 @@ namespace ArkanoidGame
 
         public ArkanoidMainMenuState(IGame game)
         {
+            RendererCache.RemoveAllBitmapsFromMainMemory();
+
             this.Game = game;
             Game.IsControllerMouse = true;
 
