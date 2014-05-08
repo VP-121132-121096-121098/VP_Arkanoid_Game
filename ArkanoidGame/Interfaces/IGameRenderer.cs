@@ -120,7 +120,7 @@ namespace ArkanoidGame.Interfaces
         /// <param name="g"></param>
         /// <param name="frameWidth"></param>
         /// <param name="frameHeight"></param>
-        void ShowPointsOnScreen(string stringToDraw, Color color,
+        void ShowScoreOnScreen(string stringToDraw, Color color,
             float emSize, Graphics g, int frameWidth, int frameHeight);
     }
 }

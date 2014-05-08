@@ -53,6 +53,7 @@
     <Compile Include="AbstractGameWindow.designer.cs">
       <DependentUpon>AbstractGameWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="ArkanoidGameOverState.cs" />
     <Compile Include="ArkanoidGamePlayState.cs" />
     <Compile Include="ArkanoidMainMenuState.cs" />
     <Compile Include="ArkanoidPauseMenuState.cs" />

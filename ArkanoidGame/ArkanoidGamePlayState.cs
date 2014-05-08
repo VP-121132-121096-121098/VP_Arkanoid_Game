@@ -109,7 +109,7 @@ namespace ArkanoidGame
         public ArkanoidGamePlayState(IGame game)
         {
             this.ballIncreaseSpeedPeriodCounter = 0;
-            this.multiBallPeriodsCounter = 0;
+            this.multiBallPeriodsCounter = multiballPeriod - 30;
             Score = 0;
             lockCollisionDetection = new object();
             debugMode = false;
@@ -504,7 +504,7 @@ namespace ArkanoidGame
         public void OnDraw(Graphics graphics, int frameWidth, int frameHeight, bool lowSpec)
         {
             Game.Renderer.Render(bitmapsToRenderCopy, graphics, frameWidth, frameHeight, lowSpec);
-            Game.Renderer.ShowPointsOnScreen(string.Format("Score: {0}", Score), Color.Orange, 11.2f, graphics,
+            Game.Renderer.ShowScoreOnScreen(string.Format("Score: {0}", Score), Color.Orange, 11.2f, graphics,
                 frameWidth, frameHeight);
             Game.Renderer.ShowETAMultiball((3750 - multiBallPeriodsCounter) * 16 / 1000.0f,
                 Color.Orange, 11.2f, graphics, frameWidth, frameHeight);
@@ -572,6 +572,12 @@ namespace ArkanoidGame
 
             this.IncreaseSpeedOfBalls();
             this.CreateNewBalls();
+
+            if (ballsInPlay.Count == 0)
+            {
+                Game.GameState = new ArkanoidGameOverState(Game, Score);
+                return 100;
+            }
 
             IEnumerator<IGameObject> iter = ballsInPlay.GetEnumerator();
             if (iter.MoveNext() && iter.Current.Velocity.Magnitude() < 0.001)
