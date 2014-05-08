@@ -47,7 +47,7 @@ DebugMode
 
  Детално кодот е објаснет со соодветни коментари во секоја од класите.
  
- ![alt tag](https://cloud.githubusercontent.com/assets/7340374/2920787/5f16a72c-d6eb-11e3-9d0e-8cd2aeccc9ca.png)
+ ![alt tag](https://cloud.githubusercontent.com/assets/7340374/2921090/067d07f6-d6ef-11e3-9525-c854f0c73cb6.png)
  
  Петар Ќимов 121132
  
