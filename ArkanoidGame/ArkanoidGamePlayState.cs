@@ -736,7 +736,12 @@ namespace ArkanoidGame
             IGeometricShape geometricShape = obj.GetGeometricShape();
             foreach (IGameObject gameObject in objectsInArea)
             {
-                if (gameObject == obj)
+
+                //не проверуваме за судири на објектот со самиот себе, како и на цигла со
+                //цигла, ниту пак на топче со топче
+                if (gameObject == obj || gameObject.ObjectType == GameObjectType.Brick
+                    && obj.ObjectType == GameObjectType.Brick
+                    || gameObject.ObjectType == GameObjectType.Ball && obj.ObjectType == GameObjectType.Ball)
                     continue;
 
                 List<Vector2D> temp = null;
