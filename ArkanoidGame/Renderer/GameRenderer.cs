@@ -216,8 +216,6 @@ namespace ArkanoidGame.Renderer
                         vecUL_DL = vecUL_DL / vecUL_DL.Magnitude() * height;
                         positionDL = positionUL + vecUL_DL;
 
-                        Point[] vertices = new Point[] { positionUL, positionUR, positionDL };
-
                         if (lowSpec && !bitmap.DrawLowSpec)
                         {
                             //за послаб хардвер (low графика)
@@ -225,6 +223,8 @@ namespace ArkanoidGame.Renderer
                             if (bitmap.IsBall)
                             {
                                 //ако сликата е топче, цртај топче и ротирај го за да се создаде анимација на ротирање
+
+                                Point[] vertices = new Point[] { positionUL, positionUR, positionDL };
 
                                 Bitmap temp = FillCircle((int)Math.Round(width), (int)Math.Round(height),
                                     bitmap.ColorLowSpec);
@@ -240,30 +240,11 @@ namespace ArkanoidGame.Renderer
                             }
                             else
                             {
-                                //Pрво провери дали може да се исцрта хоризонтален правоаголник. Ако тоа е можно
-                                //исцртај го, инаку направи прво помошна битмапа па ротирај ја според координатите
-                                //UL, UR, DL
+                                Vector2D positionDR = positionDL + vecUL_UR;
 
-                                if (bitmap.PositionUL.X == bitmap.PositionDL.X
-                                    && bitmap.PositionUL.Y < bitmap.PositionDL.Y
-                                    && bitmap.PositionUL.Y == bitmap.PositionUR.Y)
-                                {
-                                    g.FillRectangle(new SolidBrush(bitmap.ColorLowSpec), (float)positionUL.X,
-                                        (float)positionUL.Y, (float)width, (float)height);
-                                }
-                                else
-                                {
-                                    int bmpWidth = (int)Math.Round(width);
-                                    int bmpHeight = (int)Math.Round(height);
-                                    Bitmap temp = new Bitmap(bmpWidth, bmpHeight);
-                                    using (Graphics gr = Graphics.FromImage(temp))
-                                    {
-                                        gr.FillRectangle(new SolidBrush(bitmap.ColorLowSpec),
-                                            0, 0, bmpWidth, bmpHeight);
-                                    }
+                                Point[] vertices = new Point[] { positionUL, positionUR, positionDR, positionDL };
 
-                                    g.DrawImage(temp, vertices);
-                                }
+                                g.FillPolygon(new SolidBrush(bitmap.ColorLowSpec), vertices);
                             }
                         }
                         else
@@ -273,6 +254,8 @@ namespace ArkanoidGame.Renderer
 
                             if (temp == null)
                                 continue;
+
+                            Point[] vertices = new Point[] { positionUL, positionUR, positionDL };
 
                             g.DrawImage(temp, vertices);
                         }
